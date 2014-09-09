@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sed -e '/EndProlog/a<< /Duplex true >> setpagedevice'
