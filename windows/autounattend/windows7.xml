@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend"
+          xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+          xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:dcterms="http://purl.org/dc/terms/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <dc:title>Answer File for Win 7 Ultimate</dc:title>
+    <dc:description>
+    Install Windows 7 with a Key and create users.
+    To use this you need to fix the passwords and the windows key entries.
+    </dc:description>
+
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-International-Core-WinPE"
+                   publicKeyToken="31bf3856ad364e35"
+                   language="neutral"
+                   versionScope="nonSxS"
+                   processorArchitecture="AMD64">
+            <SetupUILanguage>
+              <WillShowUI>OnError</WillShowUI>
+              <UILanguage>en-US</UILanguage>
+            </SetupUILanguage>
+            <UILanguage>en-US</UILanguage>
+        </component>
+
+        <component name="Microsoft-Windows-Setup"
+                   processorArchitecture="AMD64"
+                   publicKeyToken="31bf3856ad364e35"
+                   language="neutral"
+                   versionScope="nonSxS">
+
+            <ImageInstall>
+                <OSImage>
+                    <InstallFrom>
+                        <MetaData wcm:action="add">
+                            <Key>/IMAGE/INDEX</Key>
+                            <Value>4</Value>
+                        </MetaData>
+                    </InstallFrom>
+                    <InstallTo>
+                        <DiskID>0</DiskID>
+                        <PartitionID>2</PartitionID>
+                    </InstallTo>
+                </OSImage>
+            </ImageInstall>
+
+            <UserData>
+                <ProductKey>
+                    <WillShowUI>Never</WillShowUI>
+                    <Key>STICK-WINDO-OWS7U-KEYFL-HEREX</Key>
+                </ProductKey>
+                <FullName>VM Failover Lab</FullName>
+                <Organization>Example, Inc.</Organization>
+                <AcceptEula>true</AcceptEula>
+            </UserData>
+
+            <DiskConfiguration>
+                <WillShowUI>OnError</WillShowUI>
+                <Disk>
+                    <WillWipeDisk>true</WillWipeDisk>
+                    <CreatePartitions>
+                        <CreatePartition wcm:action="add">
+                            <Order>1</Order>
+                            <Type>Primary</Type>
+                            <Size>350</Size>
+                            <Extend>false</Extend>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Type>Primary</Type>
+                            <Extend>true</Extend>
+                        </CreatePartition>
+                    </CreatePartitions>
+                    <ModifyPartitions>
+                        <ModifyPartition wcm:action="modify">
+                            <Order>1</Order> 
+                            <PartitionID>1</PartitionID> 
+                            <Label>Boot</Label> 
+                            <Format>NTFS</Format> 
+                            <Active>true</Active> 
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="modify">
+                            <Order>2</Order> 
+                            <PartitionID>2</PartitionID> 
+                            <Label>Windows</Label> 
+                            <Format>NTFS</Format> 
+                        </ModifyPartition>
+                    </ModifyPartitions>
+                    <DiskID>0</DiskID>
+                </Disk>
+            </DiskConfiguration>
+
+        </component>
+    </settings>
+
+    <settings pass="specialize">
+       <component name="Microsoft-Windows-Security-Licensing-SLC-UX"
+                  processorArchitecture="x86"
+                  publicKeyToken="31bf3856ad364e35"
+                  language="neutral"
+                  versionScope="nonSxS">
+          <SkipAutoActivation>true</SkipAutoActivation>
+       </component>
+
+       <component name="Microsoft-Windows-Shell-Setup"
+                   processorArchitecture="AMD64"
+                   publicKeyToken="31bf3856ad364e35"
+                   language="neutral"
+                   versionScope="nonSxS">
+
+            <ComputerName>LabPC</ComputerName>
+       </component>
+
+       <component name="Microsoft-Windows-Deployment"
+                  processorArchitecture="x86"
+                  publicKeyToken="31bf3856ad364e35"
+                  language="neutral"
+                  versionScope="nonSxS">
+
+          <RunSynchronous>
+
+             <RunSynchronousCommand wcm:action="add">
+                <Description>Workaround W7 NetworkLocation problem</Description>
+                <Order>1</Order>
+                <Path>cmd /c reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\NewNetworks" /v NetworkList /t REG_MULTI_SZ /d "" /f </Path>
+                <WillReboot>Never</WillReboot>
+             </RunSynchronousCommand>
+
+             <RunSynchronousCommand wcm:action="add">
+                <Description>Workaround W7 bug</Description>
+                <Order>2</Order>
+                <Path>reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\FirstNetwork" /v Category /t REG_DWORD /d 00000001 /f</Path>
+                <WillReboot>Never</WillReboot>
+             </RunSynchronousCommand>
+
+             <RunSynchronousCommand wcm:action="add">
+                <Description>Install some program</Description>
+                <Order>3</Order>
+                <Path>cmd /C "%SystemDrive%\install\program.exe /silent"</Path>
+                <WillReboot>Never</WillReboot>
+             </RunSynchronousCommand>
+
+             <RunSynchronousCommand wcm:action="add">
+                <Description>Test Sync command</Description>
+                <Order>4</Order>
+                <Path>cmd /C %SystemDrive%\install\test.cmd</Path>
+                <WillReboot>Never</WillReboot>
+             </RunSynchronousCommand>
+
+          </RunSynchronous>
+
+       </component>
+    </settings>
+
+    <settings pass="oobeSystem">
+
+        <component name="Microsoft-Windows-International-Core"
+                   processorArchitecture="AMD64"
+                   publicKeyToken="31bf3856ad364e35"
+                   language="neutral"
+                   versionScope="nonSxS">
+          <InputLocale>0409:00000409</InputLocale>
+          <SystemLocale>en-us</SystemLocale>
+          <UserLocale>en-us</UserLocale>
+          <UILanguage>en-us</UILanguage>
+        </component>
+
+        <component name="Microsoft-Windows-Shell-Setup"
+                   processorArchitecture="AMD64"
+                   publicKeyToken="31bf3856ad364e35"
+                   language="neutral"
+                   versionScope="nonSxS">
+
+            <OOBE>
+              <HideEULAPage>true</HideEULAPage>
+              <NetworkLocation>Work</NetworkLocation>
+              <ProtectYourPC>1</ProtectYourPC>
+              <SkipMachineOOBE>true</SkipMachineOOBE>
+              <SkipUserOOBE>true</SkipUserOOBE>
+            </OOBE>
+
+            <ComputerName>LabPC</ComputerName>
+            <RegisteredOwner>Karl Redgate</RegisteredOwner>
+            <TimeZone>Eastern Standard Time</TimeZone>
+
+            <UserAccounts>
+              <LocalAccounts>
+
+                <LocalAccount wcm:action="add">
+                  <Name>Administrator</Name>
+                  <Description>Administrator</Description>
+                  <DisplayName>Administrator</DisplayName>
+                  <Group>Administrators</Group>
+                </LocalAccount>
+
+                <LocalAccount wcm:action="add">
+                   <Password>
+                      <Value>YwExAmPlEEnCrYpTeDpAsSwOrDBuTReaLlYDEADBEEFkAA==</Value>
+                      <PlainText>false</PlainText>
+                   </Password>
+                   <Group>Administrators</Group>
+                   <DisplayName>Example Admin Account</DisplayName>
+                   <Description>Test account</Description>
+                   <Name>zhaan</Name>
+                </LocalAccount>
+
+                <LocalAccount wcm:action="add">
+                   <Password>
+                      <Value>guest</Value>
+                      <PlainText>true</PlainText>
+                   </Password>
+                   <Group>Guests</Group>
+                   <DisplayName>Example Guest Account</DisplayName>
+                   <Description>Guest account</Description>
+                   <Name>guest</Name>
+                </LocalAccount>
+
+              </LocalAccounts>
+
+              <AdministratorPassword>
+                  <Value>ExAmPle*5</Value>
+                  <PlainText>true</PlainText>
+              </AdministratorPassword>
+            </UserAccounts>
+
+        </component>
+
+    </settings>
+
+</unattend>
+<!--
+  - vim:autoindent
+  - vim:expandtab
+  -->
