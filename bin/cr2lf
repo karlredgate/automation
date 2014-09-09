@@ -1,0 +1,6 @@
+#!/bin/bash
+
+[ -z "$1" ] && exec tr '\r' '\n'
+temp=.foo$$
+tr '\r' '\n' < "$1" > $temp
+mv $temp "$1"

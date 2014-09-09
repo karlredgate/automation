@@ -1,0 +1,16 @@
+#!/bin/bash
+
+for book in *.pdf
+do
+    echo "$book"
+    title=$( exiftool -veryShort -Title "$book" )
+    [ -z "$title" ] && {
+        title="${book%.pdf}"
+	exiftool -Title="$title" "$book"
+    }
+    [ "$title" = "untitled" ] && {
+        title="${book%.pdf}"
+	exiftool -Title="$title" "$book"
+    }
+    echo "   $title"
+done
