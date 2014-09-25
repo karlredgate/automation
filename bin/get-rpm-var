@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Assumption in this currently is that the variables are all
+# defined in the spec.  This wants to be augmented to support
+# variable lookups in the rpm macros scripts.
+#
+
+varname=$1
+spec=$2
+value=$( grep -i ${varname}: $spec | sed -e "s/${varname}:[ \t]*//i" )
+
+while [[ "$value" =~ "%{" ]]
+do
+    ref=$( echo "$value" | sed -e "s/}.*//" -e "s/.*%{//" )
+    sub=$( get_rpm_var $ref $spec )
+    # echo "replace <$ref> with <$sub> in <$value>"
+    value=$( echo $value | sed -e "s/%{$ref}/$sub/" )
+done
+echo $value
+
+# vim:autoindent expandtab sw=4
