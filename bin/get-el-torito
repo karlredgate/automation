@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+#
+#
+
+iso=$1
+
+eval $(isoinfo -d -i $iso | sed -n -e '/Nsect/s/.* /NSECT=/p' -e '/Bootoff/s/.* /BOOTOFF=/p')
+
+echo "El Torito is at $BOOTOFF and is $NSECT long"
+
+[ -z "$BOOTOFF" ] && {
+    echo "This is not an El Torito ISO image" 1>&2
+    exit 1
+}
+
+dd if=$iso of=boot.img bs=2048 count=$NSECT skip=$BOOTOFF
+
+#isoinfo -d -i ../en_windows_7_enterprise_x64_dvd_x15-70749.iso
+#Eltorito validation header:
+#    Hid 1
+#    Arch 0 (x86)
+#    ID 'Microsoft Corporation'
+#    Key 55 AA
+#    Eltorito defaultboot header:
+#        Bootid 88 (bootable)
+#        Boot media 0 (No Emulation Boot)
+#        Load segment 0
+#        Sys type 0
+#        Nsect 8
+#        Bootoff 2DE 734 
+#
+#What is interesting is that it’s an El Torito no-emulation bootable 
+#disk. The boot image required to boot it is 8 sectors long (“Nsect 8″)
+#starting at sector number 734 (“Bootoff” in decimal).
+# 
+#dd if=../en_windows_7_enterprise_x64_dvd_x15-70749.iso \
+#    of=boot.img bs=2048 count=8 skip=734 
+# 
+#mkisofs -o ../new-win.iso -b boot.img -no-emul-boot -c BOOT.CAT \
+#    -iso-level 2 -udf \
+#    -J -l -D -N -joliet-long -relaxed-filenames . 
+#
