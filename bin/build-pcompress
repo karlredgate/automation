@@ -1,0 +1,46 @@
+#!/bin/bash
+
+function die() {
+    echo "$*" 1>&2
+    exit 1
+}
+
+function get_rpm_var() {
+    local varname=$1
+    local spec=$2
+    local value=$( grep -i ${varname}: $spec | sed -e "s/${varname}:[ \t]*//i" )
+    while [[ "$value" =~ "%{" ]]
+    do
+        local ref=$( echo "$value" | sed -e "s/}.*//" -e "s/.*%{//" )
+        local sub=$( get_rpm_var $ref $spec )
+        # echo "replace <$ref> with <$sub> in <$value>"
+        value=$( echo $value | sed -e "s/%{$ref}/$sub/" )
+    done
+    echo $value
+}
+
+yumdownloader --source wavpack
+wavpackrpm=$( ls wavpack*.src.rpm )
+rpm2cpio $wavpackrpm | cpio -imd
+tarball=$( get_rpm_var source wavpack.spec )
+
+case $tarball in
+*bz2) z=j ;;
+*gz)  z=z ;;
+esac
+
+tar x${z}f $tarball
+
+# Checking for Yasm ...
+# Yasm version 1.1 or later is required to build on x64 platforms
+# http://yasm.tortall.net/
+
+# should xsltproc the URL dir /releases/ and find the latest of
+# version number associated with the name
+wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+tar xzf yasm*.tar.gz
+( cd $dir ; make )
+
+# install in local bin dir and add that to the current path
+
+# vim:autoindent expandtab sw=4
