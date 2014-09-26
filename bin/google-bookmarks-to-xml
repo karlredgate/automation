@@ -1,0 +1,17 @@
+#!/bin/bash
+
+sed -e 's|\\"|\&quot;|g' \
+    -e 's|"version": 1|<key>version</key><val>1</val>|' \
+    -e 's|{|<g>|g' \
+    -e 's|},|</g>|g' \
+    -e 's|"\([^"]*\)":|<key>\1</key>|g' \
+    -e 's|"\([^"]*\)",|<val>\1</val>|g' \
+    -e 's|"\([^"]*\)"$|<val>\1</val>|g' \
+    -e 's|}|</g>|g' \
+    -e 's|\[|<list>|g' \
+    -e 's|\],|</list>|g' \
+    -e 's|\]|</list>|g' \
+    -e 's|\&|\&amp;|g' \
+    ~/.config/google-chrome/Default/Bookmarks | xmllint --format -
+
+# vim:autoindent expandtab sw=4
