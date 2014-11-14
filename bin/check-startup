@@ -1,0 +1,591 @@
+#!/usr/bin/ruby
+
+$DEBUG = false
+
+require 'zlib'
+require 'tsort'
+
+class VT100
+    def self.RED    ( string ) "[1;41;33m#{string}[0m" end 
+    def self.red    ( string ) "[1;31m#{string}[0m" end 
+    def self.green  ( string ) "[1;32m#{string}[0m" end 
+    def self.magenta( string ) "[1;35m#{string}[0m" end 
+    def self.yellow ( string ) "[0;33m#{string}[0m" end 
+    def self.YELLOW ( string ) "[1;33m#{string}[0m" end 
+    def self.BLUE   ( string ) "[1;37;44m#{string}[0m" end 
+    def self.blue   ( string ) "[1;34m#{string}[0m" end 
+end
+
+class Dependency
+    def to_s; "unknown dependency" end
+end
+
+class JobEvent < Dependency
+    def initialize( state, name )
+        @state = state
+	@name = name
+    end
+    def dependency; @name end
+    def to_s; "JOB: #{@state} #{@name}" end
+end
+
+class NamedEvent < Dependency
+    def initialize( name )
+        @name = name
+    end
+    def dependency; @name end
+    def to_s; "EVENT: #{@name}" end
+end
+
+class StartupEvent < Dependency
+    def dependency; 'startup' end
+    def to_s; "SYSTEM: startup" end
+end
+
+class RunlevelEvent < Dependency
+    def initialize( runlist )
+        @runlist = runlist
+    end
+    def dependency; 'runlevel' end
+    def to_s; "SYSTEM: runlevel #{@runlist}" end
+end
+
+#
+# Container for the list of jobs and tasks that are currently
+# configured on this system.  Each job or tasks has its own
+# associated state.
+#
+# This class mixes in the topological sort module to allow us
+# to determine startup dependencies.
+#
+class Jobs
+    include TSort
+
+    def initialize
+        @jobs = {}
+    end
+
+    def add( job )
+	n = job.name
+	raise TypeError.new("invalid job key #{n.type}") unless n.is_a? String
+	return puts "NOT ADD #{n}" unless @jobs[n].nil?
+        @jobs[n] = job
+	puts "add job #{n}" if $DEBUG
+        job
+    end
+
+    def find( name ) @jobs[name] end
+    def exists?( name ) @jobs[name] != nil end
+
+    def tsort_each_node(&block)
+        @jobs.each_key(&block)
+    end
+
+    def tsort_each_child(node, &block)
+	job = @jobs[node]
+	return puts " #ERR no job named #{node}" if job.nil?
+        job.dependencies.each(&block)
+    end
+
+    def probe_runlevel
+        @runlevel = %x{runlevel}.split[1].strip
+	@rcdir = "/etc/rc.d/rc#{@runlevel}.d"
+	Dir.glob("#{@rcdir}/S*").sort.each { |path|
+	    name = File.basename(path).sub(/S\d\d/,'')
+	    # add( Event.new(name) )
+	}
+    end
+
+    def probe
+        add( Event.new('startup') )
+        add( Event.new('runlevel') )
+	probe_runlevel()
+        %x{initctl list}.each_line { |line| add( Job.new(self, line.chomp) ) }
+    end
+
+    def report
+        tsort.each { |name|
+            job = find(name)
+            if job.nil?
+	        puts "#{name} has no valid job"
+                next
+            end
+            job.report
+        }
+    end
+
+end
+
+#
+# An Event is not a job - it is the result of a call to
+# 'initctl emit event-name'.
+#
+class Event
+    def initialize( name )
+        @name = name
+	@timestamp = nil
+	@failed = false
+	@consumers = []
+    end
+
+    def timestamp=( time )
+	# Currently using a string
+	# raise TypeError.new("bad timestamp") unless time.is_a? Time
+        @timestamp = time
+    end
+
+    def failed=( b )
+        @failed = b
+    end
+
+    def name; @name end
+    def dependencies; [] end
+    def consumers; @consumers end
+
+    def dependency_met?
+	return false if @timestamp.nil?
+	return false if @failed
+	true
+    end
+
+    # should be triggered
+    def report
+	message = case
+	when @failed
+	    puts "event #{@name} failed at #{@timestamp}"
+	when @timestamp.nil?
+	    puts "event "+VT100.red(@name)+VT100.yellow(" has not triggered")
+	else
+	    puts "event #{@name} triggered at #{@timestamp}"
+	end
+    end
+
+    def report_consumers(joblist)
+        @consumers.each { |consumer|
+	    job = joblist.find(consumer)
+	    next if job.nil?
+	    next if job.state == 'running'
+	    puts "      "+VT100.red(job.name)+" has not consumed "+VT100.red(@name)
+	}
+    end
+
+    def state; 'EVENT' end
+    def to_s; "EVENT:#{@name}" end
+end
+
+class Job
+
+    attr_reader :name, :goal, :state
+    attr_reader :depend
+
+    def initialize(joblist, line)
+        @joblist = joblist
+	@depend = []
+
+        case line
+
+        when /^(\S+) (\w+)\/(\w+), process (\d+)$/
+	    @name = $1
+	    @goal = $2
+	    @state = $3
+	    @pid = $4.to_i
+
+        when /^(\S+) \((\S+)\) (\w+)\/(\w+), process (\d+)$/
+	    @name = $1
+	    @instance = $2
+	    @goal = $3
+	    @state = $4
+	    @pid = $5.to_i
+
+        when /^(\S+) (\w+)\/(\w+)$/
+	    @name = $1
+	    @goal = $2
+	    @state = $3
+
+        else
+            raise "Unknown format #{line}"
+        end
+
+        puts "==> reading /etc/init/#{@name}.conf" if $DEBUG
+        cfg_blob = IO.read("/etc/init/#{@name}.conf")
+	@config = cfg_blob.split
+	@task = @config.grep(/^task/)[0].nil? == false
+
+	@emits = @config.grep(/^emits/).inject([]) { |a,v|
+	    a.concat v.sub(/emits/,'').strip.split
+	}
+	@emits.each { |e| @joblist.exists?(e) or @joblist.add( Event.new(e) ) }
+
+        @start = @config.grep(/start on/)[0].to_s.sub('start on','').strip
+
+	@starts = []
+	@stops = []
+	@events = []
+
+        parse()
+
+    end
+
+    def dependency_met?
+        task? ? state() == 'waiting' : state() == 'running'
+    end
+
+    def dependencies
+        @depend.collect { |d| d.dependency }
+    end
+
+    def task?; @task end
+
+    # If a task is still running; need to check what it emits,
+    # and see which jobs are not yet running that depend on that
+    # emitted event
+    def task_report
+        print "task  #{@name} is #{@state}"
+	case @state
+	when 'waiting' ; puts ""
+	when 'running'
+	    puts " and "+VT100.RED("has not completed")+" because"
+	    @emits.each { |event_name|
+		event = @joblist.find(event_name)
+		event.report_consumers(@joblist)
+	    }
+	end
+    end
+
+    def job_report
+        print "job   #{@name} is #{@state}"
+	case @state
+	when 'running' ; puts ""
+	when 'waiting'
+	    print " for"
+	    dependencies().each { |d|
+		job = @joblist.find( d )
+		if job.nil?
+		    print " ?#{d}"
+		    next
+		end
+		print " "+VT100.red(job.name) unless job.dependency_met?
+	    }
+	    puts ""
+	end
+    end
+
+    def report
+        task? ? task_report : job_report
+    end
+
+    def to_s
+	(task? ? "task " : "job ") +
+        @name + " is " + @state + " and starts on " + @start
+    end
+
+    # "start on" expression parser
+    EOI = 256
+    IDENTIFIER = 257
+    STARTUP    = 258
+    RUNLEVEL   = 259
+    STARTING   = 260
+    STARTED    = 261
+    STOPPING   = 262
+    STOPPED    = 263
+    AND        = 264
+    OR         = 265
+    RUNLIST    = 266
+    INTEGER    = 267
+    NOT_EQUAL  = 268
+
+    def token_type( t )
+	case t
+	when EOI        ; "EOI"
+	when INTEGER    ; "N(#{@integer})"
+	when IDENTIFIER ; "ID(#{@identifier})"
+	when STARTUP    ; "STARTUP"
+	when RUNLEVEL   ; "RUNLEVEL"
+	when STARTING   ; "STARTING"
+	when STARTED    ; "STARTED"
+	when STOPPING   ; "STOPPING"
+	when STOPPED    ; "STOPPED"
+	when AND        ; "AND"
+	when OR         ; "OR"
+	when NOT_EQUAL  ; "NOT_EQUAL"
+	when RUNLIST    ; "[#{@runlist}]"
+	else              "token(#{t})"
+	end
+    end
+
+    def lookahead( t )
+        @current_token == t
+    end
+
+    def token( t )
+        return false unless @current_token == t
+	print "#{token_type(t)} " if $DEBUG
+	get_next_token
+    end
+
+    def required( found )
+        raise "parse error current token is <#{token_type(@current_token)}>" unless found
+	true
+    end
+
+    def parenthesized_expression
+        print "paren " if $DEBUG
+        token('(') && required( expression() ) && required(')')
+    end
+
+
+
+    def recognized_runlevel_event
+        puts "\n --> Depend on <runlevel #{@runlist}>" if $DEBUG
+	# think I need to clear the @integer value somewhere
+        @depend << RunlevelEvent.new( @runlist || @identifier || @integer )
+	true
+    end
+
+    def runlist
+        token(RUNLIST) || token(IDENTIFIER) || token(INTEGER)
+    end
+
+    def runlevel_event
+	@runlist = nil
+        token(RUNLEVEL) && required( runlist() ) && recognized_runlevel_event()
+    end
+
+    def system_event
+        token(STARTUP) || runlevel_event()
+    end
+
+    def recognized_job_criteria
+	puts "\n --> Depend on job criteria <#{token_type(@jobevent)} #{@job_name}>" if $DEBUG
+        @depend << JobEvent.new( token_type(@jobevent).downcase, @job_name )
+        true
+    end
+
+    def job_criteria
+        job_event() && required( job_name() ) && variable_list() && recognized_job_criteria()
+    end
+
+    def job_event
+	@jobevent = @current_token
+        token(STARTING) || token(STARTED) || token(STOPPING) || token(STOPPED)
+    end
+
+    def job_name
+	@job_name = @identifier
+        token(IDENTIFIER)
+    end
+
+    def variable_value
+        token(INTEGER) || token(IDENTIFIER) || token(RUNLIST) || true
+    end
+
+    def variable_operator
+        token('=') || token(NOT_EQUAL)
+    end
+
+    def variable_binding
+        token(IDENTIFIER) && required(variable_operator()) && variable_value()
+    end
+
+    def variable_list
+        # Need to add parse here
+	print "variable_list? " if $DEBUG
+	variable_binding
+	true
+    end
+
+    def event_name_recognized()
+	puts "\n --> Depend on event <#{@event_name}>" if $DEBUG
+        @depend << NamedEvent.new(@event_name)
+
+	event = @joblist.find(@event_name)
+	@joblist.add( event = Event.new(@event_name) ) if event.nil?
+	event.consumers << @name
+        true
+    end
+
+    def event_name
+	@event_name = @identifier
+	token(IDENTIFIER) && event_name_recognized()
+    end
+
+    def disjunction
+        token(AND) && required( expression() )
+    end
+
+    def conjunction
+        token(OR) && required( expression() )
+    end
+
+    def primary
+        # parenthesized_expression() ||
+	system_event() || job_criteria() || event_name()
+    end
+
+    def expression
+	primary()
+	return true if lookahead(EOI)
+	while lookahead(AND) || lookahead(OR)
+	    result = conjunction() || disjunction()
+	end
+	result
+    end
+
+    def parse
+        puts "Parsing: <#{@start}>" if $DEBUG
+	@input = @start.split('')
+
+	return if @input.length == 0
+        get_next_token()
+        expression() && required( token(EOI) )
+    end
+
+    def recognize_integer
+	@integer = 0
+	@integer += ((@integer*10)+@input.shift.to_i) while @input[0].to_s.match(/[0-9]/)
+	@current_token = INTEGER
+        print "N(#{@integer}) " if $DEBUG
+	true
+    end
+
+    def recognize_identifier
+	@identifier = ""
+	@identifier += @input.shift while @input[0].to_s.match(/[\.\-_\/a-zA-Z]/)
+	@current_token = IDENTIFIER
+        print "ID(#{@identifier}) " if $DEBUG
+	recognize_keyword || true
+    end
+
+    def recognize_keyword
+        case @identifier
+	when 'startup'  ; @current_token = STARTUP
+	when 'runlevel' ; @current_token = RUNLEVEL
+	when 'starting' ; @current_token = STARTING
+	when 'started'  ; @current_token = STARTED
+	when 'stopping' ; @current_token = STOPPING
+	when 'stopped'  ; @current_token = STOPPED
+	when 'and'      ; @current_token = AND
+	when 'or'       ; @current_token = OR
+	else return false
+	end
+	true
+    end
+
+    def recognize_runlist
+	@runlist = ""
+	@input.shift
+	@runlist += @input.shift while @input[0] != ']'
+	@input.shift
+	@current_token = RUNLIST
+        print "RUNLIST(#{@runlist}) " if $DEBUG
+	true
+    end
+
+    def recognize_operator
+	case @input[0]
+	when '!'
+	    case @input[1]
+	    when '='
+	        @input.shift(2)
+		@current_token = NOT_EQUAL
+	    else raise "bad operator @{input[0]}@{input[1]}"
+	    end
+	else raise "bad operator @{input[0]}"
+	end
+	true
+    end
+
+    def eat_whitespace
+	@input.shift while @input[0].match(/\s/)
+    end
+
+    def get_next_token
+	return @current_token = EOI if @input.length == 0
+        eat_whitespace() if @input[0].match(/\s/)
+
+        case @input[0]
+	when /#/        ; @current_token = EOI
+	when /[a-zA-Z]/ ; recognize_identifier()
+	when '='        ; @current_token = @input.shift
+	when '('        ; @current_token = @input.shift
+	when ')'        ; @current_token = @input.shift
+	when '!'        ; recognize_operator()
+	when '['        ; recognize_runlist()
+	when /[0-9]/    ; recognize_integer()
+	else raise "invalid input '#{@input[0]}'"
+	end
+    end
+
+end
+
+class Logfiles
+    BASE = '/var/log'
+    def initialize( jobs )
+        @jobs = jobs
+    end
+
+    def logfiles
+	logfiles = []
+	logfiles.concat Dir.glob("#{BASE}/messages.??.gz").sort { |x,y| y <=> x }
+	logfiles.concat Dir.glob("#{BASE}/messages.?.gz").sort { |x,y| y <=> x }
+	logfiles.concat Dir.glob("#{BASE}/messages")
+	logfiles
+    end
+
+    def locate_events(io)
+        while line = io.gets
+	    failed = false
+	    case line
+	    when /(.*) \S+ init: Handling (\S+) event$/
+	        timestamp = $1
+	        event_name = $2
+	    when /^init: event_finished: Finished (\S+) event/
+	        timestamp = 'SYSTEM-BOOT'
+	        event_name = $1
+	    when /^init: Handling (\S+) event/
+	        timestamp = 'SYSTEM-BOOT'
+	        event_name = $1
+	    else next
+	    end
+
+	    next if event_name == 'starting'
+	    next if event_name == 'started'
+	    next if event_name == 'stopping'
+	    next if event_name == 'stopped'
+
+	    if event_name.match(/(\S+)\/failed/)
+	        event_name = $1
+		failed = true
+	    end
+
+	    event = @jobs.find( event_name )
+	    if event.nil?
+	        puts "Event located in logs for unknown event #{event_name}"
+		next
+	    end
+	    event.timestamp = timestamp
+	    event.failed = failed
+	end
+    end
+
+    def process_logfile( logfile )
+	reader = case logfile
+	when /.gz$/ ; Zlib::GzipReader
+	else File
+	end
+
+	reader.open(logfile) { |io| locate_events(io) }
+    end
+
+    def process()
+        logfiles().each { |logfile| process_logfile(logfile) }
+	process_logfile( "#{BASE}/boot.log" )
+    end
+end
+
+jobs = Jobs.new
+jobs.probe()
+Logfiles.new(jobs).process()
+jobs.report()
+
+# vim:autoindent
