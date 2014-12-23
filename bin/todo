@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Save the data lines - with day and date reversed
+# ignore TODO items that are done or skipped
+# append the current saved date to the TODO line and print it
+# send output to "number lines" tool
+#
+
+sed -rn -e '/^(Sun|Mon|Tues|Wednes|Thurs|Fri|Satur)day .*/{s/(.*) (.*)/\2 \1/;h}' \
+        -e '/TODO,(done|skip)/b' \
+        -e '/== TODO/{G;s/\n/  /;p}' \
+        ~/Dropbox/j2.txt | nl
+
+# vim:autoindent expandtab sw=4
