@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function die() {
+    echo "$@" 1>&2
+    exit 1
+}
+
+self=\^$(tr '\0' '.' < /proc/$$/cmdline)\$
+others=$(grep --text --files-with-match "$self" /proc/[0-9]*/cmdline)
+
+for process in $others
+do
+    [ $process = /proc/$$/cmdline ] && continue
+    die "This job is already running"
+done
+
+sleep 10
