@@ -1,0 +1,126 @@
+#!/bin/bash
+#
+# Only handle one request
+#
+
+function send_headers() {
+    :
+}
+
+function send_response() {
+    :
+    ok
+}
+
+function success() {
+    local code=$1
+    local message="$2"
+    echo "HTTP/1.1 $code $message"
+    send_headers
+}
+
+function ok() {
+    success 200 "OK"
+}
+
+function client_error() {
+    local code=$1
+    local message="$2"
+    echo "HTTP/1.1 $code $message"
+    send_headers
+    exit 1
+}
+
+function bad_request() {
+    client_error 400 "Bad reqquest"
+}
+
+function unauthorized() {
+    client_error 401 "Unauthorized method"
+}
+
+function payment_required() {
+    client_error 402 "Payment required"
+}
+
+function forbidden() {
+    client_error 403 "Forbidden"
+}
+
+function not_found() {
+    client_error 404 "Not found"
+}
+
+function method_not_allowed() {
+    client_error 405 "Method not allowed"
+}
+
+function not_acceptable() {
+    client_error 406 "Not acceptable"
+}
+
+function conflict() {
+    client_error 409 "Conflict"
+}
+
+function HEAD() {
+    ok
+}
+
+function GET() {
+    ok
+}
+
+function POST() {
+    ok
+}
+
+function method_valid() {
+   case $(type -t $method) in
+   function) return 0 ;;
+          *) return 1 ;;
+   esac
+}
+
+function parse_header() {
+    :
+}
+
+function line_contains_data() {
+    read line
+    [ -z "$line" ] && return 1
+}
+
+function read_headers() {
+    while line_contains_data
+    do
+        parse_header
+    done
+}
+
+function read_request() {
+    read method url version
+    case "$version" in
+    HTTP/1.1|HTTP/1.0)
+        read_headers
+        ;;
+    "")
+        read blank
+        [ -z "$blank" ] || echo no headers for 0.9
+        ;;
+    *)
+        echo unknown version
+        ;;
+    esac
+}
+
+read_request
+echo "Method: $method"
+echo "URL: $url"
+echo "Version: $version"
+
+method_valid || method_not_allowed
+
+send_response
+
+# vim:autoindent expandtab sw=4
