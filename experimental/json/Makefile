@@ -6,3 +6,6 @@ test: basic
 
 basic: basic.o
 	cc -o $@ $^
+
+clean:
+	rm basic *.o

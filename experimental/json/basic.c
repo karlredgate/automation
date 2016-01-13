@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "errors.h"
+
 #define EOI     256
 #define INTEGER 257
 #define STRING  258
@@ -13,28 +15,6 @@ static char current_identifier[1024];
 static char current_string[4096];
 static int stringpos;
 static long current_integer;
-
-void die() { exit( 1 ); }
-
-void
-unterminated_string() {
-    fprintf( stderr, "unterminated string\n" );
-    die();
-}
-
-int
-invalid_character( int c ) {
-    fprintf( stderr, "invalid character in input '%c'n", c );
-    die();
-    return 0;
-}
-
-int
-parse_error( char *where ) {
-    fprintf( stderr, "parse error (%s)\n", where );
-    die();
-    return 0;
-}
 
 char *
 report_token( int token ) {
