@@ -3,18 +3,15 @@
 #include <stdlib.h>
 
 #include "errors.h"
-
-#define EOI     256
-#define INTEGER 257
-#define STRING  258
-#define ERROR   259
+#include "scanner.h"
 
 static int c = 0;
-static int current_token;
-static char current_identifier[1024];
-static char current_string[4096];
 static int stringpos;
-static long current_integer;
+
+int current_token;
+char current_identifier[1024];
+char current_string[4096];
+long current_integer;
 
 char *
 report_token( int token ) {
@@ -40,15 +37,9 @@ report_token( int token ) {
     }
 }
 
-int
-nextchar() {
+void
+init_scanner() {
     c = getchar();
-    if ( c != EOF ) return 1;
-    if ( feof(stdin) ) {
-        current_token = EOI;
-        return 1;
-    }
-    return 0;
 }
 
 void
@@ -205,6 +196,26 @@ recognize_metachar:
 recognize_identifier:
     current_token = ERROR;
     return;
+}
+
+int
+look_ahead( int _token ) {
+    return current_token == _token;
+}
+
+int
+required( int found ) {
+    if ( found == 0 ) parse_error("required");
+    return 1;
+}
+
+int
+token( int _token ) {
+    printf( "CHECK TOKEN current %s == %s\n", report_token(current_token), report_token(_token) );
+    if ( current_token != _token )  return 0;
+    get_next_token();
+    printf( "NEXT TOKEN: %s\n", report_token(current_token) );
+    return 1;
 }
 
 /* vim: set autoindent expandtab sw=4 : */
