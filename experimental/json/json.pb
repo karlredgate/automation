@@ -1,7 +1,13 @@
 
 #include "base.pb"
 
-JSONText : JSONValue ;
+JSONText :
+            JSONObject |
+            JSONObject |
+            JSONObject |
+            JSONObject |
+            JSONObject |
+            JSONValue ;
 
 JSONValue :
             JSONObject |
