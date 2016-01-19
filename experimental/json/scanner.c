@@ -26,13 +26,13 @@ report_token( int token ) {
     case ']':     return "<]>";
     case EOI:     return "<EOI>";
     case INTEGER:
-        sprintf( s, "INTEGER<%ld>", current_integer );
+        // sprintf( s, "INTEGER<%ld>", current_integer );
         return s;
     case STRING:
-        sprintf( s, "STRING<%s>", current_string );
+        // sprintf( s, "STRING<%s>", current_string );
         return s;
     default:
-        sprintf( s, "<? %d ?>", token );
+        // sprintf( s, "<? %d ?>", token );
         return s;
     }
 }
@@ -211,10 +211,10 @@ required( int found ) {
 
 int
 token( int _token ) {
-    printf( "CHECK TOKEN current %s == %s\n", report_token(current_token), report_token(_token) );
+    // printf( "CHECK TOKEN current %s == %s\n", report_token(current_token), report_token(_token) );
     if ( current_token != _token )  return 0;
     get_next_token();
-    printf( "NEXT TOKEN: %s\n", report_token(current_token) );
+    // printf( "NEXT TOKEN: %s\n", report_token(current_token) );
     return 1;
 }
 
