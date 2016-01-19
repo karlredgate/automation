@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "errors.h"
 #include "scanner.h"
@@ -43,6 +44,22 @@ init_scanner() {
 }
 
 void
+check_for_keyword() {
+    if ( strcmp(current_string, "null") == 0 ) {
+        current_token = KEYWORD_NULL;
+        return;
+    }
+    if ( strcmp(current_string, "true") == 0 ) {
+        current_token = KEYWORD_TRUE;
+        return;
+    }
+    if ( strcmp(current_string, "false") == 0 ) {
+        current_token = KEYWORD_FALSE;
+        return;
+    }
+}
+
+void
 get_next_token() {
     int digit;
 
@@ -72,9 +89,9 @@ start_scan:
     case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8':
     case '9': goto recognize_decimal;
-    default:
-        invalid_character( c );
     }
+
+    goto recognize_identifier;
 
 eat_whitespace:
     c = getchar();
@@ -191,10 +208,31 @@ recognize_metachar:
         current_string[stringpos++] = '\t';
         c = getchar();
         goto recognize_string;
+    default:
+        invalid_character( c );
     }
 
+add_char_to_identifier:
+    current_string[stringpos++] = c;
+    c = getchar();
+
 recognize_identifier:
-    current_token = ERROR;
+    switch (c) {
+    case '_':
+    case '$': goto add_char_to_identifier;
+    }
+
+    if ( c < 'A' ) goto identifier_recognized;
+    if ( c <= 'Z' ) goto add_char_to_identifier;
+    if ( c < 'a' ) goto identifier_recognized;
+    if ( c <= 'z' ) goto add_char_to_identifier;
+    if ( stringpos == 0 ) invalid_character( c );
+    goto identifier_recognized;
+
+identifier_recognized:
+    current_string[stringpos] = '\0';
+    current_token = IDENTIFIER;
+    check_for_keyword();
     return;
 }
 

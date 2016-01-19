@@ -66,7 +66,8 @@ recognized_JSONObject() {
 int
 JSONObject() {
     printf( "trying Object\n" );
-    return token('{') && JSONObjectMembers() && required( token('}') ) && recognized_JSONObject();
+    // return token('{') && JSONObjectMembers() && required( token('}') ) && recognized_JSONObject();
+    return token('{') && JSONObjectMembers() && required( token('}') );
 }
 
 int
