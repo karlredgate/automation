@@ -9,6 +9,9 @@
 static int c = 0;
 static int stringpos;
 
+char input[4096];
+static int input_pos;
+
 int current_token;
 char current_identifier[1024];
 char current_string[4096];
@@ -26,21 +29,46 @@ report_token( int token ) {
     case '[':     return "<[>";
     case ']':     return "<]>";
     case EOI:     return "<EOI>";
+    case IDENTIFIER:
+        sprintf( s, "IDENTIFIER<%s>", current_string );
+        return s;
     case INTEGER:
-        // sprintf( s, "INTEGER<%ld>", current_integer );
+        sprintf( s, "INTEGER<%ld>", current_integer );
         return s;
     case STRING:
-        // sprintf( s, "STRING<%s>", current_string );
+        sprintf( s, "STRING<%s>", current_string );
         return s;
+    case KEYWORD_TRUE: return "true";
+    case KEYWORD_FALSE: return "false";
+    case KEYWORD_NULL: return "null";
     default:
-        // sprintf( s, "<? %d ?>", token );
+        sprintf( s, "<? %d ?>", token );
         return s;
     }
 }
 
 void
-init_scanner() {
+nextchar() {
     c = getchar();
+    input[input_pos++] = c;
+    input[input_pos] = '\0';
+}
+
+void
+init_scanner() {
+    input_pos = 0;
+    nextchar();
+}
+
+void
+scanner_report( char *message ) {
+    int i;
+    int limit = input_pos - 1;
+
+    fprintf( stderr, "%s\n", input );
+    for ( i = 0 ; i < limit ; ++i )  putc( ' ', stderr );
+    fprintf( stderr, "^\n" );
+    fprintf( stderr, "%s\n", message );
 }
 
 void
@@ -74,7 +102,7 @@ start_scan:
     case '\n': goto eat_whitespace;
     case '"':
         stringpos = 0;
-        c = getchar();
+        nextchar();
         goto recognize_string;
     case '{':
     case '}':
@@ -83,7 +111,7 @@ start_scan:
     case ':':
     case ',':
         current_token = c;
-        c = getchar();
+        nextchar();
         return;
     case '0': goto determine_base;
     case '1': case '2': case '3': case '4':
@@ -91,10 +119,11 @@ start_scan:
     case '9': goto recognize_decimal;
     }
 
+    stringpos = 0;
     goto recognize_identifier;
 
 eat_whitespace:
-    c = getchar();
+    nextchar();
     switch (c) {
     case ' ':
     case '\t':
@@ -109,7 +138,7 @@ recognize_decimal:
     case '5': case '6': case '7': case '8': case '9':
         current_integer *= 10;
         current_integer += c - '0';
-        c = getchar();
+        nextchar();
         goto recognize_decimal;
     default:
         current_token = INTEGER;
@@ -135,7 +164,7 @@ recognize_hex:
 add_hex_digit:
     current_integer *= 16;
     current_integer += digit;
-    c = getchar();
+    nextchar();
     goto recognize_hex;
 
 recognize_octal:
@@ -144,7 +173,7 @@ recognize_octal:
     case '4': case '5': case '6': case '7':
         current_integer *= 8;
         current_integer += c - '0';
-        c = getchar();
+        nextchar();
         goto recognize_octal;
     case '8':
     case '9':
@@ -155,10 +184,10 @@ recognize_octal:
     }
 
 determine_base:
-    c = getchar();
+    nextchar();
     switch (c) {
     case 'x':
-        c = getchar();
+        nextchar();
         goto recognize_hex;
     case '0': case '1': case '2': case '3': case '4': case '5': case '6':
     case '7': goto recognize_octal;
@@ -176,15 +205,15 @@ recognize_string:
         unterminated_string();
     case '"':
         current_string[stringpos] = '\0';
-        c = getchar();
+        nextchar();
         current_token = STRING;
         return;
     case '\\':
-        c = getchar();
+        nextchar();
         goto recognize_metachar;
     default:
         current_string[stringpos++] = c;
-        c = getchar();
+        nextchar();
         goto recognize_string;
     }
 
@@ -194,19 +223,19 @@ recognize_metachar:
         unterminated_string();
     case '"':
         current_string[stringpos++] = '"';
-        c = getchar();
+        nextchar();
         goto recognize_string;
     case 'n':
         current_string[stringpos++] = '\n';
-        c = getchar();
+        nextchar();
         goto recognize_string;
     case 'r':
         current_string[stringpos++] = '\r';
-        c = getchar();
+        nextchar();
         goto recognize_string;
     case 't':
         current_string[stringpos++] = '\t';
-        c = getchar();
+        nextchar();
         goto recognize_string;
     default:
         invalid_character( c );
@@ -214,7 +243,7 @@ recognize_metachar:
 
 add_char_to_identifier:
     current_string[stringpos++] = c;
-    c = getchar();
+    nextchar();
 
 recognize_identifier:
     switch (c) {
@@ -243,8 +272,10 @@ look_ahead( int _token ) {
 
 int
 required( int found ) {
-    if ( found == 0 ) parse_error("required");
-    return 1;
+    if ( found == 1 ) return 1;
+    printf( "CURRENT TOKEN: %s\n", report_token(current_token) );
+    parse_error("required");
+    return 0;
 }
 
 int

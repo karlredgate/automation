@@ -16,6 +16,7 @@ extern long current_integer;
 char * report_token( int token );
 void init_scanner();
 void get_next_token();
+void scanner_report( char * );
 int look_ahead( int _token );
 int required( int found );
 int token( int _token );
