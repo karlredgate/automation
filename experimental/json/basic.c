@@ -76,9 +76,19 @@ JSONArray() {
 }
 
 int
+JSONBoolean() {
+    return token(KEYWORD_TRUE) || token(KEYWORD_FALSE);
+}
+
+int
 JSONValue() {
     printf( "trying Value\n" );
-    return JSONObject() || JSONArray() || JSONNumber() || JSONString();
+    return JSONObject() ||
+           JSONArray() ||
+           JSONNumber() ||
+           JSONBoolean() ||
+           JSONString() ||
+           token(KEYWORD_NULL);
 }
 
 int
