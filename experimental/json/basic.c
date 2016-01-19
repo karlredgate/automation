@@ -18,6 +18,17 @@ JSONString() {
 }
 
 int
+JSONList() {
+    printf( "trying list\n" );
+    if ( JSONValue() == 0 ) return 0;
+    while ( look_ahead(',') ) {
+        token(',');
+        if ( JSONValue() == 0 ) parse_error("trailing ,");
+    }
+    return 1;
+}
+
+int
 JSONMember() {
     printf( "trying member\n" );
     return JSONString() && required( token(':') ) && required( JSONValue() );
@@ -41,6 +52,12 @@ JSONObjectMembers() {
 }
 
 int
+JSONArrayMembers() {
+    printf( "trying members\n" );
+    return JSONList() || 1;
+}
+
+int
 recognized_JSONObject() {
     printf( "JSONObject\n" );
     return 1;
@@ -53,9 +70,14 @@ JSONObject() {
 }
 
 int
+JSONArray() {
+    return token('[') && JSONArrayMembers() && required( token(']') );
+}
+
+int
 JSONValue() {
     printf( "trying Value\n" );
-    return JSONObject() || JSONNumber() || JSONString();
+    return JSONObject() || JSONArray() || JSONNumber() || JSONString();
 }
 
 int
