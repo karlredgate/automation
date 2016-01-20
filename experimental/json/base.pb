@@ -1,5 +1,7 @@
 %resource  Integer: non-zero digit* ;
 %resource  StringLiteral: "\"" ascii+ "\"" ;
+%resource  LongStringLiteral: "\"" ascii+ ascii+ ascii+ ascii+ ascii+ "\"" ;
+%resource  EscapedStringLiteral: "\"" ascii+ ascii+ string-escape* ascii+ ascii+ string-escape* ascii+ "\"" ;
 %resource  BoundedInteger:
            non-zero  |
            non-zero digit |
@@ -44,9 +46,12 @@
 %resource  L4Mask:    DottedMask | uint5_bits ;
 %resource  L4AddressSpec: L4Address "/" L4Mask | L4Address ;
 
-%resource  ascii:    uppercase | lowercase | digit ;
+%resource  ascii:    uppercase | lowercase | digit | punctuation ;
 %resource  alpha:    uppercase | lowercase ;
 %resource  alphanum: uppercase | lowercase | digit ;
+
+%resource  string-escape:  "\s" ["n"|"t"|"r"|"\""] ;
+
 %resource  Identifier: alpha alphanum+ ;
 
 %resource  uint5_t:
@@ -88,6 +93,12 @@
     "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
     "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
     "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+
+%resource  punctuation:
+    "!" | "#" | "$" | "%" | "&" | "`" | "(" | ")" | "*" |
+    "+" | "," | "-" | "'" | "/" | ":" | ";" | "<" | "=" |
+    ">" | "?" | "_" | "[" | "]" | "{" | "}" | "@" | "~" |
+    "|" ;
 
 %resource  whitespace: hws | vws ;
 

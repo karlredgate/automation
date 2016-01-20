@@ -2,11 +2,9 @@
 #include "base.pb"
 
 JSONText :
-            JSONObject |
-            JSONObject |
-            JSONObject |
-            JSONObject |
-            JSONObject |
+            JSONObject | JSONObject | JSONObject |
+            JSONObject | JSONObject | JSONObject |
+            JSONObject | JSONObject | JSONObject |
             JSONValue ;
 
 JSONValue :
@@ -18,7 +16,13 @@ JSONValue :
             JSONNumber ;
 
 JSONObject : "{" JSONObjectMembers "}" ;
-JSONObjectMembers : JSONMemberList | "" ;
+
+JSONObjectMembers :
+             JSONMemberList | JSONMemberList | JSONMemberList |
+             JSONMemberList | JSONMemberList | JSONMemberList |
+             JSONMemberList | JSONMemberList | JSONMemberList |
+             "" ;
+
 JSONMemberList : JSONMember | JSONMemberList "," JSONMember ;
 JSONMember : JSONString ":" JSONValue ;
 
@@ -26,7 +30,7 @@ JSONArray : "[" JSONArrayMembers "]" ;
 JSONArrayMembers : JSONElementList | "" ;
 JSONElementList : JSONValue | JSONElementList "," JSONValue ;
 
-JSONString : StringLiteral ;
+JSONString : StringLiteral | LongStringLiteral | EscapedStringLiteral ;
 JSONNumber : Integer ;
 JSONNullLiteral : "null" ;
 JSONBooleanLiteral : "true" | "false" ;
