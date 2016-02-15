@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function disklist() {
+    diskutil list -plist | xsltproc xxx -
+}
+
+function diskinfo() {
+    diskutil info -plist /dev/disk2 | xsltproc xxx -
+    # diskutil info -plist "/Volumes/Macintosh HD"
+}
+
+# vim:autoindent expandtab sw=4

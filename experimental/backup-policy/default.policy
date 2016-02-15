@@ -1,0 +1,95 @@
+; potential client grouping policy
+; client version (windows 10) ...
+
+(deftemplate Account
+    (slot id)
+)
+
+(deftemplate Client
+    (slot os-version (type STRING))
+    (slot memory-size (type INTEGER))
+)
+
+(deftemplate Volume
+    (slot network-drive)
+)
+
+(deftemplate File
+    (slot path (type STRING))
+    (slot basename (type STRING))
+    (slot extension (type SYMBOL) (default unknown))
+    (slot modified-timestamp (type INTEGER))
+    (slot mimetype (type SYMBOL) (default unknown))
+    (slot filetype (type SYMBOL)
+        (allowed-symbols picture video document spreadsheet unknown)
+        (default unknown)
+    )
+    (slot action (type SYMBOL)
+        (allowed-symbols ignore archive)
+        (default ignore)
+    )
+)
+
+(deffunction picture-extension (?extension)
+    ( or
+      (= 0 (str-compare ?extension "jpg"))
+      (= 0 (str-compare ?extension "jpeg"))
+      (= 0 (str-compare ?extension "png"))
+      (= 0 (str-compare ?extension "gif"))
+      (= 0 (str-compare ?extension "tiff"))
+      (= 0 (str-compare ?extension "bmp"))
+    )
+)
+
+(defrule identify-pictures
+    ?file <- ( File (filetype unknown)
+        (extension
+            jpeg | jpg | jp2 | bmp | png | gif | tiff
+        )
+    )
+  =>
+    ( modify ?file ( filetype picture ) )
+)
+
+(defrule identify-documents
+    ?file <- ( File (filetype unknown)
+        (extension
+            doc | docx | txt | text | md | pdf
+        )
+    )
+  =>
+    ( modify ?file ( filetype document ) )
+)
+
+;(defrule identify-pictures
+;    ?file <- ( File ( extension ?extension ) (filetype unknown) )
+;    (test (picture-extension ?extension) )
+;  =>
+;    ( modify ?file ( filetype picture ) )
+;)
+
+(defrule archive-pictures
+    ?file <- ( File ( filetype picture ) (action ~archive) )
+  =>
+    ( modify ?file ( action archive ) )
+)
+
+(defrule archive-documents
+    ?file <- ( File ( filetype document ) (action ~archive) )
+  =>
+    ( modify ?file ( action archive ) )
+)
+
+;(defrule report-ignore
+;    ?file <- (File (action ignore) (path ?path))
+;  =>
+;    ( printout t "Ignore : " ?path crlf )
+;)
+
+(defrule report-archive
+    ?file <- (File (action archive) (path ?path))
+  =>
+    ( printout t "Archive : " ?path crlf )
+)
+
+; vim: set autoindent expandtab sw=4 :

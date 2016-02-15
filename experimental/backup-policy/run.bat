@@ -1,0 +1,5 @@
+(load* default.policy)
+(reset)
+(batch* filelist.clp)
+(run)
+(exit)
