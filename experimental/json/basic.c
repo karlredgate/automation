@@ -60,7 +60,7 @@ recognized_JSONObject() {
 
 int
 JSONObject() {
-    // return token('{') && JSONObjectMembers() && required( token('}') ) && recognized_JSONObject();
+    return token('{') && JSONObjectMembers() && required( token('}') ) && recognized_JSONObject();
     return token('{') && JSONObjectMembers() && required( token('}') );
 }
 
