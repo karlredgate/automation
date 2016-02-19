@@ -15,19 +15,25 @@ strindex( char *s, char subject ) {
 
 static void
 print_segment( char *segment ) {
-    for (;;) {
-        if ( *segment == '\0' ) return;
-        char *space = strindex( segment, ' ' );
-
-        if ( space == NULL ) {
-            printf( "%s ", segment );
-            return;
+    for (; *segment != '\0' ; segment++ ) {
+        switch (*segment) {
+        case ' ': fputs("%20",stdout); continue;
+        case '!': fputs("%21",stdout); continue;
+        case '"': fputs("%22",stdout); continue;
+        case '#': fputs("%23",stdout); continue;
+        case '%': fputs("%25",stdout); continue;
+        case '&': fputs("%26",stdout); continue;
+        case '(': fputs("%28",stdout); continue;
+        case ')': fputs("%29",stdout); continue;
+        case ',': fputs("%2c",stdout); continue;
+        case ';': fputs("%3b",stdout); continue;
+        case '<': fputs("%3c",stdout); continue;
+        case '>': fputs("%3e",stdout); continue;
+        default: putchar( *segment );
         }
-
-        *space = '\0';
-        printf( "%s%%20", segment );
-        segment = space + 1;
     }
+
+    putchar(' ');
 }
 
 static void
