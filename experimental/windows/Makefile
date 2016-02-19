@@ -1,3 +1,4 @@
+CC=/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-gcc
 
 default:
 	@echo " ====== use mingw32-make ====="
@@ -5,6 +6,9 @@ default:
 	mingw32-make all
 
 all: hello.exe file.exe window.exe ps.exe sh.exe svc.exe
+
+fileurl.exe: fileurl.o
+	$(CC) -o $@ $^ -lshlwapi
 
 hello.exe: hello.o
 	$(CC) -o $@ $^
