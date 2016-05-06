@@ -10,6 +10,7 @@
                 version='1.0'>
 
   <xsl:output method="xml" indent="yes" omit-xml-declaration="yes" />
+  <xsl:param name='base' />
   <xsl:param name='catalog' />
 
   <dc:title></dc:title>
@@ -40,9 +41,19 @@
         <xsl:text>&#10;</xsl:text>
   </xsl:template>
 
+  <dc:description>
+    This matches the 'product' div and produces a set of triples about the
+    product in the resulting RDF.
+
+    The base string param should be deducible from the base document URI.
+    Not sure how to get that yet.  It looks like a XSLT 2.0 feature, but I
+    think I have been able to do this before - need to check.
+  </dc:description>
   <xsl:template match='div[@class="product "]'>
       <xsl:element name='so:Product'>
          <xsl:attribute name='rdf:about'>
+             <xsl:value-of select='$base' />
+             <xsl:value-of select='ul[@class="productDescription"]/li[@class="productName"]/a/@href' />
          </xsl:attribute>
 
          <xsl:element name='so:sku'>

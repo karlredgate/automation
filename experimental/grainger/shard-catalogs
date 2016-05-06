@@ -25,7 +25,14 @@ function crawl() {
             echo "<rdf:Description rdf:about='$base$products'>"
             echo "<so:url rdf:resource='$base' />"
             echo "</rdf:Description>"
-            xsltproc --html --stringparam catalog "${base}${catalog}" products.xslt ${base}${products} 2> /dev/null
+            for page in {1..3}
+            do
+                url="${base}${products}?perPage=48&requestedPage=$page"
+                xsltproc --html \
+                         --stringparam base "${base}" \
+                         --stringparam catalog "${base}${catalog}" \
+                         products.xslt "$url" 2> /dev/null
+            done
         done
     done
 }
