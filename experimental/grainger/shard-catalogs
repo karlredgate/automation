@@ -1,0 +1,38 @@
+#!/bin/bash
+
+
+function catalogs() {
+    local base="$1"
+    xsltproc --html  anchors.xslt $base/category/ecatalog/N-/Ntt-products 2> /dev/null
+}
+
+function subcatalog() {
+    local uri="$1"
+    xsltproc --html anchors.xslt $uri 2> /dev/null
+}
+
+function crawl() {
+    local base="$1"
+
+    catalogs "$base" | while read catalog
+    do
+        echo "<rdf:Description rdf:about='$base$catalog'>"
+        echo "<so:url rdf:resource='$base' />"
+        echo "</rdf:Description>"
+
+        subcatalog ${base}${catalog} | while read products
+        do
+            echo "<rdf:Description rdf:about='$base$products'>"
+            echo "<so:url rdf:resource='$base' />"
+            echo "</rdf:Description>"
+            xsltproc --html --stringparam catalog "${base}${catalog}" products.xslt ${base}${products} 2> /dev/null
+        done
+    done
+}
+
+echo '<?xml version="1.0"?>'
+echo '<rdf:RDF>'
+crawl http://www.grainger.com
+echo '</rdf:RDF>'
+
+# vim:autoindent expandtab sw=4
