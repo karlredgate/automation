@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# the configure step failed - messages claim that I am missing some packages
+# The build instructions said that there are submodules.
+# Looking at the oldest rev - I see libglnx - which in the readme claims:
+#
+# libglnx is the successor to libgsystem: https://git.gnome.org/browse/libgsystem
+
+git clone git@github.com:ostreedev/ostree.git
+( cd ostree ; NOCONFIGURE=1 ./autogen.sh )
+( cd ostree ; ./configure )
+
+#
+# Errors from configure:
+#
+# configure: error: Package requirements (gio-unix-2.0 >= 2.40.0 libgsystem >= 2015.1) were not met:
+#
+# No package 'libgsystem' found
+#
+# Consider adjusting the PKG_CONFIG_PATH environment variable if you
+# installed software in a non-standard prefix.
+#
+# Alternatively, you may set the environment variables OT_DEP_GIO_UNIX_CFLAGS
+# and OT_DEP_GIO_UNIX_LIBS to avoid the need to call pkg-config.
+# See the pkg-config man page for more details.
+#
+
+( cd ostree ; make )
+( cd ostree ; make install DESTDIR=/usr/local )
+
+# vim:autoindent expandtab sw=4
