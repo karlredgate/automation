@@ -6,6 +6,27 @@
 #
 # libglnx is the successor to libgsystem: https://git.gnome.org/browse/libgsystem
 
+# Make sure to install everthing needed by configure
+dnf install libgsystem-devel
+dnf install lzma-devel
+dnf install gpgme-devel
+dnf install libsoup-devel
+dnf install fuse-devel
+dnf install libmount-devel
+dnf install libarchive-devel
+dnf install gtk-doc
+
+# There is no pkg-config for lzma - so configure still fails
+export OT_DEP_LZMA_CFLAGS=" " 
+export OT_DEP_LZMA_LIBS="-llzma"
+
+# Force a few settings to avoid missing pkg-config info
+export OT_DEP_E2P_CFLAGS=" " 
+export OT_DEP_E2P_LIBS="-le2p"
+
+export OT_DEP_GPGME_CFLAGS=" "
+export OT_DEP_GPGME_LIBS="-lgpgme"
+
 git clone git@github.com:ostreedev/ostree.git
 ( cd ostree ; NOCONFIGURE=1 ./autogen.sh )
 ( cd ostree ; ./configure )
@@ -25,7 +46,13 @@ git clone git@github.com:ostreedev/ostree.git
 # See the pkg-config man page for more details.
 #
 
+sed --in-place '/include <sys\/capability.h/s/sys/linux/' libglnx/glnx-libcontainer.h
+
 ( cd ostree ; make )
+
+# Build fails  - missing sys/capability.h
+# Patch the file in the repo
+
 ( cd ostree ; make install DESTDIR=/usr/local )
 
 # vim:autoindent expandtab sw=4
