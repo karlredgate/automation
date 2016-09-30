@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function die() {
+    echo $* 1>&2
+    exit 1
+}
+
+for i in {1..100}
+do
+    dada json.pb > raw.json
+    jq . < raw.json > cooked.json || die "jq raw"
+    cat cooked.json
+    time ./basic < raw.json || die "basic raw"
+    time ./basic < cooked.json || die "cooked raw"
+done
