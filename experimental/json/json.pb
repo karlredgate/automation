@@ -18,10 +18,17 @@ JSONValue :
 JSONObject : "{" JSONObjectMembers "}" ;
 
 JSONObjectMembers :
+             BigJSONMemberList | BigJSONMemberList |
+             BigJSONMemberList | BigJSONMemberList |
              JSONMemberList | JSONMemberList | JSONMemberList |
              JSONMemberList | JSONMemberList | JSONMemberList |
              JSONMemberList | JSONMemberList | JSONMemberList |
              "" ;
+
+BigJSONMemberList : JSONMemberList "," JSONMemberList ","
+                    JSONMemberList "," JSONMemberList ","
+                    JSONMemberList "," JSONMemberList ","
+                    JSONMember ;
 
 JSONMemberList : JSONMember | JSONMemberList "," JSONMember ;
 JSONMember : JSONString ":" JSONValue ;
