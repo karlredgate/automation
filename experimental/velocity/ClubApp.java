@@ -10,7 +10,6 @@ public class ClubApp {
 
     public static void main( String[] args ) {
 
-        // Initialize template engine
         try {
             Velocity.init();
         } catch( Exception x ) {
@@ -18,7 +17,6 @@ public class ClubApp {
             System.exit( 1 );
         }
 
-        // Obtain a template
         Template clubTemplate = null;
         try {
             clubTemplate = Velocity.getTemplate( "ClubApp.vm" );
@@ -33,10 +31,8 @@ public class ClubApp {
             System.exit( 1 );
         }
 
-        // Create context
         VelocityContext context = new VelocityContext();
 
-        // Populate context
         context.put( "firstName", "John" );
         context.put( "lastName", "Doe" );
         context.put( "streetAddress", "123 Jane Ave." );
