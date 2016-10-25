@@ -1,5 +1,9 @@
 
 var config = {
+    jshint: {
+        files: ['Gruntfile.js', 'src/**/*.js']
+    },
+    watch: {},
     connect: {
         server: {
             options: {
@@ -19,9 +23,12 @@ function nothing() {
     console.log( "what me worry" );
 }
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
    grunt.initConfig( config );
 
+   // With this line you get this error:
+   //   Warning: Task "jshint" not found. Use --force to continue.
+   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
    grunt.loadNpmTasks( 'grunt-contrib-watch' );
    grunt.loadNpmTasks( 'grunt-contrib-connect' );
 
