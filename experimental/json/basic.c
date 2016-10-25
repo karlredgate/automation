@@ -54,7 +54,7 @@ JSONArrayMembers() {
 
 int
 recognized_JSONObject() {
-    printf( "JSONObject\n" );
+    /* printf( "JSONObject\n" ); */
     return 1;
 }
 
