@@ -1,0 +1,13 @@
+               CLUB VELOCITY APPLICATION
+First Name: $firstName
+Last Name: $lastName
+Address: $streetAddress
+City: $city              State: $state Zip: $zip
+Phone Number: $phoneNumber
+Email Address: $emailAddress
+Occupation: $occupation
+Other Interests: $otherInterests
+Is this a new membership request or a renewal? $appType
+How long have you been using Velocity? $useTime
+Do you use Velocity for work or play? $useType
+Do you want to receive our newsletter? $wantNewsletter
