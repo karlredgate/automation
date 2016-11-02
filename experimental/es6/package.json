@@ -1,0 +1,14 @@
+{
+    "name": "es6-test",
+    "version": "1.0.0",
+    "devDependencies": {
+        "babel-cli": "*",
+        "babel-preset-latest": "*"
+    },
+    "babel": {
+        "presets": "latest"
+    },
+    "scripts": {
+        "clean": "rm -rf node_modules"
+    }
+,"vim-config":" vim: set autoindent expandtab sw=4 syntax=json : "}
