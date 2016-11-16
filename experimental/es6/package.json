@@ -9,6 +9,7 @@
         "presets": "latest"
     },
     "scripts": {
-        "clean": "rm -rf node_modules"
+        "clean": "rm -rf node_modules",
+        "translate": "./node_modules/.bin/babel $*"
     }
 ,"vim-config":" vim: set autoindent expandtab sw=4 syntax=json : "}
