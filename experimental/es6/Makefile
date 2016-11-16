@@ -9,3 +9,6 @@ translate: devenv quux.es5 import-module.es5 spread.es5
 
 devenv:
 	npm install
+
+clean:
+	rm -f *.es5
