@@ -1,0 +1,2 @@
+javac -classpath /Users/kredgate/Downloads/a/apache-tomcat-9.0.0.M10/lib/servlet-api.jar MyServlet.java
+javac -classpath /Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/lib/missioncontrol/plugins/javax.servlet_3.0.0.v201112011016.jar MyServlet.java
