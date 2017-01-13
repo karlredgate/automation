@@ -1,0 +1,17 @@
+{
+  "name": "my-project-name",
+  "version": "0.1.0",
+  "description": "No description yet",
+  "author": "Karl Redgate <karl.redgate@gmail.com>",
+  "license": "MIT",
+  "repository": "github.com:karlredgate",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "grunt": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-nodeunit": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*"
+  }
+}
