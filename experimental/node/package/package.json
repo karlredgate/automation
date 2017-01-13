@@ -1,0 +1,8 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "description": "package that tests package.json features",
+    "scripts": {
+        "try:hello": "echo 'try to say hello'"
+    }
+}
