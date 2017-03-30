@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 function ArrayXML( array ) {
     process.stdout.write( '<array>' );
@@ -17,9 +17,9 @@ function ArrayXML( array ) {
 function ObjectXML( object ) {
     process.stdout.write( '<object>' );
     for (var key in object) {
-        process.stdout.write('<' + key + '>');
+        process.stdout.write('<slot key="' + key + '">');
         json2xml( object[key] );
-        process.stdout.write('</' + key + '>');
+        process.stdout.write('</slot>');
     }
     process.stdout.write( '</object>' );
 }
