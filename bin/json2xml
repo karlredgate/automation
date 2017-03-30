@@ -1,0 +1,77 @@
+#!/usr/bin/node
+
+function ArrayXML( array ) {
+    process.stdout.write( '<array>' );
+
+    function convert( element ) {
+        process.stdout.write( '<item>' );
+        json2xml( element );
+        process.stdout.write( '</item>' );
+    }
+
+    array.map( convert );
+
+    process.stdout.write( '</array>' );
+}
+
+function ObjectXML( object ) {
+    process.stdout.write( '<object>' );
+    for (var key in object) {
+        process.stdout.write('<' + key + '>');
+        json2xml( object[key] );
+        process.stdout.write('</' + key + '>');
+    }
+    process.stdout.write( '</object>' );
+}
+
+function StringXML( string ) {
+    process.stdout.write( '<![CDATA[' );
+    process.stdout.write( string );
+    process.stdout.write( ']]>' );
+}
+
+function NumberXML( number ) {
+    process.stdout.write( number.toString() );
+}
+
+function BooleanXML( flag ) {
+    if ( flag === true ) {
+        process.stdout.write( "true" );
+        return;
+    }
+    process.stdout.write( "false" );
+}
+
+function json2xml( object ) {
+   if ( object === null ) return '';
+   var constructor = object.constructor;
+   var errmsg = "unknown constructor type: " + constructor.toString();
+
+   switch (constructor) {
+   case Array:  return ArrayXML( object );
+   case Object: return ObjectXML( object );
+   case Number: return NumberXML( object );
+   case String: return StringXML( object );
+   case Boolean: return BooleanXML( object );
+   // objectdefault: throw new errmsg;
+   default: process.stderr.write( errmsg ); process.exit();
+   }
+}
+
+var result = "var data = ";
+function append( s ) {
+    result += s;
+}
+
+function parse() {
+    eval( result );
+    json2xml( data );
+}
+
+process.stdin.resume();
+process.stdin.setEncoding( 'utf8' );
+
+process.stdin.on( 'data', append.bind(result) );
+process.stdin.on( 'end', parse );
+
+/* vim: set autoindent expandtab sw=4 syntax=javascript: */
