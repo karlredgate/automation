@@ -1,0 +1,24 @@
+nasm -l forth.lis forth.asm 
+tar xzvf ../nasm-2.13.01.tar.gz 
+cd nasm-2.13.01/
+cp nasm ~/bin/
+nasm --version
+nasm -v
+/usr/bin/nasm -v
+~/bin/nasm -v
+nasm -v
+nasm -l forth.lis forth.asm 
+nasm hello.asm 
+nasm -f macho64 hello.asm 
+nasm -f macho hello32.asm 
+nasm -l forth.lis forth.asm 
+nasm -l forth.lis -f bin  forth.asm 
+open peter.michaux.ca\ -\ Assembly\ \"hello\,\ world\"\ for\ OS\ X.pdf 
+nasm -f macho64 hello.asm 
+ld -macos_version_min 10.7.0 -lSystem -o hello hello.o 
+ld -macosx_version_min 10.7.0 -lSystem -o hello hello.o 
+./hello 
+vi hello32.asm
+nasm -f macho hello32.asm 
+ld -macosx_version_min 10.7.0 -o hello32 hello32.o 
+./hello32 
