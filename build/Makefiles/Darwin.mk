@@ -1,4 +1,11 @@
 
+DISTRO := OSX
+RELEASE := $(shell sw_vers -productVersion)
+
+ifeq ($(RELEASE),10.11.6)
+CODENAME := ElCapitan
+endif
+
 # Mac OSX package
 
 distro_dependencies: release_dependencies
@@ -22,3 +29,5 @@ distro_clean: release_clean
 
 VERSION := $(shell sw_vers -productVersion)
 include Makefiles/Darwin$(VERSION).mk
+
+include $(wildcard Makefiles/$(DISTRO).mk Makefiles/Darwin$(RELEASE).mk )

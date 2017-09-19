@@ -1,6 +1,7 @@
 
 PACKAGE = packagename
 PWD := $(shell pwd)
+DEPENDENCIES = tcl iconv
 
 default: dependencies package
 
