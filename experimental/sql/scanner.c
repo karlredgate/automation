@@ -17,6 +17,37 @@ char current_identifier[1024];
 char current_string[4096];
 long current_integer;
 
+static int
+is_upper_alpha( char c ) {
+    if ( c < 'A' ) return 0;
+    if ( c < 'Z' ) return 0;
+    return 1;
+}
+
+static int
+is_lower_alpha( char c ) {
+    if ( c < 'a' ) return 0;
+    if ( c < 'z' ) return 0;
+    return 1;
+}
+
+static int
+is_alpha( char c ) {
+    return is_upper_alpha(c) || is_lower_alpha(c);
+}
+
+static int
+is_numeric( char c ) {
+    if ( c < '0' ) return 0;
+    if ( c < '9' ) return 0;
+    return 1;
+}
+
+static int
+is_alphanum( char c ) {
+    return is_alpha(c) || is_numeric(c);
+}
+
 char *
 report_token( int token ) {
     static char s[4096];
@@ -52,6 +83,12 @@ nextchar() {
     c = getchar();
     input[input_pos++] = c;
     input[input_pos] = '\0';
+}
+
+static void
+append_identifier() {
+    current_string[stringpos++] = c;
+    nextchar();
 }
 
 void
@@ -104,11 +141,10 @@ start_scan:
         stringpos = 0;
         nextchar();
         goto recognize_string;
-    case '{':
-    case '}':
-    case '[':
-    case ']':
-    case ':':
+
+    case '(':
+    case ')':
+    case ';':
     case ',':
         current_token = c;
         nextchar();
@@ -120,7 +156,95 @@ start_scan:
     }
 
     stringpos = 0;
+
+    switch (c) {
+    case 's':
+    case 'S': goto recognize_select;
+    case 'f':
+    case 'F': goto recognize_from;
+    case 'w':
+    case 'W': goto recognize_where;
+    }
+
     goto recognize_identifier;
+
+recognize_select:
+    append_identifier();
+    switch (c) {
+    case 'e':
+    case 'E': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'l':
+    case 'L': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'e':
+    case 'E': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'c':
+    case 'C': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 't':
+    case 'T': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    if ( is_alphanum(c) ) goto recognize_identifier;
+    current_token = KEYWORD_SELECT;
+    return;
+
+recognize_where:
+    append_identifier();
+    switch (c) {
+    case 'h':
+    case 'H': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'e':
+    case 'E': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'r':
+    case 'R': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'e':
+    case 'E': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    if ( is_alphanum(c) ) goto recognize_identifier;
+    current_token = KEYWORD_WHERE;
+    return;
+
+recognize_from:
+    append_identifier();
+    switch (c) {
+    case 'r':
+    case 'R': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'o':
+    case 'O': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    switch (c) {
+    case 'm':
+    case 'M': append_identifier(); break;
+    default: goto recognize_identifier;
+    }
+    if ( is_alphanum(c) ) goto recognize_identifier;
+    current_token = KEYWORD_FROM;
+    return;
 
 eat_whitespace:
     nextchar();
@@ -251,9 +375,9 @@ recognize_identifier:
     case '$': goto add_char_to_identifier;
     }
 
-    if ( c < 'A' ) goto identifier_recognized;
+    if ( c  < 'A' ) goto identifier_recognized;
     if ( c <= 'Z' ) goto add_char_to_identifier;
-    if ( c < 'a' ) goto identifier_recognized;
+    if ( c  < 'a' ) goto identifier_recognized;
     if ( c <= 'z' ) goto add_char_to_identifier;
     if ( stringpos == 0 ) invalid_character( c );
     goto identifier_recognized;
@@ -280,10 +404,10 @@ required( int found ) {
 
 int
 token( int _token ) {
-    // printf( "CHECK TOKEN current %s == %s\n", report_token(current_token), report_token(_token) );
+    printf( "CHECK TOKEN current %s == %s\n", report_token(current_token), report_token(_token) );
     if ( current_token != _token )  return 0;
     get_next_token();
-    // printf( "NEXT TOKEN: %s\n", report_token(current_token) );
+    printf( "NEXT TOKEN: %s\n", report_token(current_token) );
     return 1;
 }
 

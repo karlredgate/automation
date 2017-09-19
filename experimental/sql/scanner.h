@@ -1,12 +1,15 @@
 
-#define ERROR          256
-#define EOI            257
-#define INTEGER        258
-#define STRING         259
-#define IDENTIFIER     260
-#define KEYWORD_NULL   261
-#define KEYWORD_TRUE   262
-#define KEYWORD_FALSE  263
+#define ERROR           256
+#define EOI             257
+#define INTEGER         258
+#define STRING          259
+#define IDENTIFIER      260
+#define KEYWORD_NULL    261
+#define KEYWORD_TRUE    262
+#define KEYWORD_FALSE   263
+#define KEYWORD_SELECT  264
+#define KEYWORD_WHERE   265
+#define KEYWORD_FROM    266
 
 extern int current_token;
 extern char current_identifier[1024];

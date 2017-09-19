@@ -69,19 +69,43 @@ JSONArray() {
     return token('[') && JSONArrayMembers() && required( token(']') );
 }
 
-int
-JSONBoolean() {
-    return token(KEYWORD_TRUE) || token(KEYWORD_FALSE);
+int JSONValue() {
+    return 1;
+}
+
+static int
+recognized_Selection() {
+    fprintf( stderr, "Recognized Selection\n" );
+    return 1;
+}
+
+static int
+recognized_Projection() {
+    fprintf( stderr, "Recognized Projection\n" );
+    return 1;
 }
 
 int
-JSONValue() {
-    return JSONObject() ||
-           JSONArray() ||
-           JSONNumber() ||
-           JSONBoolean() ||
-           JSONString() ||
-           token(KEYWORD_NULL);
+Projection() {
+    return token(KEYWORD_SELECT) && token(IDENTIFIER) &&
+           token(KEYWORD_FROM)   && token(IDENTIFIER) &&
+           recognized_Projection();
+}
+
+int
+Selection() {
+    return token(KEYWORD_SELECT) && token(IDENTIFIER) &&
+           token(KEYWORD_FROM)   && token(IDENTIFIER) &&
+           token(KEYWORD_WHERE)   && token(IDENTIFIER) &&
+           recognized_Selection();
+}
+
+int
+Statement() {
+    return // JSONObject() ||
+           Selection() ||
+           Projection() ||
+           parse_error("invalid statement");
 }
 
 int
@@ -93,7 +117,7 @@ void
 parse() {
     init_scanner();
     get_next_token();
-    JSONText() && required( token(EOI) );
+    Statement() && required( token(';') ) && required( token(EOI) );
 }
 
 int
