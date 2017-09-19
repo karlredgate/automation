@@ -1,0 +1,8 @@
+
+ls -a /Library/Receipts/db/
+less /Library/Receipts/InstallHistory.plist
+
+ls /System/Library/Receipts/
+lsbom  /System/Library/Receipts/com.apple.pkg.BaseSystemResources.bom
+lsbom  /System/Library/Receipts/com.apple.pkg.update.os.SecUpd2017-003ElCapitan.15G1611.bom  | less
+
