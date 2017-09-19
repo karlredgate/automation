@@ -27,9 +27,11 @@ connection(Listener, Parent) ->
 loop(Socket) ->
     io:format( "receive loop~n" ),
     receive
-    {tcp, Socket, Bin} ->
+    {tcp, Socket, Data} ->
         io:format( "got data~n" ),
-	io:format( "data ~p~n", [Bin] ),
+	io:format( "data ~p~n", [Data] ),
+	<<"GET ",URI/binary>> = Data,
+	io:format( "URI is ~p~n", [URI] ),
        loop(Socket);
     {tcp_closed, Socket} -> io:format( "closed" );
     {_} -> io:format( "unknown msg~n" )
