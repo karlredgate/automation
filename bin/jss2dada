@@ -10,6 +10,8 @@ function die( message ) {
 var parsers = {};
 
 function dispatch( rule, name, schema ) {
+    schema = include(schema);
+
     if (schema.type.constructor === Array) {
         [type, default_value] = schema.type;
     } else {
@@ -23,17 +25,33 @@ function dispatch( rule, name, schema ) {
     parser( rule, name, schema );
 }
 
+/*
+ * extract part of the schema
+ */
+function extract( schema, segments ) {
+    if ( segments.length == 0 ) return schema;
+    let segment = segments.shift();
+    return extract( schema[segment], segments );
+}
+
 function include( schema ) {
     // Should check for undefined
     if ( schema["$ref"] == null ) return schema;
-    let ref = schema["$ref"].replace(/#$/,'');
-    let content = JSON.parse( FS.readFileSync(ref, 'utf8') );
-    return content;
+    let [file, path] = schema["$ref"].split('#');
+    let segments = path.split('/');
+    segments.shift(); // remove empty root
+    let content = JSON.parse( FS.readFileSync(file, 'utf8') );
+    let snippet = extract( content, segments );
+    return snippet;
+}
+
+function qstring( name ) {
+    return '"\\"' + name + '\\"" ';
 }
 
 function keystring( name ) {
     if ( name == null ) return '';
-    return '"\\"' + name + '\\":" ';
+    return qstring(name) + '":" ';
 }
 
 function basic_type( rule, name, type ) {
@@ -52,8 +70,17 @@ parsers["boolean"] = function ( rule, name, schema ) {
     basic_type( rule, name, 'Boolean' );
 };
 
+/*
+ * Need to handle "default" slot also
+ */
 parsers["string"] = function ( rule, name, schema ) {
-    basic_type( rule, name, 'StringLiteral' );
+    if ( schema["enum"] == null ) {
+        return basic_type( rule, name, 'StringLiteral' );
+    }
+    console.log( rule + ': ' + keystring(name) );
+    let strings = schema["enum"].map( e => qstring(e) );
+    console.log( "[ " + strings.join('|') + " ]" );
+    console.log( ' ;' );
 };
 
 parsers["array"] = function ( rule, name, schema ) {
