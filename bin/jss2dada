@@ -2,8 +2,12 @@
 
 const FS = require('fs');
 
+function warning( message ) {
+    console.error( 'WARNING: ' + message );
+}
+
 function die( message ) {
-    console.log( 'ERROR: ' + message );
+    console.error( 'ERROR: ' + message );
     process.exit( -1 );
 }
 
@@ -12,7 +16,11 @@ var parsers = {};
 function dispatch( rule, name, schema ) {
     schema = include(schema);
 
-    if (schema.type.constructor === Array) {
+    if ( schema.type == null ) {
+        die( 'schema "' + name + '" has no TYPE -- ' + JSON.stringify(schema) );
+    }
+
+    if ( schema.type.constructor === Array ) {
         [type, default_value] = schema.type;
     } else {
         [type, default_value] = [schema.type, null];
@@ -38,11 +46,17 @@ function include( schema ) {
     // Should check for undefined
     if ( schema["$ref"] == null ) return schema;
     let [file, path] = schema["$ref"].split('#');
+    // if the file is null - then we are referencing the current file
+    console.error( "LOADING '" + file + "' path='" + path + "'" );
+
     let segments = path.split('/');
     segments.shift(); // remove empty root
+
     let content = JSON.parse( FS.readFileSync(file, 'utf8') );
+
     let snippet = extract( content, segments );
-    return snippet;
+    if ( snippet["$ref"] == null ) return snippet;
+    die( "DOUBLE INCLUDE" );
 }
 
 function qstring( name ) {
@@ -91,7 +105,7 @@ parsers["array"] = function ( rule, name, schema ) {
                  name + '-items  "," ' + name + '-item ;' );
 
     schema.items = include(schema.items);
-    console.log( '/* look up array parser for ' + schema.items.type + ' */' );
+    // console.log( '/* look up array parser for ' + schema.items.type + ' */' );
 
     dispatch( name + '-item', null, schema.items );
     // let parser = parsers[schema.items.type];
@@ -99,20 +113,45 @@ parsers["array"] = function ( rule, name, schema ) {
 };
 
 parsers["object"] = function ( rule, name, schema ) {
-    console.log( '/* parse object schema for ' + name + ' */' );
+    // console.log( '/* parse object schema for ' + name + ' */' );
     let keys = Object.keys(schema.properties);
     console.log( rule + ': ' + keystring(name) + ' "{" ' + keys.join(' "," ') + ' "}" ;' );
     let p = schema.properties;
     keys.map( key => dispatch(key, key, p[key]) );
 };
 
+function check_definitions( dto ) {
+    if ( typeof dto["type"] == 'undefined' ) {
+        if ( dto.definitions ) {
+            console.error( "this is not a schema" );
+            process.exit( 0 );
+        }
+        die( "Invalid schema - no top level type" );
+    }
+}
+
+function resolve( dto, filename ) {
+    if ( dto.constructor  !== Object ) return dto;
+    if ( dto["$ref"] == null ) {
+        let keys = Object.keys(dto);
+        keys.map( key => dto[key] = resolve(dto[key], filename) );
+        return dto;
+    }
+    let [file, path] = dto["$ref"].split('#');
+    file = file || filename;
+    let content = JSON.parse( FS.readFileSync(file, 'utf8') );
+    let segments = path.split('/');
+    segments.shift(); // remove empty root
+    let snippet = extract( content, segments );
+    return resolve( snippet, file );
+}
+
 function parse( err, data ) {
     if ( err ) die( "failed to read file: " + err );
     console.log( '#include "base.pb"' );
-    let dto = JSON.parse( data );
+    let dto = resolve( JSON.parse(data) );
+    check_definitions( dto );
     dispatch( 'root', null, dto );
-    // let parser = parsers[dto.type];
-    // parser( 'root', dto );
 }
 
 FS.readFile( process.argv[2], parse );
