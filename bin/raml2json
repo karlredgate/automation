@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'json'
+
+class RAML
+
+    def initialize( file )
+        @data = YAML.load_file( file )
+    end
+
+    def paths( schema )
+        schema.select { |key,val| key.match('/') }
+    end
+
+    def verbs( schema )
+        schema.select { |key,val| key.match('/').nil? }
+    end
+
+    def report_responses( schema )
+        return if schema.nil?
+        schema.each { |code,desc|
+            media_type = desc['body'].keys[0]
+            media_schema = desc['body'][media_type]['schema']
+            puts "#{code} -- #{media_type} + #{media_schema}"
+        }
+    end
+
+    def report_body( schema )
+        return if schema.nil?
+        schema.each { |code,desc|
+            media_type = desc['body'].keys[0]
+            media_schema = desc['body'][media_type]['schema']
+            puts "#{code} -- #{media_type} + #{media_schema}"
+        }
+    end
+
+    def report
+        puts "Report..."
+        base = @data['baseUri']
+        paths(@data).each { |path,schema|
+            puts "check #{path} ..."
+            verbs(schema).each { |verb,desc|
+                puts "#{verb.upcase}  #{base}#{path}"
+                puts "Body: #{desc['body']}" unless desc['body'].nil?
+                report_responses( desc['responses'] )
+            }
+        }
+    end
+
+    def json; JSON.dump( @data ) end
+
+end
+
+raml = RAML.new( ARGV[0] )
+puts raml.json
+
+# vim:autoindent expandtab sw=4

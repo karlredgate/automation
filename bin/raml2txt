@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+#
+# Validations
+#   4xx problem details
+#   source dto same type as response
+#   check for typos in uri params vs what is seen in uri example
+
+require 'yaml'
+require 'json'
+
+class RAML
+
+    def initialize( file )
+        @data = YAML.load_file( file )
+        @base = @data['baseUri']
+    end
+
+    def paths( schema )
+        schema.select { |key,val| key.match('/') }
+    end
+
+    def verbs( schema )
+        verb_list = ['get','put','post','delete','head','options','trace','connect']
+        # schema.select { |key,val| key.match('/').nil? }
+        schema.select { |key,val| verb_list.include? key.downcase }
+    end
+
+    def report_uri_params( schema )
+        return if schema.nil?
+        schema.each { |param,desc|
+            puts "(#{desc['type']}) \033[35m{#{param}}\033[39m #{desc['description']}"
+        }
+    end
+
+    def color_uri( uri )
+        uri.gsub('{',"\033[35m{").gsub('}',"}\033[39m")
+    end
+
+    def color_media( media_type )
+        "\033[33m#{media_type}\033[39m"
+    end
+
+    def report_body( schema )
+        return if schema.nil?
+        media_type = schema.keys[0]
+        media_schema = color_media( schema[media_type]['schema'] )
+        puts "BODY: #{media_type} + #{media_schema}"
+    end
+
+    def color_response_dto( code, dto )
+        return color_media(dto) if ( (code / 100) != 4 )
+        return color_media(dto) if dto.match(/httpProblemDetail/i)
+        return "\033[41m#{dto}\033[49m"
+    end
+
+    def media_type( code, body )
+        return "EMPTY" if body.nil?
+        media_type   = body.keys[0]
+        media_schema = body[media_type]['schema']
+        "#{media_type} + #{color_response_dto(code,media_schema)}"
+    end
+
+    def colored_code( code )
+        case code / 100
+        when 2 then "\033[32m#{code}\033[39m"
+        when 3 then "\033[32m#{code}\033[39m"
+        when 4 then "\033[31m#{code}\033[39m"
+        when 5 then "\033[31m#{code}\033[39m"
+        end
+    end
+
+    def report_responses( schema )
+        return if schema.nil?
+        schema.each { |code,desc|
+            media = media_type( code, desc['body'] )
+            description  = desc['description'] || ''
+            mesg = "(#{description.strip})" unless description.nil?
+            puts "#{colored_code(code)} -> #{mesg}"
+            puts "       #{media}"
+        }
+    end
+
+    def report_schema( prefix, schema )
+        paths(schema).each { |path,subschema|
+            verbs(subschema).each { |verb,desc|
+                description  = desc['description'] || "\033[41mMissing description\033[49m"
+                display_name = desc['displayName'] || "\033[41mMissing display name\033[49m"
+                puts "\n ----- #{display_name.strip} -------"
+                puts " #{description}"
+                puts " ----- -------------- -------"
+                uri = color_uri( "#{prefix}#{path}" )
+                puts "\033[36m#{verb.upcase}\033[39m  #{uri}"
+                report_uri_params( subschema['uriParameters'] )
+                report_body( desc['body'] )
+                report_responses( desc['responses'] )
+            }
+            report_schema( "#{prefix}#{path}", subschema )
+        }
+    end
+
+    def report
+        report_schema( @base, @data )
+    end
+
+    def json; JSON.dump( @data ) end
+
+end
+
+# puts raml['baseUri']
+
+raml = RAML.new( ARGV[0] )
+raml.report
+
+# vim:autoindent expandtab sw=4
