@@ -1,0 +1,9 @@
+#!/bin/bash
+
+filename="$1"
+shift
+title="$*"
+
+[ -z "$title" ] && title="${filename%.pdf}"
+
+exiftool -overwrite_original_in_place -Title="$title" "$filename"
