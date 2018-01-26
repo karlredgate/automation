@@ -40,7 +40,19 @@ class RAML
         "\033[33m#{media_type}\033[39m"
     end
 
-    def report_body( schema )
+    def error( message )
+        puts "\033[41m#{message}\033[49m"
+    end
+
+    def report_body( verb, schema )
+        case verb
+        when "GET" then
+            return error("Body content type present in a GET") unless schema.nil?
+        when "POST" then
+            return error("BODY content type missing in POST")  if schema.nil?
+        when "PUT" then
+            return error("BODY content type missing in PUT")  if schema.nil?
+        end
         return if schema.nil?
         media_type = schema.keys[0]
         media_schema = color_media( schema[media_type]['schema'] )
@@ -73,10 +85,10 @@ class RAML
         return if schema.nil?
         schema.each { |code,desc|
             media = media_type( code, desc['body'] )
-            description  = desc['description'] || ''
+            description  = desc['description'] || "\033[41mMissing Description\033[49m"
             mesg = "(#{description.strip})" unless description.nil?
-            puts "#{colored_code(code)} -> #{mesg}"
-            puts "       #{media}"
+            puts "#{colored_code(code)} -> #{media}"
+            puts "       #{mesg}"
         }
     end
 
@@ -91,7 +103,7 @@ class RAML
                 uri = color_uri( "#{prefix}#{path}" )
                 puts "\033[36m#{verb.upcase}\033[39m  #{uri}"
                 report_uri_params( subschema['uriParameters'] )
-                report_body( desc['body'] )
+                report_body( verb.upcase, desc['body'] )
                 report_responses( desc['responses'] )
             }
             report_schema( "#{prefix}#{path}", subschema )
@@ -106,7 +118,8 @@ class RAML
 
 end
 
-# puts raml['baseUri']
+# $stdout.reopen( IO.popen('less -R','w') ) if STDOUT.isatty
+# $out = STDOUT.isatty ? IO.popen('less -R','w') : STDOUT
 
 raml = RAML.new( ARGV[0] )
 raml.report
