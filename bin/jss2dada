@@ -7,6 +7,7 @@ function warning( message ) {
 }
 
 function die( message ) {
+    console.log( '# ERROR: ' + message );
     console.error( 'ERROR: ' + message );
     process.exit( -1 );
 }
@@ -65,6 +66,10 @@ parsers["boolean"] = function ( rule, name, schema ) {
     basic_type( rule, name, 'Boolean' );
 };
 
+parsers["datetime"] = function ( rule, name, schema ) {
+    basic_type( rule, name, 'rfc-date-time-string' );
+};
+
 /*
  * Need to handle "default" slot also
  */
@@ -88,20 +93,33 @@ parsers["array"] = function ( rule, name, schema ) {
 };
 
 parsers["object"] = function ( rule, name, schema ) {
+    // this might not be correct - need to see if this means we need to be inheriting other props from ??
+    if ( typeof schema.additionalProperties != 'undefined' ) {
+        if ( typeof schema.properties == 'undefined' ) {
+            schema.properties = schema.additionalProperties.properties;
+        }
+    }
     if ( typeof schema.properties == 'undefined' ) {
         die( "Invalid schema - object definition for '" + rule + "' has no properties" );
     }
     let keys = Object.keys(schema.properties);
-    console.log( rule + ': ' + keystring(name) + ' "{" ' + keys.join(' "," ') + ' "}" ;' );
+    let rules = keys.map( k => rule + '-' + k ); // prefix the rule name
+    console.log( rule + ': ' + keystring(name) + ' "{" ' + rules.join(' ",\\n" ') + ' "}\\n" ;' );
     let p = schema.properties;
-    keys.map( key => dispatch(key, key, p[key]) );
+    // KNR - maybe not this
+    keys.map( key => dispatch(rule + '-' + key, key, p[key]) );
 };
 
 function check_definitions( dto ) {
     // if ( typeof dto["type"] == 'undefined' ) {
     if ( typeof dto["properties"] == 'undefined' ) {
         if ( typeof dto["type"] != 'undefined' ) {
+            if ( dto["type"] == 'array' ) {
+                warning( 'This schema has an array as its top level structure' );
+                return;
+            }
             warning( 'This schema has a "type" but no "properties"' );
+            return;
         }
         if ( dto.definitions ) {
             console.error( "this is not a schema" );
