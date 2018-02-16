@@ -84,12 +84,12 @@ parsers["string"] = function ( rule, name, schema ) {
 };
 
 parsers["array"] = function ( rule, name, schema ) {
-    console.log( rule + ': ' + keystring(name) + ' "[" ' + name + '-items "]" ;' );
-    console.log( name + '-items: ' +
-                 name + '-item | ' +
-                 name + '-items  "," ' + name + '-item ;' );
+    console.log( rule + ': ' + keystring(name) + ' "[" ' + rule + '-items "]" ;' );
+    console.log( rule + '-items: ' +
+                 rule + '-item | ' +
+                 rule + '-items  "," ' + rule + '-item ;' );
 
-    dispatch( name + '-item', null, schema.items );
+    dispatch( rule + '-item', null, schema.items );
 };
 
 parsers["object"] = function ( rule, name, schema ) {
@@ -156,6 +156,7 @@ function parse( err, data ) {
     // warning( "DTO: " + JSON.stringify(d) );
     // warning( "RES: " + JSON.stringify(resolve(d, process.argv[2])) );
     let dto = resolve( JSON.parse(data), process.argv[2] );
+    // console.error( JSON.stringify(dto) );
     check_definitions( dto );
     console.log( '#include "base.pb"' );
     dispatch( 'root', null, dto );
