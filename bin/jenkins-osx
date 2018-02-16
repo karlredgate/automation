@@ -1,0 +1,7 @@
+
+APPSUPP=~/Library/Application\ Support/Jenkins
+wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+
+JENKINS_HOME="$APPSUPP" java -jar jenkins.war
+JENKINS_HOME="$APPSUPP" java -Djenkins.install.runSetupWizard=false  \
+                             -jar jenkins.war
