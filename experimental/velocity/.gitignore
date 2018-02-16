@@ -1,3 +1,5 @@
 *.class
 *.jar
 /ClubApp.txt
+/velocity-1.7.tar.gz
+/velocity-1.7
