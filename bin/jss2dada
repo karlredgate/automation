@@ -104,7 +104,9 @@ parsers["object"] = function ( rule, name, schema ) {
     }
     let keys = Object.keys(schema.properties);
     let rules = keys.map( k => rule + '-' + k ); // prefix the rule name
-    console.log( rule + ': ' + keystring(name) + ' "{" ' + rules.join(' ",\\n" ') + ' "}\\n" ;' );
+    console.log( rule + ':\n' + keystring(name) + ' "{" ' );
+    console.log( rules.join(' ",\\n" \n') );
+    console.log( ' "}\\n" ;\n' );
     let p = schema.properties;
     // KNR - maybe not this
     keys.map( key => dispatch(rule + '-' + key, key, p[key]) );
