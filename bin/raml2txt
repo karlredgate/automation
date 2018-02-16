@@ -10,9 +10,12 @@ require 'json'
 
 class RAML
 
+    # Load the file and construct an object from it
     def initialize( file )
         @data = YAML.load_file( file )
         @base = @data['baseUri']
+        file = @data['traits']
+        @traits = YAML.load_file(file) unless file.nil?
     end
 
     def paths( schema )
@@ -81,7 +84,32 @@ class RAML
         end
     end
 
-    def report_responses( schema )
+    def trait( name )
+        i = @traits.detect { |trait| trait.keys[0] == name }
+        i[name]
+    end
+
+    def merge_trait( schema, trait )
+        trait.each { |key,value|
+            schema[key] ||= {}
+            schema[key].merge!( value )
+        }
+    end
+
+    # for each entry in the "is" array, add the values
+    # of its members to the schema
+    def import_interfaces( schema )
+        return if schema['is'].nil?
+        schema['is'].each { |name| merge_trait( schema, trait(name) ) }
+    end
+
+    def report_responses( verb, schema )
+        case verb
+        when "GET" then
+            return error("Response body content type missing in a GET") if schema.nil?
+        when "HEAD" then
+            return error("Response body content type present in a HEAD") unless schema.nil?
+        end
         return if schema.nil?
         schema.each { |code,desc|
             media = media_type( code, desc['body'] )
@@ -92,9 +120,12 @@ class RAML
         }
     end
 
+    # using the schema RAML object passed in, report on the
+    # children of the prefix URL
     def report_schema( prefix, schema )
         paths(schema).each { |path,subschema|
             verbs(subschema).each { |verb,desc|
+                import_interfaces( desc )
                 description  = desc['description'] || "\033[41mMissing description\033[49m"
                 display_name = desc['displayName'] || "\033[41mMissing display name\033[49m"
                 puts "\n ----- #{display_name.strip} -------"
@@ -103,13 +134,16 @@ class RAML
                 uri = color_uri( "#{prefix}#{path}" )
                 puts "\033[36m#{verb.upcase}\033[39m  #{uri}"
                 report_uri_params( subschema['uriParameters'] )
-                report_body( verb.upcase, desc['body'] )
-                report_responses( desc['responses'] )
+
+                report_body(      verb.upcase, desc['body'] )
+                report_responses( verb.upcase, desc['responses'] )
             }
             report_schema( "#{prefix}#{path}", subschema )
         }
     end
 
+    # @base is the baseUri pulled from the RAML file
+    # @data is the complete RAML object
     def report
         report_schema( @base, @data )
     end
