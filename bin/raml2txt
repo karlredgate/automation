@@ -39,6 +39,10 @@ class RAML
         uri.gsub('{',"\033[35m{").gsub('}',"}\033[39m")
     end
 
+    def color_error( s )
+        "\033[41m#{s}\033[49m"
+    end
+
     def color_media( media_type )
         "\033[33m#{media_type}\033[39m"
     end
@@ -58,7 +62,11 @@ class RAML
         end
         return if schema.nil?
         media_type = schema.keys[0]
-        media_schema = color_media( schema[media_type]['schema'] )
+        media_schema = if schema[media_type].nil?
+            color_error("schema missing")
+        else
+            color_media( schema[media_type]['schema'] )
+        end
         puts "BODY: #{media_type} + #{media_schema}"
     end
 
@@ -127,7 +135,7 @@ class RAML
             verbs(subschema).each { |verb,desc|
                 import_interfaces( desc )
                 description  = desc['description'] || "\033[41mMissing description\033[49m"
-                display_name = desc['displayName'] || "\033[41mMissing display name\033[49m"
+                display_name = desc['displayName'] || "\033[44mMissing display name\033[49m"
                 puts "\n ----- #{display_name.strip} -------"
                 puts " #{description}"
                 puts " ----- -------------- -------"
