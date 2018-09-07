@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# workflow automation?? - written in node.js
+#
+# This installs it in the local dir and then calls the local
+# binary
+#
+# Much like Grunt, Gulp is a javascript task runner. Gulp however
+# prefers code over configuration. Being that your tasks are written
+# in code, gulp feels more like a build framework, giving you the
+# tools to create tasks that fit your specific needs.
+#
+# <http://gulpjs.com/>
+# <https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md>
+#
+# You need to read more about how to set up and use this...
+#
+
+[ -d node_modules/gulp ] || npm install gulp
+[ -d node_modules/gulp-cli ] || npm install gulp-cli
+
+[ -f gulpfile.js ] || {
+    cat > gulpfile.js <<END
+var gulp = require('gulp');
+gulp.task('default', function() {
+// place code for your default task here
+});
+END
+}
+
+exec ./node_modules/gulp-cli/bin/gulp.js $*
