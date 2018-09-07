@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+    version="3.1">
+
+  <display-name>Project Name</display-name>
+
+  <servlet>
+    <servlet-name>healthcheck</servlet-name>
+    <servlet-class>com.redgates.se.servlets.AdminServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>healthcheck</servlet-name>
+    <url-pattern>/restricted/*</url-pattern>
+  </servlet-mapping>
+
+  <context-param>
+    <param-name>contextClass</param-name>
+    <param-value>
+      org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+    </param-value>
+  </context-param>
+  <!-- Set JavaConfig class to import -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>com.redgates.cfg.DiagnosticsTomcatSpringConfig</param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- Injects HTTP Request -->
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+
+  <!-- logging enhance filter -->
+  <!-- <filter> -->
+  <!-- <filter-name>PulsarLoggingFilter</filter-name> -->
+  <!-- <filter-class>com.redgates.se.logging.filters.RequestLoggingFilter</filter-class> -->
+  <!-- </filter> -->
+
+  <filter>
+    <filter-name>innerGridFilter</filter-name>
+    <filter-class>com.redgates.ids.sdk.innergrid.web.InnerGridFilter</filter-class>
+  </filter>
+
+  <!-- Enable PulsarSecurityFilter for IDS authentication -->
+  <filter>
+    <filter-name>PulsarSecurityFilter</filter-name>
+    <filter-class>com.redgates.security.servicesgateway.identity.PulsarSecurityFilter</filter-class>
+  </filter>
+
+
+  <!-- <filter-mapping> -->
+  <!-- <filter-name>PulsarLoggingFilter</filter-name> -->
+  <!-- <url-pattern>/v1/*</url-pattern> -->
+  <!-- </filter-mapping> -->
+
+  <filter-mapping>
+    <filter-name>innerGridFilter</filter-name>
+    <url-pattern>/v1/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>PulsarSecurityFilter</filter-name>
+    <url-pattern>/v1/*</url-pattern>
+  </filter-mapping>
+
+  <servlet>
+    <servlet-name>jersey</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    <!-- All Jersey configuration is done through this class -->
+    <init-param>
+      <param-name>javax.ws.rs.Application</param-name>
+      <param-value>com.redgates.cfg.DiagnosticsJerseyConfig</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>jersey</servlet-name>
+    <url-pattern>/v1/*</url-pattern>
+  </servlet-mapping>
+</web-app>
