@@ -1,7 +1,12 @@
 #!/bin/bash
 
 function usage() {
-    cd ~/skel ; ls
+    for skel in $(cd ~/skel ; ls)
+    do
+        desc=~/skel/$skel/.description
+        printf "%-20s" $skel
+        [ -f $desc ] && cat $desc || echo "??"
+    done
     exit 0
 }
 
