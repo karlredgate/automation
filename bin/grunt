@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# build tool - written in node.js
+#
+# This installs it in the local dir and then calls the local
+# binary.  npm install spams the output - and there is no way
+# to turn it off.  Redirect stdout to get rid of it - but not
+# stderr - so I can see errors.
+#
+# <http://gruntjs.com/>
+# <http://gruntjs.com/getting-started>
+# 
+
+[ -f README.md ] || {
+    cat > README.md <<END
+README
+======
+
+<!-- vim: set autoindent expandtab sw=4 syntax=markdown: -->
+END
+}
+
+[ -f Gruntfile.js ] || {
+    echo "Create gruntfile"
+    cat > Gruntfile.js <<END
+function help() {
+    console.log( "No tasks defined yet." );
+}
+
+module.exports = function(grunt) {
+  grunt.registerTask( 'help', help );
+
+  grunt.initConfig({
+    jshint: {
+      files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      options: {
+        globals: {
+          jQuery: true
+        }
+      }
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['jshint']
+    }
+  });
+
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.registerTask('default', ['jshint']);
+};
+END
+}
+
+[ -f package.json ] || {
+    echo "Create package config"
+    cat > package.json <<END
+{
+    "name": "my-project-name",
+    "version": "0.1.0",
+    "description": "No description yet",
+    "author": "Karl Redgate <karl.redgate@gmail.com>",
+    "license": "MIT",
+    "repository": "github.com:karlredgate",
+    "readmeFilename": "README.md",
+    "devDependencies": {
+        "grunt": "*",
+        "grunt-contrib-jshint": "*",
+        "grunt-contrib-nodeunit": "*",
+        "grunt-contrib-uglify": "*",
+        "grunt-contrib-watch": "*"
+    }
+}
+END
+    echo "Installing dependencies"
+    npm install > /dev/null
+}
+
+exec ./node_modules/grunt/bin/grunt $*
