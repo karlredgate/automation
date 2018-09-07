@@ -16,16 +16,5 @@
 # You need to read more about how to set up and use this...
 #
 
-[ -d node_modules/gulp ] || npm install gulp
-[ -d node_modules/gulp-cli ] || npm install gulp-cli
-
-[ -f gulpfile.js ] || {
-    cat > gulpfile.js <<END
-var gulp = require('gulp');
-gulp.task('default', function() {
-// place code for your default task here
-});
-END
-}
-
+[ -d node_modules/gulp ] || skel gulp
 exec ./node_modules/gulp-cli/bin/gulp.js $*

@@ -19,6 +19,9 @@ function dispatch( rule, name, schema ) {
         die( 'schema "' + name + '" has no TYPE -- ' + JSON.stringify(schema) );
     }
 
+    /*
+     * the schema.type can be a string or an array.
+     */
     if ( schema.type.constructor === Array ) {
         [type, default_value] = schema.type;
     } else {
@@ -70,16 +73,62 @@ parsers["datetime"] = function ( rule, name, schema ) {
     basic_type( rule, name, 'rfc-date-time-string' );
 };
 
-/*
- * Need to handle "default" slot also
- */
-parsers["string"] = function ( rule, name, schema ) {
-    if ( schema["enum"] == null ) {
-        return basic_type( rule, name, 'StringLiteral' );
-    }
-    console.log( rule + ': ' + keystring(name) );
+function is_basic_string( schema ) {
+    if ( schema["enum"] != null ) return false;
+    if ( schema["format"] != null ) return false;
+    if ( schema["oneOf"] != null ) return false;
+    return true;
+}
+
+function string_enum( rule, name, schema ) {
+    if ( schema["enum"] == null ) return false;
     let strings = schema["enum"].map( e => qstring(e) );
     console.log( "[ " + strings.join('|') + " ]" );
+    return true;
+}
+
+function format_to_non_terminal( format ) {
+    switch ( format ) {
+    case 'ipv4'     : return 'L4Address';
+    case 'ipv6'     : return 'L4Address'; // this should be an IPv6Address
+    case 'hostname' : return 'hostname';
+    }
+    return 'UNKNOWN';
+}
+
+function string_format( rule, name, schema ) {
+    if ( schema["format"] == null ) return false;
+    console.log( format_to_non_terminal( schema['format'] ) );
+    // throw an error
+    return true;
+}
+
+function string_oneOf( rule, name, schema ) {
+    let items = schema['oneOf'];
+    if ( items == null ) return false;
+
+    function is_format( item ) { return item['format'] != null; }
+    function value( item ) {
+        return '"\\"" ' + format_to_non_terminal(item['format']) + ' "\\""';
+    }
+    let formats = items.filter(is_format).map(value);
+    console.log( formats.join(' | ') );
+
+    return true;
+}
+
+/*
+ * Need to handle "default" slot also
+ * handle "oneOf" for "format"
+ */
+parsers["string"] = function ( rule, name, schema ) {
+    console.log( rule + ': ' + keystring(name) );
+
+    if ( string_enum(  rule, name, schema) ) return console.log(';');
+    if ( string_format(rule, name, schema) ) return console.log(';');
+    if ( string_oneOf( rule, name, schema) ) return console.log(';');
+
+    console.log( 'StringLiteral' );
     console.log( ' ;' );
 };
 
@@ -131,6 +180,11 @@ function check_definitions( dto ) {
     }
 }
 
+/*
+ * resolve() grovels through the schema and replaces all '$ref' entries
+ * with the actual schema that is referenced.  It is retrieved from
+ * the local file if it is local, and from the external file otherwise.
+ */
 function resolve( dto, filename ) {
     if ( dto.constructor  !== Object ) return dto;
     if ( dto["$ref"] == null ) {
@@ -159,6 +213,7 @@ function parse( err, data ) {
     // console.error( JSON.stringify(dto) );
     check_definitions( dto );
     console.log( '#include "base.pb"' );
+    console.log( '#include "hostnames.pb"' );
     dispatch( 'root', null, dto );
 }
 

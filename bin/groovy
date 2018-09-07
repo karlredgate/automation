@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Normally it is expected you will run their script and point at
+# a bunch of their jars.  The "-all" jar is supposed to have
+# all of it.  But, I do not see it in the recent builds.
+#
+# From
+# http://groovy-lang.org/download.html
+# 2.5+: A "fat pom" groovy-all-x.y.z.pom referring to the core
+#       plus all modules (excluding optional ones).
+#       In order to cater to the module system of Java 9+,
+#       the groovy-all-x.y.z.jar file is no longer available.
+
+GROOVY=/Users/kredgate/.m2/repository/org/codehaus/groovy/groovy-all/2.4.11/groovy-all-2.4.11.jar
+
+java -cp ${GROOVY} groovy.lang.GroovyShell $*

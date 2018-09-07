@@ -1,0 +1,179 @@
+#!/bin/bash
+
+function die() {
+    echo $* 1>&2
+    exit 1
+}
+
+function hdfs_configured() {
+    xmllint --noout \
+	    --xpath '//configuration/property/[name="dfs.replication"]'  \
+	    $ETC/hdfs-site.xml 2> /dev/null
+}
+
+function configure_hdfs() {
+    mv $ETC/hdfs-site.xml $ETC/hdfs-site.orig
+    xsltproc <( hdfs_xslt ) $ETC/hdfs-site.orig > $ETC/hdfs-site.xml
+}
+
+function hdfs_xslt() {
+cat <<END
+<?xml version='1.0' ?>
+<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+		version='1.0'>
+  <xsl:template match='configuration'>
+      <xsl:copy>
+      <xsl:element name='property'>
+          <xsl:element name='name'>dfs.replication</xsl:element>
+          <xsl:element name='value'>1</xsl:element>
+      </xsl:element>
+      </xsl:copy>
+  </xsl:template>
+    <xsl:template match="@*|node()">
+       <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>
+END
+}
+
+function core_configured() {
+    xmllint --noout \
+	    --xpath '//configuration/property/[name="fs.defaultFS"]'  \
+	    $ETC/core-site.xml 2> /dev/null
+}
+
+function configure_core() {
+    mv $ETC/core-site.xml $ETC/core-site.orig
+    xsltproc <( core_xslt ) $ETC/core-site.orig > $ETC/core-site.xml
+}
+
+function core_xslt() {
+cat <<END
+<?xml version='1.0' ?>
+<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+		version='1.0'>
+  <xsl:template match='configuration'>
+      <xsl:copy>
+      <xsl:element name='property'>
+          <xsl:element name='name'>fs.defaultFS</xsl:element>
+          <xsl:element name='value'>hdfs://localhost:9000</xsl:element>
+      </xsl:element>
+      </xsl:copy>
+  </xsl:template>
+    <xsl:template match="@*|node()">
+       <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>
+END
+}
+
+function yarn_configured() {
+    xmllint --noout \
+	    --xpath '//configuration/property/[name="yarn.nodemanager.aux-services"]'  \
+	    $ETC/yarn-site.xml 2> /dev/null
+}
+
+function configure_yarn() {
+    mv $ETC/yarn-site.xml $ETC/yarn-site.orig
+    xsltproc <( yarn_xslt ) $ETC/yarn-site.orig > $ETC/yarn-site.xml
+}
+
+function yarn_xslt() {
+cat <<END
+<?xml version='1.0' ?>
+<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+		version='1.0'>
+  <xsl:template match='configuration'>
+      <xsl:copy>
+      <xsl:element name='property'>
+          <xsl:element name='name'>yarn.nodemanager.aux-services</xsl:element>
+          <xsl:element name='value'>mapreduce_shuffle</xsl:element>
+      </xsl:element>
+      </xsl:copy>
+  </xsl:template>
+    <xsl:template match="@*|node()">
+       <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>
+END
+}
+
+function mapred_configured() {
+    xmllint --noout \
+	    --xpath '//configuration/property/[name="mapreduce.framework.name"]'  \
+	    $ETC/mapred-site.xml 2> /dev/null
+}
+
+function configure_mapred() {
+    xsltproc <( mapred_xslt ) $ETC/mapred-site.xml.template > $ETC/mapred-site.xml
+}
+
+function mapred_xslt() {
+cat <<END
+<?xml version='1.0' ?>
+<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+		version='1.0'>
+  <xsl:template match='configuration'>
+      <xsl:copy>
+      <xsl:element name='property'>
+          <xsl:element name='name'>mapreduce.framework.name</xsl:element>
+          <xsl:element name='value'>yarn</xsl:element>
+      </xsl:element>
+      </xsl:copy>
+  </xsl:template>
+    <xsl:template match="@*|node()">
+       <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>
+END
+}
+
+JAVA_VERSION=$( java -version 2>&1  | sed -ne '/version/s/.*"\(.*\)"/\1/p' )
+
+case $JAVA_VERSION in
+1.8.*) ;;
+*) die wrong java version ;;
+esac
+
+export JAVA_HOME=$( /usr/libexec/java_home )
+
+echo setup ssh localhost
+
+# This should be discovered
+HADOOP_VERSION=2.8.1
+HADOOP_DIRNAME=hadoop-${HADOOP_VERSION}
+HADOOP_TARBALL="${HADOOP_DIRNAME}.tar.gz"
+HADOOP_URI="http://ftp.wayne.edu/apache/hadoop/common/${HADOOP_DIRNAME}/$HADOOP_TARBALL"
+HADOOP_LIBRARY="$HOME/Library/${HADOOP_DIRNAME}"
+
+CACHE=$HOME/.cache/redgate
+[ -d $CACHE ] || mkdir -p $CACHE
+[ -f $CACHE/$HADOOP_TARBALL ] || curl -o $CACHE/$HADOOP_TARBALL $HADOOP_URI
+
+[ -d $HADOOP_LIBRARY ] || tar -C $HOME/Library -xvf $CACHE/$HADOOP_TARBALL
+
+ETC=$HADOOP_LIBRARY/etc/hadoop
+hdfs_configured || configure_hdfs
+core_configured || configure_core
+yarn_configured || configure_yarn
+mapred_configured || configure_mapred
+
+echo Format HDFS
+$HADOOP_LIBRARY/bin/hdfs namenode -format
+
+# The instructions show starting sbin/start-dfs.sh 
+# which in turn runs daemons.sh - which then runs daemon.sh
+# ends up running:
+# nohup nice -n $N hdfsScript --config $CONFDIR $command $@ > log 2>&1 < /dev/null &
+#  This should all translate to a Launchd config
+
+# Then mkdir
+# bin/hdfs dfs -mkdir /user
+# bin/hdfs dfs -mkdir /user/$LOGNAME
+# sbin/start-yarn.sh
+
+# vim:autoindent expandtab sw=4
