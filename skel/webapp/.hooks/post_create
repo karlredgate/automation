@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# run after copying the hierarchy
+#
+
+echo created
+
+# vim: ai et sw=4
