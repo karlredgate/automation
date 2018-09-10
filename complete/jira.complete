@@ -1,0 +1,37 @@
+
+function __jira_commands__() {
+    for f in *.jira
+    do
+        echo "${f%.jira}"
+    done
+}
+
+function __jira_cmd_options__() {
+    local prev="$1"
+    local cur="$2"
+    echo
+}
+
+function __jira__() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local cword=$COMP_CWORD
+    local commands=$( cd $HOME/lib/jira ; __jira_commands__ )
+
+    COMPREPLY=()
+
+    case $cword in
+    1)
+        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+        ;;
+    2)
+        # [ $prev = "appsec" ] && COMPREPLY=( $(appsec_commands "$cur") )
+        COMPREPLY=( $(__jira_cmd_options__ $prev "$cur") )
+        ;;
+    esac
+}
+
+# Use __jira__ function to complete for jira command
+complete -F __jira__ jira
+
+# vim: autoindent expandtab sw=4

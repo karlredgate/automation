@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# jira master command - calls subcommands from ~/lib/jira/*.jira
+# base path (and config) from ~/.jirarc
+#
+
+. $HOME/.jirarc
+export jira_base=${base}
+
+function die() {
+    echo "$*" 1>&2
+    exit 1
+}
+
+function get() {
+    echo "GET ${jira_base}/${1}"
+    /usr/bin/curl -E $LOGNAME "${jira_base}/${1}"
+}
+export -f get
+
+CMDS=$HOME/lib/jira
+command="$1"
+script="$CMDS/${command}.jira"
+shift
+
+[ -x "$script" ] || die "No such command - $command"
+exec $script "$@" || die "Failed to run $command"
+
+# vim: autoindent expandtab sw=4

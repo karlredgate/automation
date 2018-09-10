@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Get the URL to use from config file
+# sub commands
+# * pdf/print
+# * for a user
+# * for everyone
+
+# /usr/bin/curl -E kredgate https://track-api.akamai.com/jira/activity?streams=user+IS+kredgate
+# https://track.akamai.com/jira/activity?maxResults=10&streams=user+IS+kredgate&os_authType=basic&title=undefined
+
+get "activity?streams=user+IS+$LOGNAME"
+
+# vim: autoindent expandtab sw=4
