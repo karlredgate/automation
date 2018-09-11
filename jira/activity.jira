@@ -35,7 +35,7 @@ cat <<END
       <xsl:text>## </xsl:text>
       <xsl:value-of select='atom:author/atom:name' />
       <xsl:text>  </xsl:text>
-      <xsl:value-of select='atom:published' />
+      <xsl:value-of select='atom:updated' />
       <xsl:text>  </xsl:text>
 
       <xsl:apply-templates select='activity:target' />

@@ -6,6 +6,76 @@
 # * for a user
 # * for everyone
 
+# THis is for activity feed - fix
+function fancy_xslt() {
+cat <<END
+<?xml version='1.0' ?>
+<xsl:stylesheet
+    xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:usr="http://streams.atlassian.com/syndication/username/1.0"
+    xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+    xmlns:activity="http://activitystrea.ms/spec/1.0/"
+    xmlns:thr="http://purl.org/syndication/thread/1.0"
+    xmlns:media="http://purl.org/syndication/atommedia"
+    version='1.0'>
+
+    <xsl:output method="text" />
+    <xsl:template match='text()' />
+
+    <xsl:template match='/atom:feed'>
+	<xsl:apply-templates />
+    </xsl:template>
+
+    <xsl:template match='atom:feed/atom:entry'>
+      <xsl:text>## </xsl:text>
+      <xsl:value-of select='atom:author/atom:name' />
+      <xsl:text>  </xsl:text>
+      <xsl:value-of select='atom:updated' />
+      <xsl:text>  </xsl:text>
+
+      <xsl:apply-templates select='activity:target' />
+      <xsl:value-of select='activity:object/atom:title[@type="text"]' />
+      <xsl:text>&#10;</xsl:text>
+      <xsl:value-of select='atom:content[@type="html"]' />
+      <xsl:text>&#10;&#10;</xsl:text>
+    </xsl:template>
+
+    <xsl:template match='activity:target'>
+      <xsl:value-of select='atom:title' />
+      <xsl:text> / </xsl:text>
+    </xsl:template>
+
+    <xsl:template match='nothing'>
+      <xsl:value-of select='activity:object/atom:id' />
+      <xsl:text>&#10;</xsl:text>
+    </xsl:template>
+
+</xsl:stylesheet>
+END
+}
+
+function fancy_text() {
+    xsltproc <(fancy_xslt) -
+}
+filter=fancy_text
+filter=cat
+
+# What query??
+query="streams=user+IS+$LOGNAME"
+for arg
+do
+    case "$arg" in
+    --pdf)  filter=pdf ; shift ;;
+    *)
+        issue="$1"
+        shift
+        ;;
+    esac
+done
+
 # get "activity?streams=user+IS+$LOGNAME"
+get "rest/api/3/issue/${issue}"
 
 # vim: autoindent expandtab sw=4
