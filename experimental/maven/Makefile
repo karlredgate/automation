@@ -8,3 +8,6 @@ package:
 
 build:
 	mvn compile
+
+clean:
+	mvn clean
