@@ -5,10 +5,84 @@
 # * pdf/print
 # * for a user
 # * for everyone
+#
+# --all  : instead of logname, all users
+# --pdf  : create $LOGNAME.pdf; run through latex
+# username : instead of LOGNAME, specific user
+
+function fancy_xslt() {
+cat <<END
+<?xml version='1.0' ?>
+<xsl:stylesheet
+    xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:usr="http://streams.atlassian.com/syndication/username/1.0"
+    xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+    xmlns:activity="http://activitystrea.ms/spec/1.0/"
+    xmlns:thr="http://purl.org/syndication/thread/1.0"
+    xmlns:media="http://purl.org/syndication/atommedia"
+    version='1.0'>
+
+    <xsl:output method="text" />
+    <xsl:template match='text()' />
+
+    <xsl:template match='/atom:feed'>
+	<xsl:apply-templates />
+    </xsl:template>
+
+    <xsl:template match='atom:feed/atom:entry'>
+      <xsl:text>## </xsl:text>
+      <xsl:value-of select='atom:author/atom:name' />
+      <xsl:text>  </xsl:text>
+      <xsl:value-of select='atom:published' />
+      <xsl:text>  </xsl:text>
+
+      <xsl:apply-templates select='activity:target' />
+      <xsl:value-of select='activity:object/atom:title[@type="text"]' />
+      <xsl:text>&#10;</xsl:text>
+      <xsl:value-of select='atom:content[@type="html"]' />
+      <xsl:text>&#10;&#10;</xsl:text>
+    </xsl:template>
+
+    <xsl:template match='activity:target'>
+      <xsl:value-of select='atom:title' />
+      <xsl:text> / </xsl:text>
+    </xsl:template>
+
+    <xsl:template match='nothing'>
+      <xsl:value-of select='activity:object/atom:id' />
+      <xsl:text>&#10;</xsl:text>
+    </xsl:template>
+
+</xsl:stylesheet>
+END
+}
+
+function fancy_text() {
+    xsltproc <(fancy_xslt) -
+}
+filter=fancy_text
+# filter=cat
+
+query="streams=user+IS+$LOGNAME"
+for arg
+do
+    case "$arg" in
+    --all)  query=""   ; shift ;;
+    --pdf)  filter=pdf ; shift ;;
+    *)
+        query="streams=user+IS+$1"
+        shift
+        ;;
+    esac
+done
 
 # /usr/bin/curl -E kredgate https://track-api.akamai.com/jira/activity?streams=user+IS+kredgate
 # https://track.akamai.com/jira/activity?maxResults=10&streams=user+IS+kredgate&os_authType=basic&title=undefined
 
-get "activity?streams=user+IS+$LOGNAME"
+# This output is in XML - filter it to the appropriate output
+# Probably should save output in file - and use http code as stdout
+get "activity?$query" | $filter
 
 # vim: autoindent expandtab sw=4

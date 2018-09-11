@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Get the URL to use from config file
+# sub commands
+# * pdf/print
+# * for a user
+# * for everyone
+
+# get "activity?streams=user+IS+$LOGNAME"
+
+# vim: autoindent expandtab sw=4
