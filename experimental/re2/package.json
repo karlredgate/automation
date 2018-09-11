@@ -1,0 +1,12 @@
+{
+    "name": "re2-test",
+    "version": "1.0.0",
+    "devDependencies": {
+        "re2": "^1.8.2"
+    },
+    "scripts": {
+        "clean": "rm -rf node_modules",
+        "translate": "./node_modules/.bin/babel $*"
+    },
+    "vim-config": " vim: set autoindent expandtab sw=4 syntax=json : "
+}
