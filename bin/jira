@@ -13,8 +13,8 @@ function die() {
 }
 
 function get() {
-    echo "GET ${jira_base}/${1}"
-    /usr/bin/curl -E $LOGNAME "${jira_base}/${1}"
+    # echo "GET ${jira_base}/${1}"
+    /usr/bin/curl --silent -E $LOGNAME "${jira_base}/${1}"
 }
 export -f get
 
