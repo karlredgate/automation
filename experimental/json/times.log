@@ -1,0 +1,853 @@
+parse error (required)
+{ "glossary": { /
+                ^
+at this token
+
+CURRENT TOKEN: IDENTIFIER<>
+
+real	0m0.004s
+user	0m0.001s
+sys	0m0.002s
+lexical error: probable comment found in input text, comments are not enabled.
+                                        { "glossary": { /* you */ "tit
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.002s
+parse error (trailing ,)
+{
+  "this": "is", /
+                  ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: probable comment found in input text, comments are not enabled.
+                                        {   "this": "is", // ignore th
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.006s
+user	0m0.001s
+sys	0m0.002s
+parse error (invalid value)
+falsexÿ
+      ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.002s
+parse error: trailing garbage
+                                        falsex
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+nullx
+
+     ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        nullx 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+truexÿ
+     ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        truex
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+{ "123":
+ÿ
+         ^
+at this token
+
+CURRENT TOKEN: <EOI>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: premature EOF
+                                       
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.005s
+user	0m0.001s
+sys	0m0.002s
+parse error (required)
+1221 21
+
+       ^
+at this token
+
+CURRENT TOKEN: INTEGER<122121>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        1221 21 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+
+{}
+{}
+     ^
+at this token
+
+CURRENT TOKEN: <{>
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                         {} {} 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+{}
+[]
+    ^
+at this token
+
+CURRENT TOKEN: <[>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        {} [] [] "sdfasd" 123 { "123" 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+[
+ÿ
+  ^
+at this token
+
+CURRENT TOKEN: <EOI>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: premature EOF
+                                       
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+"abcÿ
+    ^
+unterminated string
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: premature EOF
+                                       
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+{
+ÿ
+  ^
+at this token
+
+CURRENT TOKEN: <EOI>
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: premature EOF
+                                       
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+[ "foo", "bar"
+ÿ
+               ^
+at this token
+
+CURRENT TOKEN: <EOI>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: premature EOF
+                                       
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input '\'n["foo",
+ "bar", "baz",
+ true,false,null,{"key":"value"},
+ [null,null,null,[]],
+ "\n\r\\
+                                                                                      ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+]
+
+ ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: unallowed token at this point in JSON text
+                                        ] 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (trailing ,)
+[ 9223372036854775807, -
+                       ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (trailing ,)
+["this","is","what","should","be",
+ "a happy bit of json",
+ "but someone, misspelled \"true\"", ture,
+                                                                                                    ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.002s
+lexical error: invalid string in json text.
+                                        ["this","is","what","should","
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input 'u'n"\u
+  ^
+here
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+[ 0.
+   ^
+at this token
+
+CURRENT TOKEN: IDENTIFIER<>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+[0.
+  ^
+at this token
+
+CURRENT TOKEN: IDENTIFIER<>
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input 'u'n["\u
+   ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input 'u'n"\u
+  ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.002s
+parse error (invalid value)
+falsexÿ
+      ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        falsex
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+2009-
+    ^
+at this token
+
+CURRENT TOKEN: IDENTIFIER<>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        2009-10-20@20:38:21.539575 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+nullx
+
+     ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        nullx 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+truex
+
+     ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                        truex 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (trailing ,)
+[ 1,2,3,4,5,6,7,
+  123456789 , -
+                               ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: invalid bytes in UTF8 string.
+                                        ["Ð”Ð° ÐœÑ Ð•Ð±Ð° ÐœÐ°Ð¹ÐºÐ°Ñ‚
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input 'u'n"\u
+  ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: after key and value, inside map, I expect ',' or '}'
+                                        { "bad thing": 01 } 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (trailing ,)
+[
+		"foo", true,
+		true, "blue",
+		"baby where are you?", "oh boo hoo!",
+        -
+                                                                                 ^
+at this token
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: malformed number, a digit is required after the minus sign.
+                                        [ 		"foo", true, 		true, "blue
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+-
+^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (invalid value)
+}
+
+ ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error: unallowed token at this point in JSON text
+                                        } 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+10.
+  ^
+at this token
+
+CURRENT TOKEN: IDENTIFIER<>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: malformed number, a digit is required after the decimal point.
+                                        10.e2 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+10e
+
+   ^
+at this token
+
+CURRENT TOKEN: IDENTIFIER<e>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: malformed number, a digit is required after the exponent.
+                                        10e 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+
+{}
+{}
+     ^
+at this token
+
+CURRENT TOKEN: <{>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: trailing garbage
+                                         {} {} 
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: invalid bytes in UTF8 string.
+                                        {"CoreletAPIVersion":2,"Corele
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error (required)
+[ "foo", "bar"
+ÿ
+               ^
+at this token
+
+CURRENT TOKEN: <EOI>
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+parse error: premature EOF
+                                       
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+parse error (trailing ,)
+{
+  "this": "is", /
+                  ^
+at this token
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+lexical error: probable comment found in input text, comments are not enabled.
+                                        {   "this": "is", // ignore th
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input '/'n["\n foo \/
+          ^
+here
+
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+lexical error: inside a string, '\' occurs before a character which it may not.
+                                        ["\n foo \/ bar \r\f\\\uffff\t
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input 'u'n"foo foo, blah blah \u
+                     ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: invalid (non-hex) character occurs after '\u' inside string.
+                                        "foo foo, blah blah \u0123 \u4
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input '/'n["\n foo \/
+          ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+lexical error: invalid character inside string.
+                                        "la di dah.  this is a string,
+                     (right here) ------^
+JSON is invalid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
+invalid character in input 'u'n"\u
+  ^
+here
+
+
+real	0m0.003s
+user	0m0.001s
+sys	0m0.001s
+JSON is valid
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.001s
