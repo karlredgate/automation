@@ -1,0 +1,11 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "description": "package that tests package.json features",
+    "dependencies": {
+        "redux": "^4.0.0"
+    },
+    "scripts": {
+        "try:hello": "echo 'try to say hello'"
+    }
+}
