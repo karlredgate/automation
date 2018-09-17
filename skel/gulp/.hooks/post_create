@@ -3,6 +3,6 @@
 # run after copying the hierarchy
 #
 
-npm install > .install.log
+npm install 2> .install.log
 
 # vim: ai et sw=4

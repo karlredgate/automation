@@ -3,6 +3,6 @@
 # run after copying the hierarchy
 #
 
-echo created
+echo "created $SKEL_ARGS"
 
 # vim: ai et sw=4
