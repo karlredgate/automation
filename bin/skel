@@ -32,6 +32,10 @@ function scaffold() {
 
 evergreen
 [ X$1 = X ] && usage
-scaffold "$1"
+export SKEL="$1"
+shift
+export SKEL_ARGS="$@"
+
+scaffold "$SKEL"
 
 # vim: ai et sw=4
