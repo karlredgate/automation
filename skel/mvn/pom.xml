@@ -2,8 +2,21 @@
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<!--
+Irritatingly - maven does not allow unknown XML tags.
+So here are the comments
+https://maven.apache.org/pom.html - pom reference
+https://maven.apache.org/ref/3.5.4/maven-model/maven.html - tags
+https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+https://maven.apache.org/guides/mini/guide-configuring-maven.html
+https://maven.apache.org/ref/3.5.4/maven-settings/settings.html
+https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html
+-->
 
   <modelVersion>4.0.0</modelVersion>
 <!--
