@@ -1,0 +1,3 @@
+
+default:
+	mvn -e validate
