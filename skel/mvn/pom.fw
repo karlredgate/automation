@@ -105,7 +105,7 @@
 \makebox[0pt][l]{
 \begin{minipage}{\textwidth}
 \begin{center}
-% \includegraphics[scale=0.75]{ski-bear.jpg}
+\includegraphics[scale=0.75]{feather.jpg}
 \end{center}
 \end{minipage}
 }
@@ -174,10 +174,12 @@ for the processor.
   @<Dependency section@>
   @<Build section@>
   @<Profile section@>
+
+  @<Copyright XML Comment@>
 </project>
 @}
 
-\url{https://maven.apache.org/pom.html}
+{\verb+https://maven.apache.org/pom.html+}
 { - pom reference}
 https://maven.apache.org/ref/3.5.4/maven-model/maven.html - tags
 https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
@@ -188,13 +190,30 @@ https://maven.apache.org/guides/introduction/introduction-to-the-standard-direct
 
 \section{Required Parts}
 
-@$@<Required elements@>@Z@M==@{@-
+The version of the Maven object model.
+
+@$@<Required elements@>+=@{@-
 <modelVersion>4.0.0</modelVersion>
+@}
+
+The group id is not required to be a domain name,
+but it prevents collisions.
+
+@$@<Required elements@>+=@{@-
 <groupId>com.redgates.base</groupId>
+@}
+
+This is the version of the package.
+
+@$@<Required elements@>+=@{@-
 <version>1.0.0-SNAPSHOT</version>
+@}
+
+@$@<Required elements@>+=@{@-
 <artifactId>redgates-base</artifactId>
 @}
 
+% -----------------------------------------------------------
 \chapter{Dependencies}
 
 The syntax for \verb+if+ allows a simple statement following the \verb+if+,
@@ -204,8 +223,9 @@ This is true in Chrome and in Node.
 
 I have yet to locate where in the spec this is stated.
 
+% FW sections that do not have the @@Z marker must be used
+% FW sections that have the @@M marker may be used multiple times
 @$@<Dependency section@>==@{@-
-<!-- this one must be used - if not it needs @@Z -->
 <dependencies>
   @<Dependencies@>
 </dependencies>
@@ -230,7 +250,6 @@ I have yet to locate where in the spec this is stated.
 \chapter{Build}
 
 @$@<Build section@>==@{@-
-<!-- this one must be used - if not it needs @@Z -->
 <build>
 </build>
 @}
@@ -239,7 +258,6 @@ I have yet to locate where in the spec this is stated.
 \chapter{Profiles}
 
 @$@<Profile section@>==@{@-
-<!-- this one must be used - if not it needs @@Z -->
 <profiles>
 </profiles>
 @}
@@ -251,37 +269,7 @@ When using an immediately-invoked function expression,
 treated as an expression instead of a declaration.
 
 % ============================================================
-\chapter{Copyright}
-
-This macro is intended to be included anywhere we need a copyright in
-a product file.
-
-@$@<Copyright Comment@>@Z@M==@{@-
-/*
- * FIX THIS
- * Copyright (c) 2018 Karl Redgate, as an unpublished work.
- * This notice does not imply unrestricted or public access to these
- * materials which are a trade secret of Karl Redgate or its
- * subsidiaries or affiliates (together referred to as "SUN"), and
- * which may not be reproduced, used, sold or transferred to any third
- * party without SUN's prior written consent.  All rights reserved.
- *
- * U.S. Government Rights.  If the Software is to be used by the
- * U.S. Government ("Government"), the following provisions apply. The
- * Software and associated documentation are commercial computer software
- * and commercial computer software documentation, respectively, and the
- * Government is acquiring only the license rights granted in the License
- * Agreement accompanying this Software (the license rights customarily
- * provided to non-Government users), in accordance with Section 12.212
- * of the Federal Acquisition Regulations ("FAR") or Section 227.7202-3
- * of the Defense Federal Acquisition Regulation Supplement ("DFARS"), as
- * applicable. For NASA users, the Government shall obtain the minimum
- * rights permitted under Section, in paragraph 1852.227-86 of the NASA
- * Supplement to the FAR (or any successor regulations).
- */
-@}
-
-apter{Utility FunnelWeb Macros}
+\chapter{Utility FunnelWeb Macros}
 
 @$@<Start Header@>@(@1@)@Z@M==@{@-
 @<Copyright Comment@>
@@ -291,6 +279,46 @@ apter{Utility FunnelWeb Macros}
 
 @$@<End Header@>@(@1@)@Z@M==@{@-
 #endif /* _@1_H_ */
+@}
+
+\section{Copyright}
+
+This macro is intended to be included anywhere we need a copyright in
+a product file.
+
+@$@<Copyright XML Comment@>@Z@M==@{@-
+<!--
+  @<Copyright Message@>
+  -->
+@}
+
+@$@<Copyright Comment@>@Z@M==@{@-
+/*
+ * @<Copyright Message@>
+ */
+@}
+
+@$@<Copyright Message@>@Z@M==@{@-
+FIX THIS
+Copyright (c) 2018 Karl Redgate, as an unpublished work.
+This notice does not imply unrestricted or public access to these
+materials which are a trade secret of Karl Redgate or its
+subsidiaries or affiliates (together referred to as "SUN"), and
+which may not be reproduced, used, sold or transferred to any third
+party without SUN's prior written consent.  All rights reserved.
+
+U.S. Government Rights.  If the Software is to be used by the
+U.S. Government ("Government"), the following provisions apply. The
+Software and associated documentation are commercial computer software
+and commercial computer software documentation, respectively, and the
+Government is acquiring only the license rights granted in the License
+Agreement accompanying this Software (the license rights customarily
+provided to non-Government users), in accordance with Section 12.212
+of the Federal Acquisition Regulations ("FAR") or Section 227.7202-3
+of the Defense Federal Acquisition Regulation Supplement ("DFARS"), as
+applicable. For NASA users, the Government shall obtain the minimum
+rights permitted under Section, in paragraph 1852.227-86 of the NASA
+Supplement to the FAR (or any successor regulations).
 @}
 
 \backmatter
