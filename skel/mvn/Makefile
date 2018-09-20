@@ -15,6 +15,6 @@ pom.xml: pom.fw
 pom.tex: pom.fw
 	fw pom.fw +t
 
-clean:
+clean: pom.xml
 	mvn clean
-	rm -f pom.aux pom.idx pom.lis pom.log pom.nop pom.pdf pom.tex pom.toc pom.xml
+	rm -f pom.aux pom.idx pom.lis pom.log pom.nop pom.pdf pom.tex pom.toc pom.xml pom.ilg pom.ind
