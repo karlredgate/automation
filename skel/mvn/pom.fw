@@ -1,0 +1,312 @@
+
+@p maximum_input_line_length = infinity
+@p typesetter = tex
+
+%
+% These funnelweb defined commands generate the text around
+% the macro definitions.  Here we redefine them to also
+% generate index entries for every macro defined in the file.
+%
+
+\def\fwmacroname#1#2{\index{#1 {\sl macro}}\index{Macro number!#2}{\sl #1\/}$\lbrack$#2$\rbrack$}
+\def\fwfilename#1#2{\index{#1 {\sl macro}}\index{Macro number!#2}{\bf #1}$\lbrack$#2$\rbrack$}
+
+\def\fwodef{\parindent=15pt\vskip3pt\hrule\vskip6pt\parindent=20pt}
+\def\fwcdef{\vskip6pt\hrule\vskip0pt\parindent=0pt}
+
+\ifx\pdfoutput\undefined
+\documentclass[twoside]{book}
+\else
+\documentclass[pdftex,twoside]{book}
+\usepackage{thumbpdf}
+\pdfcompresslevel=9
+\fi
+
+%
+% Packages for LaTeX
+%
+\usepackage[all,ps,dvips]{xy}
+\usepackage{pst-node}
+\usepackage{pst-tree}
+\usepackage[dvips]{graphicx}
+\usepackage{fancyhdr}
+\usepackage{makeidx}
+\usepackage{utopia}
+
+\newenvironment{commentary}[1]
+{\index{Commentary notes!#1}
+\begin{center}\begin{minipage}{0.8\textwidth}
+\vspace{2ex}\hrule\vspace{1ex}
+\def\commentaryname{#1}
+\parskip=\medskipamount
+\em}
+{\par {\bf -- \commentaryname}
+\vspace{1ex}\hrule\vspace{2ex}
+\end{minipage}\end{center}}
+% End of commentary environment definition
+
+\pagestyle{fancy}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,RE]{RedEye}
+\fancyfoot[CO,CE]{\copyright 2018 -- Karl Redgate}
+
+% Since this is funnelweb, the parindent is normally changed to
+% 0pt and a parskip is defined.  However, since I define a bunch
+% of other LaTeX stuff after the funnelweb header, this gets
+% screwed up.  So, here I use the funnelweb TeX commands to restore
+% that behavior.
+\parindent=0pt
+\fwparskipon
+% END of funnelweb setup
+
+\addtolength{\textwidth}{3cm}
+\addtolength{\headwidth}{3cm}
+\addtolength{\marginparwidth}{-2cm}
+\addtolength{\oddsidemargin}{-2cm}
+\addtolength{\evensidemargin}{-2cm}
+% \marginpar{ This is a test }
+
+\makeindex
+\typeout{Copyright (c) 2018, Karl Redgate}
+\typeout{Author: Karl Redgate}
+
+%%%%%%%%%%%%%%%
+%
+% Start of document
+%
+\begin{document}
+
+\frontmatter
+
+% Title Page
+
+\thispagestyle{empty}
+\makebox{
+    \begin{minipage}{\textwidth}
+        {\Huge\bfseries Specification of a\\[1ex]
+        \makebox{Project Object Model}\\[1ex]
+        (POM) File\\
+        }
+    \noindent\rule[-1ex]{\textwidth}{5pt}\\[2.5ex]
+    \end{minipage}
+}
+\vspace{2ex}
+\makebox[0pt][l]{
+    \begin{minipage}{\textwidth}
+    \flushright
+    {\bfseries
+        Karl Redgate\\[3ex]}
+        Version 1.0.0\\
+        19 September, 2018
+    \end{minipage}
+}
+
+\vspace{\stretch{1}}
+\makebox[0pt][l]{
+\begin{minipage}{\textwidth}
+\begin{center}
+% \includegraphics[scale=0.75]{ski-bear.jpg}
+\end{center}
+\end{minipage}
+}
+
+% Skip my framebox ...
+% normally my framebox has the stretch and then the copyright has
+% \vspace[2ex]
+% instead put the stretch before the copyright
+
+\vspace{\stretch{1}}
+\begin{center}
+Copyright \copyright 2018, \textsf{Karl Redgate}
+\end{center}
+\pagebreak
+
+% Copyright Page -- change this to a BSD license or some such
+\thispagestyle{empty}
+\begin{small}
+FIX THIS
+Copyright \copyright 2018 Karl Redgate, as an unpublished work.
+This notice does not imply unrestricted or public access to these
+materials which are a trade secret of Karl Redgate or its
+subsidiaries or affiliates (together referred to as "SUN"), and
+which may not be reproduced, used, sold or transferred to any third
+party without SUN's prior written consent.
+
+All rights reserved.
+
+U.S. Government Restricted Rights.  If you are licensing the
+Software on behalf of the U.S. Government ("Government"), the
+following provisions apply to you.  If the Software is supplied to
+the Department of Defense ("DoD"), it is classified as "Commercial
+Computer Software" under paragraph 252.227-7014 of the DoD Supplement
+to the Federal Acquisition Regulations ("DFARS") (or any successor
+regulations) and the Government is acquiring only the license
+rights granted herein (the license rights customarily provided to
+non-Government users).  If the Software is supplied to any unit
+or agency of the Government other than DoD, it is classified as
+"Restricted Computer Software" and the Government's rights in the
+Software are defined in paragraph 52.227-19 of the Federal Acquisition
+Regulations ("FAR") (or any successor regulations) or, in the cases
+of NASA, in paragraph 18.52.227-86 of the NASA Supplement to the FAR
+(or any successor regulations).
+\end{small}
+
+\tableofcontents
+
+\mainmatter
+
+% ============================================================
+\chapter{Overview}
+
+This file is a funnelweb file containing all ot the 
+other files in this directory.  This is the omly one needed
+for the processor.
+
+@O@<pom.xml@>@{
+<?xml version="1.0"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  @<Required elements@>
+  @<Dependency section@>
+  @<Build section@>
+  @<Profile section@>
+</project>
+@}
+
+\url{https://maven.apache.org/pom.html}
+{ - pom reference}
+https://maven.apache.org/ref/3.5.4/maven-model/maven.html - tags
+https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+https://maven.apache.org/guides/mini/guide-configuring-maven.html
+https://maven.apache.org/ref/3.5.4/maven-settings/settings.html
+https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html
+
+\section{Required Parts}
+
+@$@<Required elements@>@Z@M==@{@-
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.redgates.base</groupId>
+<version>1.0.0-SNAPSHOT</version>
+<artifactId>redgates-base</artifactId>
+@}
+
+\chapter{Dependencies}
+
+The syntax for \verb+if+ allows a simple statement following the \verb+if+,
+but not a subsequent \verb+else+ following that simple statement.
+The use of \verb+else+ requires that a block follows the \verb+if+.
+This is true in Chrome and in Node.
+
+I have yet to locate where in the spec this is stated.
+
+@$@<Dependency section@>==@{@-
+<!-- this one must be used - if not it needs @@Z -->
+<dependencies>
+  @<Dependencies@>
+</dependencies>
+@}
+
+@$@<Dependencies@>+=@{@-
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <scope>test</scope>
+    <version>LATEST</version>
+    <exclusions>
+       <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+       </exclusion>
+    </exclusions>
+</dependency>
+@}
+
+% -----------------------------------------------------------
+\chapter{Build}
+
+@$@<Build section@>==@{@-
+<!-- this one must be used - if not it needs @@Z -->
+<build>
+</build>
+@}
+
+% -----------------------------------------------------------
+\chapter{Profiles}
+
+@$@<Profile section@>==@{@-
+<!-- this one must be used - if not it needs @@Z -->
+<profiles>
+</profiles>
+@}
+
+\chapter{Notes}
+
+When using an immediately-invoked function expression,
+\verb+void+ can be used to force the function keyword to be
+treated as an expression instead of a declaration.
+
+% ============================================================
+\chapter{Copyright}
+
+This macro is intended to be included anywhere we need a copyright in
+a product file.
+
+@$@<Copyright Comment@>@Z@M==@{@-
+/*
+ * FIX THIS
+ * Copyright (c) 2018 Karl Redgate, as an unpublished work.
+ * This notice does not imply unrestricted or public access to these
+ * materials which are a trade secret of Karl Redgate or its
+ * subsidiaries or affiliates (together referred to as "SUN"), and
+ * which may not be reproduced, used, sold or transferred to any third
+ * party without SUN's prior written consent.  All rights reserved.
+ *
+ * U.S. Government Rights.  If the Software is to be used by the
+ * U.S. Government ("Government"), the following provisions apply. The
+ * Software and associated documentation are commercial computer software
+ * and commercial computer software documentation, respectively, and the
+ * Government is acquiring only the license rights granted in the License
+ * Agreement accompanying this Software (the license rights customarily
+ * provided to non-Government users), in accordance with Section 12.212
+ * of the Federal Acquisition Regulations ("FAR") or Section 227.7202-3
+ * of the Defense Federal Acquisition Regulation Supplement ("DFARS"), as
+ * applicable. For NASA users, the Government shall obtain the minimum
+ * rights permitted under Section, in paragraph 1852.227-86 of the NASA
+ * Supplement to the FAR (or any successor regulations).
+ */
+@}
+
+apter{Utility FunnelWeb Macros}
+
+@$@<Start Header@>@(@1@)@Z@M==@{@-
+@<Copyright Comment@>
+#ifndef _@1_H_
+#define _@1_H_
+@}
+
+@$@<End Header@>@(@1@)@Z@M==@{@-
+#endif /* _@1_H_ */
+@}
+
+\backmatter
+
+\begin{thebibliography}{99}
+
+\bibitem{Parsing}
+   Dick Grune, Ceriel Jacobs.
+   \newblock {\em Parsing Techniques: A Practical Guide}.
+   \newblock Ellis Horwood Limited, 1990.
+   \newblock ISBN: 0-13-651431-6.
+
+\end{thebibliography}
+
+\printindex
+
+\end{document}
+
+@! vim:autoindent expandtab sw=4
