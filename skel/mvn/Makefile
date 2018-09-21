@@ -10,10 +10,10 @@ pom.pdf: pom.tex
 	lualatex pom.tex
 
 pom.xml: pom.fw
-	fw pom.fw || ( cat pom.lis ; exit 1 )
+	fw +o -t pom.fw || ( cat pom.lis ; exit 1 )
 
 pom.tex: pom.fw
-	fw pom.fw +t
+	fw -o +t pom.fw
 
 clean: pom.xml
 	mvn clean

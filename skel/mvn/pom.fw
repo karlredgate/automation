@@ -171,6 +171,7 @@ for the processor.
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   @<Required elements@>
+  @<Property section@>
   @<Dependency section@>
   @<Build section@>
   @<Profile section@>
@@ -241,6 +242,20 @@ This is the version of the package.
 <artifactId>redgates-base</artifactId>
 @}
 
+\section{Properties}
+
+@$@<Property section@>==@{@-
+<properties>
+  @<Properties@>
+</properties>
+@}
+
+Used by formatter-maven-plugin to locate \verb+eclipse-java-google-style.xml+
+
+@$@<Properties@>+=@{@-
+<main.basedir>${project.parent.basedir}</main.basedir>
+@}
+
 
 % -----------------------------------------------------------
 \chapter{Dependencies}
@@ -290,12 +305,6 @@ I have yet to locate where in the spec this is stated.
 <profiles>
 </profiles>
 @}
-
-\chapter{Notes}
-
-When using an immediately-invoked function expression,
-\verb+void+ can be used to force the function keyword to be
-treated as an expression instead of a declaration.
 
 % ============================================================
 \chapter{Utility FunnelWeb Macros}
