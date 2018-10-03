@@ -1,0 +1,31 @@
+
+function printError( e ) {
+    var obj = {
+        code: e.code,
+        message: e.message,
+        path: e.path,
+        start: e.start,
+        end: e.end,
+        isWarning: e.isWarning
+    };
+console.log( e );
+    console.log( JSON.stringify(obj,null,2) );
+}
+
+var raml = require( "raml-1-parser" );
+var api = raml.loadApiSync( process.argv[2] );
+
+api.errors().forEach( printError );
+
+console.log( JSON.stringify(api, null, 2) );
+
+function printResourceMethod( method ) {
+    console.log( "" + method.method() + "  (" + this.kind() + ") -> " + this.absoluteUri() );
+}
+
+function printResource( resource ) {
+    var handler = printResourceMethod.bind(resource);
+    resource.methods().forEach( handler );
+}
+
+api.resources().forEach( printResource );
