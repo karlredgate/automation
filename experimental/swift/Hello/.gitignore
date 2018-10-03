@@ -3,3 +3,8 @@
 /Packages
 /*.xcodeproj
 /factorial
+cocoa
+cocoa.dSYM/
+example
+example.dSYM/
+factorial.dSYM/
