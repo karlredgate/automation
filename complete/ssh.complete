@@ -1,0 +1,34 @@
+
+function __ssh_commands__() {
+    grep '^Host ' ~/.ssh/config  | sed -e 's/Host //' | sort
+}
+
+function __ssh_cmd_options__() {
+    local prev="$1"
+    local cur="$2"
+    echo
+}
+
+function __ssh__() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local cword=$COMP_CWORD
+    local commands=$( __ssh_commands__ )
+
+    COMPREPLY=()
+
+    case $cword in
+    1)
+        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+        ;;
+    2)
+        # [ $prev = "appsec" ] && COMPREPLY=( $(appsec_commands "$cur") )
+        COMPREPLY=( $(__ssh_cmd_options__ $prev "$cur") )
+        ;;
+    esac
+}
+
+# Use __ssh__ function to complete for ssh command
+complete -F __ssh__ ssh
+
+# vim: autoindent expandtab sw=4

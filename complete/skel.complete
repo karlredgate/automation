@@ -1,0 +1,29 @@
+
+function __skel_cmd_options__() {
+    local prev="$1"
+    local cur="$2"
+    echo
+}
+
+function __skel__() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local cword=$COMP_CWORD
+    local commands=$( cd $HOME/skel ; echo * )
+
+    COMPREPLY=()
+
+    case $cword in
+    1)
+        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+        ;;
+    2)
+        COMPREPLY=( $(__skel_cmd_options__ $prev "$cur") )
+        ;;
+    esac
+}
+
+# Use __skel__ function to complete for skel command
+complete -F __skel__ skel
+
+# vim: autoindent expandtab sw=4
