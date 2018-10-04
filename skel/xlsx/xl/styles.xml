@@ -77,8 +77,8 @@
 
   <tableStyles count="1">
     <tableStyle count="2" pivot="0" name="dev Programs-style">
-      <tableStyleElement dxfId="8" type="firstRowStripe"/>
-      <tableStyleElement dxfId="9" type="secondRowStripe"/>
+      <tableStyleElement dxfId="1" type="firstRowStripe"/>
+      <tableStyleElement dxfId="1" type="secondRowStripe"/>
     </tableStyle>
   </tableStyles>
 

@@ -9,6 +9,12 @@
   <tableColumns count="1">
     <tableColumn name="Column1" id="1"/>
   </tableColumns>
-  <tableStyleInfo name="Programs-style" showColumnStripes="0" showFirstColumn="1" showLastColumn="1" showRowStripes="1"/>
+
+  <tableStyleInfo
+      name="dev Programs-style"
+      showColumnStripes="0"
+      showFirstColumn="1"
+      showLastColumn="1"
+      showRowStripes="1"/>
 
 </table>
