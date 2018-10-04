@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<comments
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+
+  <authors>
+    <author/>
+  </authors>
+
+  <commentList>
+    <comment authorId="0" ref="A31">
+      <text>
+        <t xml:space="preserve">according to +someone@example.com we just needs to open ticket 
+	- Jane Doe
++else@example.com
+	- Roe</t>
+      </text>
+    </comment>
+    <comment authorId="0" ref="C7">
+      <text>
+        <t xml:space="preserve">+email@example.com - it's own app 
+_Assigned to Product Owner_
+	-John Doe</t>
+      </text>
+    </comment>
+  </commentList>
+
+</comments>

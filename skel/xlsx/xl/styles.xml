@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet
+    xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+
+  <numFmts count="3">
+    <numFmt numFmtId="164" formatCode="mmm&quot; &quot;dd&quot;, &quot;yyyy"/>
+    <numFmt numFmtId="165" formatCode="mmm d yyyy"/>
+    <numFmt numFmtId="166" formatCode="mmm d, yyyy"/>
+  </numFmts>
+
+  <fonts count="11">
+    <font> <sz val="10.0"/> <color rgb="FF000000"/> <name val="Arial"/> </font>
+    <font> <b/> <sz val="10.0"/> <color rgb="FF980000"/> <name val="Arial"/> </font>
+    <font> <b/> <sz val="10.0"/> <color rgb="FF000000"/> <name val="Arial"/> </font>
+    <font> <b/> <sz val="11.0"/> <color rgb="FF333333"/> <name val="Arial"/> </font>
+    <font> <sz val="10.0"/> <color rgb="FFFFFFFF"/> <name val="Arial"/> </font>
+    <font> <b/> <sz val="11.0"/> <color rgb="FFEFEFEF"/> <name val="Arial"/> </font>
+    <font> <sz val="10.0"/> <color rgb="FF333333"/> <name val="Arial"/> </font>
+    <font> <sz val="8.0"/> <color rgb="FF333333"/> <name val="Arial"/> </font>
+    <font> <u/> <sz val="8.0"/> <color rgb="FF1155CC"/> <name val="Arial"/> </font>
+    <font> <u/> <sz val="10.0"/> <color rgb="FF000080"/> <name val="Arial"/> </font>
+    <font> <b/> <sz val="10.0"/> <color rgb="FFFFFFFF"/> <name val="Arial"/> </font>
+  </fonts>
+
+  <fills count="2">
+    <fill> <patternFill patternType="none"/> </fill>
+    <fill> <patternFill patternType="lightGray"/> </fill>
+  </fills>
+
+ 
+  <borders count="2">
+    <border/>
+    <border>
+      <left style="thin"> <color rgb="FF000000"/> </left>
+      <right style="thin"> <color rgb="FF000000"/> </right>
+      <top style="thin"> <color rgb="FF000000"/> </top>
+      <bottom style="thin"> <color rgb="FF000000"/> </bottom>
+    </border>
+  </borders>
+
+  <cellStyleXfs count="1">
+    <xf borderId="0" fillId="0" fontId="0" numFmtId="0" applyAlignment="1" applyFont="1"/>
+  </cellStyleXfs>
+
+  <cellXfs count="2">
+    <xf borderId="0" fillId="0" fontId="0" numFmtId="0" xfId="0" applyAlignment="1" applyFont="1">
+      <alignment readingOrder="0" shrinkToFit="0" vertical="bottom" wrapText="0"/>
+    </xf>
+    <xf borderId="0" fillId="0" fontId="0" numFmtId="0" xfId="0" applyFont="1"/>
+  </cellXfs>
+
+
+  <cellStyles count="1">
+    <cellStyle xfId="0" name="Normal" builtinId="0"/>
+  </cellStyles>
+
+
+  <dxfs count="2">
+    <dxf>
+      <font/>
+      <fill>
+        <patternFill patternType="solid"> <fgColor rgb="FFFCE8B2"/> <bgColor rgb="FFFCE8B2"/> </patternFill>
+      </fill>
+      <border/>
+    </dxf>
+    <dxf>
+      <font> <color rgb="FF980000"/> </font>
+      <fill>
+        <patternFill patternType="solid"> <fgColor rgb="FFF4C7C3"/> <bgColor rgb="FFF4C7C3"/> </patternFill>
+      </fill>
+      <border/>
+    </dxf>
+  </dxfs>
+
+
+  <tableStyles count="1">
+    <tableStyle count="2" pivot="0" name="dev Programs-style">
+      <tableStyleElement dxfId="8" type="firstRowStripe"/>
+      <tableStyleElement dxfId="9" type="secondRowStripe"/>
+    </tableStyle>
+  </tableStyles>
+
+
+</styleSheet>
