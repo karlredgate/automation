@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="1026" uniqueCount="358">
+<sst
+    xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    count="1026"
+    uniqueCount="358">
+
+    <dc:description>
+	I assume the "si" tag is string index.  There is no ID associated with it.
+	The index in the node list is used to find the string.
+	I am not sure yet what "rPr", "u", and "b" tags are.
+	the "xml:space" attribute of the "t" tag appears to retain space at the
+	end of the text node.
+    </dc:description>
 
   <si>
     <r>
@@ -9,9 +24,7 @@
       <t>What is rPr b tags</t>
     </r>
     <r>
-      <t xml:space="preserve">
-       - What is this piece
-       - and this</t>
+      <t xml:space="preserve">some text</t>
     </r>
   </si>
 
