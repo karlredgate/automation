@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Read each of the sheets and add them to the workbook.
+# Leave the rest of the workbook XML alone.
+#
+
+# vim: ai et sw=4
