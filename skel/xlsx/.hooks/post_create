@@ -3,7 +3,18 @@
 # run after copying the hierarchy
 #
 
-# use this if using node packages
-# npm install > .install.log
+# Check if there were already csv files in the current directory
+# and translate them to sheets.
+
+# Then update the workbook to point at them.
+
+function main() {
+    for csv in *.csv
+    do
+        echo "Add $csv to workbook ..."
+    done
+}
+
+main "$@"
 
 # vim: ai et sw=4
