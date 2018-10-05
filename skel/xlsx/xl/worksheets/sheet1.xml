@@ -7,6 +7,8 @@
     xmlns:mv="urn:schemas-microsoft-com:mac:vml"
     xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"
     xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
     xmlns:xm="http://schemas.microsoft.com/office/excel/2006/main">
 
   <sheetPr>
@@ -14,8 +16,11 @@
     <outlinePr summaryBelow="0" summaryRight="0"/>
   </sheetPr>
 
+  <dc:description>
+      showGridLines="0" makes lines disappear
+  </dc:description>
   <sheetViews>
-    <sheetView showGridLines="0" workbookViewId="0"/>
+    <sheetView showGridLines="1" workbookViewId="0"/>
   </sheetViews>
   <sheetFormatPr customHeight="1" defaultColWidth="14.43" defaultRowHeight="15.75"/>
 

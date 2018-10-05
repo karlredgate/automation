@@ -26,18 +26,20 @@
 
   <dc:description>
       The definedNames tag generates errors unless it refers to something real.
+      Even though these refer to specific sheets - it appears the sheets must have
+      some reference to them as well?
   </dc:description>
 
   <!--
   <definedNames>
       <definedName
 	  hidden="1"
-	  localSheetId="1"
-	  name="_xlnm._FilterDatabase">'what is this'!$A$1:$B$3</definedName>
+	  localSheetId="2"
+	  name="_xlnm._FilterDatabase">'description of sheet 1'!$A$1:$B$3</definedName>
     <definedName
 	hidden="1"
-	localSheetId="2"
-	name="_xlnm._FilterDatabase">'what is this 2'!$A$2:$A$3</definedName>
+	localSheetId="1"
+	name="_xlnm._FilterDatabase">'description of sheet 2'!$A$2:$A$3</definedName>
   </definedNames>
 -->
 
