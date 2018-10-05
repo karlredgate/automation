@@ -16,6 +16,7 @@
     <sheet state="visible" name="description of sheet 2" sheetId="2" r:id="rId4"/>
   </sheets>
 
+  <!--
   <definedNames>
       <definedName
 	  hidden="1"
@@ -26,6 +27,7 @@
 	localSheetId="2"
 	name="_xlnm._FilterDatabase">'what is this 2'!$A$2:$A$3</definedName>
   </definedNames>
+-->
 
   <calcPr/>
 
