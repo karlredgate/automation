@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# run after copying the hierarchy
+#
+
+# use this if using node packages
+# npm install > .install.log
+
+# vim: ai et sw=4
