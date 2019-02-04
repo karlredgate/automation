@@ -1,0 +1,19 @@
+
+var o = new Object();
+var h = {};
+var p = new Proxy( o, h );
+
+h.set = function (target, name, value) {
+    console.log( "set " + name.toString() + " to " + value );
+    target[name] = value;
+    return value;
+};
+
+h.get = function (target, name) {
+    console.log( "get " + name.toString() );
+    return target[name];
+};
+
+p.a = 3;
+p.b = 5;
+console.log( "P: " + p );
