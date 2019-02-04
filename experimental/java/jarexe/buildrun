@@ -1,0 +1,3 @@
+javac Shell.java 
+jar cfm Shell.jar Manifest.txt Shell.class 
+java -jar Shell.jar 
