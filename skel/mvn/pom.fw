@@ -33,6 +33,9 @@
 \usepackage{makeidx}
 \usepackage{utopia}
 
+% To allow \url{} and \href ...
+\usepackage{hyperref}
+
 \newenvironment{commentary}[1]
 {\index{Commentary notes!#1}
 \begin{center}\begin{minipage}{0.8\textwidth}
@@ -191,20 +194,20 @@ https://maven.apache.org/guides/introduction/introduction-to-the-standard-direct
 
 \section{Required Parts}
 
-The version of the Maven object model.
+The \verb+modelVersion+ element contains the version of the Maven object model.
 
 @$@<Required elements@>+=@{@-
 <modelVersion>4.0.0</modelVersion>
 @}
 
 The group id is not required to be a domain name,
-but it prevents collisions.
+but it helps prevent collisions.
 
 @$@<Required elements@>+=@{@-
 <groupId>com.redgates.base</groupId>
 @}
 
-This is the version of the package.
+The \verb+version+ element contains the version of the package.
 
 @$@<Required elements@>+=@{@-
 <version>1.0.0-SNAPSHOT</version>
@@ -233,6 +236,7 @@ This is not in use yet
 @}
 
 This is the version of the package.
+Or is this the version of the parent
 
 @$@<Parent elements@>+=@{@-
 <version>1.0.0-SNAPSHOT</version>
@@ -258,14 +262,21 @@ Used by formatter-maven-plugin to locate \verb+eclipse-java-google-style.xml+
 
 
 % -----------------------------------------------------------
+% https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html
 \chapter{Dependencies}
 
-The syntax for \verb+if+ allows a simple statement following the \verb+if+,
-but not a subsequent \verb+else+ following that simple statement.
-The use of \verb+else+ requires that a block follows the \verb+if+.
-This is true in Chrome and in Node.
+Maven avoids the need to discover and specify the libraries that
+your own dependencies\cite{Dependencies}
+require by including transitive dependencies automatically.
+This feature is facilitated by reading the project files of your
+dependencies from the remote repositories specified.
+In general, all dependencies of those projects are used in your
+project, as are any that the project inherits from its parents, or
+from its dependencies, and so on.
+There is no limit to the number of levels that dependencies can be
+gathered from.
+A problem arises only if a cyclic dependency is discovered.
 
-I have yet to locate where in the spec this is stated.
 
 % FW sections that do not have the @@Z marker must be used
 % FW sections that have the @@M marker may be used multiple times
@@ -274,6 +285,57 @@ I have yet to locate where in the spec this is stated.
   @<Dependencies@>
 </dependencies>
 @}
+
+\begin{description}
+\item[Dependency mediation] -
+    this determines what version of an artifact will be chosen when
+    multiple versions are encountered as dependencies.
+    Maven picks the "nearest definition".
+    That is, it uses the version of the closest dependency to your
+    project in the tree of dependencies.
+    You can always guarantee a version by declaring it explicitly
+    in your project's POM.
+    Note that if two dependency versions are at the same depth in
+    the dependency tree, the first declaration wins.
+\item["nearest definition"]
+    means that the version used will be the closest one to your
+    project in the tree of dependencies.
+    For example, if dependencies
+    for A, B, and C are defined as A -> B -> C -> D 2.0 and A -> E
+    -> D 1.0, then D 1.0 will be used when building A because the
+    path from A to D through E is shorter.
+    You could explicitly add a dependency to D 2.0 in A to force
+    the use of D 2.0.
+\item[Dependency management] -
+    this allows project authors to directly specify the versions
+    of artifacts to be used when they are encountered in transitive
+    dependencies or in dependencies where no version has been
+    specified.
+    In the example in the preceding section a dependency
+    was directly added to A even though it is not directly used by A.
+    Instead, A can include D as a dependency in its dependencyManagement
+    section and directly control which version of D is used when,
+    or if, it is ever referenced.
+\item[Dependency scope] -
+    this allows you to only include dependencies appropriate for
+    the current stage of the build.
+    This is described in more detail below.
+\item[Excluded dependencies] -
+    If project X depends on project Y, and project Y depends on
+    project Z, the owner of project X can explicitly exclude project
+    Z as a dependency, using the "exclusion" element.
+\item[Optional dependencies] -
+    If project Y depends on project Z, the owner of project Y can
+    mark project Z as an optional dependency, using the "optional"
+    element.
+    When project X depends on project Y, X will depend only on
+    Y and not on Y's optional dependency Z.
+    The owner of project X may then explicitly add a dependency
+    on Z, at her option.
+    (It may be helpful to think of optional dependencies
+    as "excluded by default.")
+\end{description}
+
 
 @$@<Dependencies@>+=@{@-
 <dependency>
@@ -289,6 +351,60 @@ I have yet to locate where in the spec this is stated.
     </exclusions>
 </dependency>
 @}
+
+\section{Scope}
+
+Dependency scope is used to limit the transitivity of a dependency,
+and also to affect the classpath used for various build tasks.
+
+There are 6 scopes available:
+
+\begin{description}
+\item[compile]
+    This is the default scope, used if none is specified.
+    Compile dependencies are available in all classpaths of a project.
+    Furthermore, those dependencies are propagated to dependent projects.
+\item[provided]
+    This is much like compile, but indicates you expect the JDK or
+    a container to provide the dependency at runtime.
+    For example, when building a web application for the Java
+    Enterprise Edition, you would set the dependency on the Servlet
+    API and related Java EE APIs to scope provided because the web
+    container provides those classes.
+    This scope is only available on the compilation and test
+    classpath, and is not transitive.
+\item[runtime]
+    This scope indicates that the dependency is not required for
+    compilation, but is for execution.
+    It is in the runtime and test classpaths, but not the compile
+    classpath.
+\item[test]
+    This scope indicates that the dependency is not required for
+    normal use of the application, and is only available for the
+    test compilation and execution phases.
+    This scope is not transitive.
+\item[system]
+    This scope is similar to provided except that you have to provide
+    the JAR which contains it explicitly.
+    The artifact is always available and is not looked up in a repository.
+\item[import]
+    This scope is only supported on a dependency of type pom in the
+    <dependencyManagement> section.
+    It indicates the dependency to be replaced with the effective
+    list of dependencies in the specified POM's <dependencyManagement>
+    section.
+    Since they are replaced, dependencies with a scope of import
+    do not actually participate in limiting the transitivity of a
+    dependency.
+\end{description}
+
+Each of the scopes (except for import) affects transitive dependencies
+in different ways, as is demonstrated in the table below.
+If a dependency is set to the scope in the left column, transitive
+dependencies of that dependency with the scope across the top row
+will result in a dependency in the main project with the scope
+listed at the intersection.
+If no scope is listed, it means the dependency will be omitted.
 
 % -----------------------------------------------------------
 \chapter{Build}
@@ -368,6 +484,11 @@ Supplement to the FAR (or any successor regulations).
    \newblock {\em Parsing Techniques: A Practical Guide}.
    \newblock Ellis Horwood Limited, 1990.
    \newblock ISBN: 0-13-651431-6.
+
+\bibitem{Dependencies}
+   Maven project.
+   \newblock {\em Introduction to the Dependency Mechanism}.
+   \newblock \url{https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html}
 
 \end{thebibliography}
 
