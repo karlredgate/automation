@@ -1,9 +1,13 @@
 
-test: hello.class
+test: HelloWorld.class HelloTrait.class
 	scala-2.12 HelloWorld
+	scala-2.12 HelloTrait
 
-hello.class: hello.scala
+HelloTrait.class: HelloTrait.scala
+	scalac-2.12 HelloTrait.scala 
+
+HelloWorld.class: hello.scala
 	scalac-2.12 hello.scala 
 
 clean:
-	rm HelloWorld*.class
+	rm *.class
