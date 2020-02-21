@@ -1,13 +1,17 @@
 
 PROJECT=Command
+JAR=$(PROJECT).jar
 OBJS += $(PROJECT).class
 
-test: $(OBJS)
+test: $(JAR)
 	@: java Command
-	java -jar $(PROJECT).jar 
+	java -jar $(JAR)
 
-$(PROJECT).jar: $(OBJS)
+$(JAR): $(OBJS)
 	jar cfm $@ Manifest.txt $(OBJS)
 
 %.class: %.java
 	javac $?
+
+clean:
+	rm -f *.class *.jar
