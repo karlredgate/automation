@@ -5,5 +5,8 @@
 
 # use this if using node packages
 # npm install > .install.log
+git init
+git add *
+git commit -m 'Initial'
 
 # vim: ai et sw=4
