@@ -11,6 +11,8 @@
 #       In order to cater to the module system of Java 9+,
 #       the groovy-all-x.y.z.jar file is no longer available.
 
-GROOVY=/Users/kredgate/.m2/repository/org/codehaus/groovy/groovy-all/2.4.11/groovy-all-2.4.11.jar
+# GROOVY=/Users/kredgate/.m2/repository/org/codehaus/groovy/groovy-all/2.4.11/groovy-all-2.4.11.jar
+# http://groovy-lang.org/install.html
+GROOVY=/Users/kredgate/Library/Groovy/groovy-3.0.4/lib/groovy-3.0.4.jar
 
 java -cp ${GROOVY} groovy.lang.GroovyShell $*
