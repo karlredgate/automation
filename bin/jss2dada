@@ -117,6 +117,13 @@ function string_oneOf( rule, name, schema ) {
     return true;
 }
 
+function string_example( rule, name, schema ) {
+    if ( schema["examples"] == null ) return false;
+    let strings = schema["examples"].map( e => qstring(e) );
+    console.log( "[ " + strings.join('|') + " | StringLiteral ]" );
+    return true;
+}
+
 /*
  * Need to handle "default" slot also
  * handle "oneOf" for "format"
@@ -124,9 +131,10 @@ function string_oneOf( rule, name, schema ) {
 parsers["string"] = function ( rule, name, schema ) {
     console.log( rule + ': ' + keystring(name) );
 
-    if ( string_enum(  rule, name, schema) ) return console.log(';');
-    if ( string_format(rule, name, schema) ) return console.log(';');
-    if ( string_oneOf( rule, name, schema) ) return console.log(';');
+    if ( string_enum(    rule, name, schema) ) return console.log(';');
+    if ( string_format(  rule, name, schema) ) return console.log(';');
+    if ( string_oneOf(   rule, name, schema) ) return console.log(';');
+    if ( string_example( rule, name, schema) ) return console.log(';');
 
     console.log( 'StringLiteral' );
     console.log( ' ;' );
