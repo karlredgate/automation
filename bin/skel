@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function die() {
+    echo "$*" 1>&2
+    exit 1
+}
+
 function usage() {
     for skel in $(cd ~/skel ; ls)
     do
@@ -17,6 +22,7 @@ function update_link() {
     ln -s $target ~/skel/$link
 }
 
+# Make sure all skel pointers are up to date
 function evergreen() {
     mkdir -p ~/skel
     for target in ~/ws/github/automation/skel/* ~/ws/automation/skel/*
@@ -26,15 +32,25 @@ function evergreen() {
 }
 
 function scaffold() {
+    [ -d ~/skel/"$1" ] || die "Unknown skel ($1)"
     ( cd ~/skel/"$1" ; tar cf - . ) | tar xf -
     [ -x .hooks/post_create ] && .hooks/post_create
 }
 
 evergreen
 [ X$1 = X ] && usage
-export SKEL="$1"
-shift
-export SKEL_ARGS="$@"
+# export SKEL="$1"
+# shift
+# export SKEL_ARGS="$@"
+
+case "$1" in
+--help) usage ;;
+--*) die "unknown option" ;;
+*)  export SKEL="$1"
+    shift
+    export SKEL_ARGS="$@"
+    ;;
+esac
 
 scaffold "$SKEL"
 
