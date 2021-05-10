@@ -42,7 +42,14 @@ cat <<END
       <xsl:value-of select='activity:object/atom:title[@type="text"]' />
       <xsl:text>&#10;</xsl:text>
       <xsl:value-of select='atom:content[@type="html"]' />
+      <xsl:apply-templates select='atom:content[@type="html"]' />
       <xsl:text>&#10;&#10;</xsl:text>
+    </xsl:template>
+
+    <xsl:template match='div'>
+      <xsl:text> DIV </xsl:text>
+      <xsl:value-of select='atom:title' />
+      <xsl:text> DIV </xsl:text>
     </xsl:template>
 
     <xsl:template match='activity:target'>
@@ -63,7 +70,6 @@ function fancy_text() {
     xsltproc <(fancy_xslt) -
 }
 filter=fancy_text
-# filter=cat
 
 query="streams=user+IS+$LOGNAME"
 for arg
@@ -71,6 +77,7 @@ do
     case "$arg" in
     --all)  query=""   ; shift ;;
     --pdf)  filter=pdf ; shift ;;
+    --raw)  filter=cat ; shift ;;
     *)
         query="streams=user+IS+$1"
         shift

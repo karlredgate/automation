@@ -16,6 +16,7 @@
 
 (deftemplate File
     (slot path (type STRING))
+    (multislot segments)
     (slot basename (type STRING))
     (slot extension (type SYMBOL) (default unknown))
     (slot modified-timestamp (type INTEGER))

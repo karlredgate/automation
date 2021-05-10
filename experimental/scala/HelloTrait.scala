@@ -1,3 +1,3 @@
 object HelloTrait extends App {
-    println( "Hello World" )
+    println( "Hello World - trait App" )
 }
