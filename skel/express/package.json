@@ -1,0 +1,25 @@
+{
+  "name": "OLAP-mock",
+  "description": "Mock Akamai OLAP service with rate control API",
+  "version": "0.0.1",
+  "main": "server.js",
+  "browser-shatisthis": "index.js",
+  "dependencies": {
+    "express": "*",
+    "connect-redis": "*",
+    "serve-static": "*",
+    "sqlite3": "*"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "author": "Karl Redgate <karl.redgate@akamai.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://stash.akamai.com/~kredgate/automation"
+  },
+  "bugs": {
+    "url": "https://gsd.akamai.com/"
+  },
+  "homepage": "https://git.source.akamai.com/users/kredgate/repos/automation"
+}
