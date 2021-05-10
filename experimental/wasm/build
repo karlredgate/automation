@@ -1,0 +1,1 @@
+node_modules/.bin/wa compile -o hello.wasm hello.c
