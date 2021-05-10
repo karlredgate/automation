@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary title="GarageBand Terminology">
+  <!-- GarageBand Suite -->
+	<suite name="GarageBand Suite" code="band" description="GarageBand classes and commands">
+		<class name="application" code="capp" description="The top level scripting object." plural="applications">
+			<cocoa class="CLgApplication"/>
+      <!-- renderPreview -->
+			<responds-to name="renderPreview">
+				<cocoa method="asRenderPreview:"/>
+			</responds-to>
+		</class>
+    <!-- renderPreview -->
+		<command name="renderPreview" code="bandprev" description="Render an iLife Preview for a project">
+			<direct-parameter description="Reference to the project" type="file" optional="yes"/>
+		</command>
+	</suite>
+</dictionary>

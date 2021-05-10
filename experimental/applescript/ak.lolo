@@ -1,0 +1,19 @@
+
+on content-policy
+end
+
+on client-request
+    set response header Foo to "testing"
+end
+
+on client-done
+    send beacon to 
+    set R_6526_10_ACTION to "alert" hidden
+    append "+mesg" to R_6526_10_ACTION
+    if ( WAF_DISABLE_AUTO_REPLY is not "on" ) 
+end
+
+on run
+end
+
+# vim: ai et sw=4 syntax=applescript

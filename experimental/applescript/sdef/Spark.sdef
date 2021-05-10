@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="Spark">
+  <suite name="Spark suite" code="sprk" description="Spark specific classes">
+      
+      <command name="HasSelectedMessage" code="spkhassm" description="Has selected message check">
+          <cocoa class="RSMAppleScriptCmdHasSelectedMessage"/>
+          <result type="boolean" />
+      </command>
+      
+      <command name="GetSelectedMessageTitle" code="spkgsmtl" description="Get selected message title">
+          <cocoa class="RSMAppleScriptCmdGetSelectedMessageTitle"/>
+          <result type="text" />
+      </command>
+      
+      <command name="GetSelectedMessageBacklink" code="spkgsmbl" description="Get selected message backlink">
+          <cocoa class="RSMAppleScriptCmdGetSelectedMessageBacklink"/>
+          <result type="text" />
+      </command>
+      
+  </suite>
+</dictionary>

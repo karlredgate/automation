@@ -1,0 +1,81 @@
+/Applications/Adium.app/Contents/Resources/Adium.sdef
+/Applications/Alfred 3.app/Contents/Resources/Alfred.sdef
+/Applications/Apple Configurator 2.app/Contents/Library/Script Libraries/Configuration Utility.scptd/Contents/Resources/ScriptingDictionary.sdef
+/Applications/Calendar.app/Contents/Resources/iCal.sdef
+/Applications/Contacts.app/Contents/Resources/Contacts.sdef
+/Applications/GPG Keychain.app/Contents/Resources/gka.sdef
+/Applications/GarageBand.app/Contents/Resources/GarageBandSuite.sdef
+/Applications/Google Chrome Canary.app/Contents/Resources/scripting.sdef
+/Applications/Google Chrome.app/Contents/Resources/scripting.sdef
+/Applications/Horos.app/Contents/Resources/Horos.sdef
+/Applications/Keynote.app/Contents/Resources/Keynote.sdef
+/Applications/LyX.app/Contents/Resources/LyX.sdef
+/Applications/MacDown.app/Contents/Resources/MacDown.sdef
+/Applications/Mail.app/Contents/Resources/Mail.sdef
+/Applications/Messages.app/Contents/Resources/iChat.sdef
+/Applications/Microsoft Excel.app/Contents/Resources/Excel.sdef
+/Applications/Microsoft Outlook.app/Contents/Resources/Outlook.sdef
+/Applications/Microsoft PowerPoint.app/Contents/Resources/PowerPoint.sdef
+/Applications/Microsoft Word.app/Contents/Resources/Word.sdef
+/Applications/Notational Velocity.app/Contents/Resources/Notation.sdef
+/Applications/Notes.app/Contents/Resources/Notes.sdef
+/Applications/Numbers.app/Contents/Resources/Numbers.sdef
+/Applications/OmniPresence.app/Contents/Resources/OmniPresence.sdef
+/Applications/Pages.app/Contents/Resources/Pages.sdef
+/Applications/Photos.app/Contents/Resources/Photos.sdef
+/Applications/Postgres.app/Contents/Resources/PostgresAppScriptable.sdef
+/Applications/Pulse Secure.app/Contents/Plugins/JamUI/PulseTray.app/Contents/Resources/PulseVerbs.sdef
+/Applications/Pulse Secure.app/Contents/Resources/PulseProperties.sdef
+/Applications/QLab.app/Contents/Resources/QLab.sdef
+/Applications/QueryMon.app/Contents/Resources/QueryMon.sdef
+/Applications/QuickTime Player.app/Contents/Resources/QuickTimePlayerX.sdef
+/Applications/RStudio.app/Contents/Resources/RStudio.sdef
+/Applications/Reminders.app/Contents/Resources/Reminders.sdef
+/Applications/Safari.app/Contents/Resources/Safari.sdef
+/Applications/Screenhero.app/Contents/Resources/Screenhero.sdef
+/Applications/Skim.app/Contents/Resources/Skim.sdef
+/Applications/Spark.app/Contents/Resources/Spark.sdef
+/Applications/System Preferences.app/Contents/Resources/SystemPreferences.sdef
+/Applications/TeX/BibDesk.app/Contents/Resources/BibDesk.sdef
+/Applications/The Unarchiver.app/Contents/Resources/TheUnarchiverSuite.sdef
+/Applications/Tunnelblick.app/Contents/Resources/tunnelblick.sdef
+/Applications/Utilities/Bluetooth File Exchange.app/Contents/Resources/Bluetooth File Exchange.sdef
+/Applications/Utilities/Terminal.app/Contents/Resources/Terminal.sdef
+/Applications/VOX.app/Contents/Resources/Vox.sdef
+/Applications/Xcode.app/Contents/Applications/Instruments.app/Contents/Resources/Instruments.sdef
+/Applications/Xcode.app/Contents/Resources/Xcode.sdef
+/Applications/iTerm 2.app/Contents/Resources/iTerm2.sdef
+/Applications/iTunes.app/Contents/Resources/com.apple.iTunes.sdef
+/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/Microsoft Update Assistant.app/Contents/Resources/MAUD.sdef
+/Library/Printers/hp/Utilities/HP Utility.app/Contents/Resources/HP Utility.sdef
+/Library/Printers/hp/Utilities/Handlers/ScanEventHandler.app/Contents/Resources/Scan.sdef
+/Library/ScriptingAdditions/WebexScriptAddition.osax/Contents/Resources/webexplugin.sdef
+/System/Library/CoreServices/AppleScript Utility.app/Contents/Resources/AppleScriptUtility.sdef
+/System/Library/CoreServices/Applications/Screen Sharing.app/Contents/Resources/ScreenSharing.sdef
+/System/Library/CoreServices/Folder Actions Setup.app/Contents/Resources/Folder Actions Setup.sdef
+/System/Library/CoreServices/FolderActionsDispatcher.app/Contents/Resources/FolderActionsDispatcher.sdef
+/System/Library/CoreServices/Image Events.app/Contents/Resources/ImageEvents.sdef
+/System/Library/CoreServices/System Events.app/Contents/Resources/SystemEvents.sdef
+/System/Library/CoreServices/VoiceOver.app/Contents/Resources/VoiceOver.sdef
+/System/Library/Frameworks/AppleScriptKit.framework/Versions/A/Resources/AppleScriptKit.sdef
+/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/OpenScripting.framework/Versions/A/Resources/Compatibility.sdef
+/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Print.framework/Versions/A/Plugins/PrinterProxy.app/Contents/Resources/PrinterProxy.sdef
+/System/Library/Frameworks/Foundation.framework/Versions/C/Resources/Intrinsics.sdef
+/System/Library/Frameworks/Foundation.framework/Versions/C/Resources/com.apple.iTunes.sdef
+/System/Library/Frameworks/ScriptingBridge.framework/Versions/A/Resources/intrinsics.sdef
+/System/Library/Frameworks/Tk.framework/Versions/8.5/Resources/Wish.app/Contents/Resources/Wish.sdef
+/System/Library/PrivateFrameworks/FolderActionsKit.framework/Versions/A/Resources/FolderActions.sdef
+/System/Library/ScriptingAdditions/StandardAdditions.osax/Contents/Resources/StandardAdditions.sdef
+/System/Library/ScriptingDefinitions/CocoaStandard.sdef
+/Volumes/BEAR/LAPTOP/nv/Notation.sdef
+/Volumes/BEAR/depot/Launchers/quicksilver/Quicksilver/Scripting/NSCoreSuite.sdef
+/Volumes/BEAR/depot/Launchers/quicksilver/Quicksilver/Scripting/Quicksilver.sdef
+/Volumes/BEAR/depot/NicePlayer/Resources/NSCoreSuite.sdef
+/Volumes/BEAR/depot/NicePlayer/Resources/NicePlayer.sdef
+/Volumes/BEAR/depot/OSX-Apps/nv/Notation.sdef
+/Volumes/BEAR/depot/livecode/engine/rsrc/terminology.sdef
+/Volumes/BEAR/depot/skim-app-code/Skim.sdef
+/Volumes/BEAR/depot/skim-app-code-2016/Skim.sdef
+/Volumes/BEAR/home/puppeteer-test/node_modules/puppeteer/.local-chromium/mac-599821/chrome-mac/Chromium.app/Contents/Resources/scripting.sdef
+/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_tarballs_ports_aqua_Growl/Growl/work/Growl-1.1.6-src/Bindings/applescript/Growl.sdef
+/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_tarballs_ports_aqua_Growl/Growl/work/Growl-1.1.6-src/Extras/GrowlTunes/GrowlTunes.sdef

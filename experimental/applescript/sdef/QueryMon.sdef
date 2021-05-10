@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="QueryMon Terminology" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <xi:include href="file:///System/Library/ScriptingDefinitions/CocoaStandard.sdef"
+                 xpointer="xpointer(/dictionary/suite)"/>
+
+	<suite name="QueryMon Suite" code="QMsu" description="Classes just for the QueryMon application.">
+
+		<class-extension extends="document">
+			<cocoa class="QueryMonDocument"/>
+                        <property name="query" code="QMqr" type="text" description="The text of the query.">
+                            <cocoa key="queryString"/>
+                        </property>
+                        <property name="query server" code="QMqs" type="text" description="Host name of the query server to use.">
+                            <cocoa key="queryServer"/>
+                        </property>
+                        <property name="repeating" code="QMrp" type="boolean" description="Should the query be refreshed repeatedly?">
+                            <cocoa key="periodicRefresh"/>
+                        </property>
+                        <property name="refresh interval" code="QMrr" type="integer" description="How often to automatically refresh the query.">
+                            <cocoa key="refreshInterval"/>
+                        </property>
+                        <property name="alert mode" code="QMam" type="boolean" description="Should the repeating query stop and alert you as soon as any rows are returned?">
+                            <cocoa key="alertMode"/>
+                        </property>
+                        <property name="use SOCKS proxy" code="QMup" type="boolean" description="Should connections to query aggregators go through a SOCKS proxy?">
+                            <cocoa key="useSocksProxy"/>
+                        </property>
+                        <property name="SOCKS proxy" code="QMsp" type="text" description="Host name (and optional port, separated by colon) of SOCKS proxy.">
+                            <cocoa key="socksProxy"/>
+                        </property>
+                        <property name="connect timeout" code="QMct" type="real" description="Connection timeout in seconds.">
+                            <cocoa key="connectTimeout"/>
+                        </property>
+                        <property name="response timeout" code="QMrt" type="real" description="Query response timeout in seconds.">
+                            <cocoa key="responseTimeout"/>
+                        </property>
+                        <property name="add derivative" code="QMad" type="boolean" description="Should an extra column be added which contains the time derivative of the last column?">
+                            <cocoa key="addDerivative"/>
+                        </property>
+                        <property name="add trailing averages" code="QMat" type="boolean" description="Should three extra columns be added representing the trailing 1, 5, and 15-minute decaying averages of the last column?"> 
+                            <cocoa key="addTrailingAverages"/>
+                        </property>
+                        <property name="number of key columns" code="QMkc" type="integer" description="How many columns (starting from the left) should be considered key columns that uniquely identify a row?">
+                            <cocoa key="keyColumns"/>
+                        </property>
+                        <property name="treat numeric strings as numbers" code="QMtn" type="boolean" description="Should numeric strings be treated as numbers?">
+                            <cocoa key="treatNumericStringsAsNumbers"/>
+                        </property>
+                        <property name="use commas in numbers" code="QMuc" type="boolean" description="Should numbers be displayed with commas separating groups of 3 digits?">
+                            <cocoa key="useCommasInNumbers"/>
+                        </property>
+                        <property name="zoom on first query" code="QMzf" type="boolean" description="Should the window be zoomed after the first query has completed?">
+                            <cocoa key="zoomOnFirstQuery"/>
+                        </property>
+                        <property name="toolbar visible" code="QMtv" type="boolean" description="Should the toolbar be visible?">
+                            <cocoa key="isToolbarVisible"/>
+                        </property>
+
+		</class-extension>
+
+	</suite>
+
+</dictionary>

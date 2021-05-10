@@ -1,0 +1,41 @@
+
+script: block* .
+
+block: handler | nested-script .
+
+handler: .
+
+nested-script:
+    "script" Identifier
+        commands
+    "end" "script" .
+
+commands: .
+
+object-specifier:
+    object-class specifier container
+.
+
+object-class: "paragraph" .
+specifier: Number .
+container: "of" object-class specifier .
+
+define-given: "given" param-label ":" param-name ... .
+
+
+
+on aHandler of paramName
+to Handler in paramName
+
+An AppleScript-defined label.
+The available labels are:
+about, above, against, apart from, around, aside from, at, below,
+beneath, beside, between, by, for, from, instead of, into, on, onto,
+out of, over, since, thru (or through), under.
+These are the only labels that can be used without the special label given.
+Each label must be unique among the labels for the handler (that
+is, you cannot use the same label for more than one parameter).
+
+
+on client-request
+

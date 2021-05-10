@@ -1,0 +1,1210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary title="QLab">
+	<suite name="Standard Suite" code="????" description="Common classes and commands for most applications.">
+		<cocoa name="NSCoreSuite"/>
+		<enumeration name="save options" code="savo">
+			<enumerator name="yes" code="yes " description="Save the file."/>
+			<enumerator name="no" code="no  " description="Do not save the file."/>
+			<enumerator name="ask" code="ask " description="Ask the user whether or not to save the file."/>
+		</enumeration>
+		<class name="item" code="cobj" description="A scriptable object.">
+			<cocoa class="AbstractObject"/>
+			<property name="class" code="pcls" description="The class of the object." type="type" access="r">
+				<cocoa key="classCode"/>
+			</property>
+			<property name="properties" code="pALL" description="All of the object&apos;s properties." type="record">
+				<cocoa key="scriptingProperties"/>
+			</property>
+			<!--
+						The blank method declarations are needed to emulate the existing
+						NSCoreSuite.scriptSuite.framework.  Ordinarily, you wouldn't do this.
+					-->
+			<responds-to command="count">
+				<cocoa method=""/>
+			</responds-to>
+			<responds-to command="delete">
+				<cocoa method=""/>
+			</responds-to>
+			<!--
+			<responds-to command="duplicate">
+				<cocoa method=""/>
+			</responds-to>
+			-->
+			<responds-to command="exists">
+				<cocoa method=""/>
+			</responds-to>
+			<responds-to command="get">
+				<cocoa method=""/>
+			</responds-to>
+			<responds-to command="move">
+				<cocoa method=""/>
+			</responds-to>
+			<responds-to command="set">
+				<cocoa method=""/>
+			</responds-to>
+		</class>
+		<class name="application" code="capp" description="An application&apos;s top level scripting object.">
+			<cocoa class="QLab"/>
+			<element type="document" access="r">
+				<cocoa key="orderedDocuments"/>
+			</element>
+			<element type="workspace" access="r">
+				<cocoa key="orderedDocuments"/>
+			</element>
+			<element type="window" access="r">
+				<cocoa key="orderedWindows"/>
+			</element>
+			<property name="name" code="pnam" description="The name of the application." type="text" access="r"/>
+			<property name="overrides" code="qOve" description="Application-wide communication overrides" type="override controller" access="r">
+				<cocoa key="overrideController"/>
+			</property>
+			<property name="preferences" code="qPrf" description="Application-wide Preferences" type="preferences controller" access="r">
+				<cocoa key="prefsController"/>
+			</property>
+			<property name="frontmost" code="pisf" description="Is this the frontmost (active) application?" type="boolean" access="r">
+				<cocoa key="isActive"/>
+			</property>
+			<property name="version" code="vers" description="The version of the application." type="text" access="r"/>
+			<responds-to command="open">
+				<cocoa method="handleOpenScriptCommand:"/>
+			</responds-to>
+			<responds-to command="print">
+				<cocoa method="handlePrintScriptCommand:"/>
+			</responds-to>
+			<responds-to command="quit">
+				<cocoa method="handleQuitScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="color" code="colr" description="A color.">
+			<cocoa class="NSColor"/>
+		</class>
+		<class name="document" code="docu" description="A document.">
+			<cocoa class="NSDocument"/>
+			<property name="path" code="ppth" description="The document&apos;s path." type="text">
+				<cocoa key="fileName"/>
+			</property>
+			<property name="modified" code="imod" description="Has the document been modified since the last save?" type="boolean" access="r">
+				<cocoa key="isDocumentEdited"/>
+			</property>
+			<property name="name" code="pnam" description="The document&apos;s name." type="text">
+				<cocoa key="lastComponentOfFileName"/>
+			</property>
+			<responds-to command="close">
+				<cocoa method="handleCloseScriptCommand:"/>
+			</responds-to>
+			<responds-to command="print">
+				<cocoa method="handlePrintScriptCommand:"/>
+			</responds-to>
+			<responds-to command="save">
+				<cocoa method="handleSaveScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="window" code="cwin" description="A window.">
+			<cocoa class="NSWindow"/>
+			<property name="name" code="pnam" description="The full title of the window." type="text">
+				<cocoa key="title"/>
+			</property>
+			<property name="id" code="ID  " description="The unique identifier of the window." type="number" access="r">
+				<cocoa key="uniqueID"/>
+			</property>
+			<property name="bounds" code="pbnd" description="The bounding rectangle of the window." type="rectangle">
+				<cocoa key="boundsAsQDRect"/>
+			</property>
+			<property name="document" code="docu" description="The document whose contents are being displayed in the window." type="document" access="r"/>
+			<property name="closeable" code="hclb" description="Whether the window has a close box." type="boolean" access="r">
+				<cocoa key="hasCloseBox"/>
+			</property>
+			<property name="titled" code="ptit" description="Whether the window has a title bar." type="boolean" access="r">
+				<cocoa key="hasTitleBar"/>
+			</property>
+			<!-- the type is supposed to be "integer" -->
+			<property name="index" code="pidx" description="The index of the window in the back-to-front window ordering." type="number">
+				<cocoa key="orderedIndex"/>
+			</property>
+			<property name="floating" code="isfl" description="Whether the window floats." type="boolean" access="r">
+				<cocoa key="isFloatingPanel"/>
+			</property>
+			<property name="miniaturizable" code="ismn" description="Whether the window can be miniaturized." type="boolean" access="r">
+				<cocoa key="isMiniaturizable"/>
+			</property>
+			<property name="miniaturized" code="pmnd" description="Whether the window is currently miniaturized." type="boolean">
+				<cocoa key="isMiniaturized"/>
+			</property>
+			<property name="modal" code="pmod" description="Whether the window is the application&apos;s current modal window." type="boolean" access="r">
+				<cocoa key="isModalPanel"/>
+			</property>
+			<property name="resizable" code="prsz" description="Whether the window can be resized." type="boolean" access="r">
+				<cocoa key="isResizable"/>
+			</property>
+			<property name="visible" code="pvis" description="Whether the window is currently visible." type="boolean">
+				<cocoa key="isVisible"/>
+			</property>
+			<property name="zoomable" code="iszm" description="Whether the window can be zoomed." type="boolean" access="r">
+				<cocoa key="isZoomable"/>
+			</property>
+			<property name="zoomed" code="pzum" description="Whether the window is currently zoomed." type="boolean">
+				<cocoa key="isZoomed"/>
+			</property>
+			<responds-to command="close">
+				<cocoa method="handleCloseScriptCommand:"/>
+			</responds-to>
+			<responds-to command="print">
+				<cocoa method="handlePrintScriptCommand:"/>
+			</responds-to>
+			<responds-to command="save">
+				<cocoa method="handleSaveScriptCommand:"/>
+			</responds-to>
+		</class>
+		<!-- The old Standard Suite: run, reopen, open, print, and quit. -->
+		<command name="open" code="aevtodoc" description="Open an object.">
+			<direct-parameter description="The file(s) to be opened." type="file"/>
+		</command>
+		<!-- NSCoreSuite doesn't define these.
+			<command name="run" code="aevtoapp" description="Run an application.  Most applications will open an empty, untitled window."/>
+			<command name="reopen" code="aevtrapp" description="Reactivate a running application.  Some applications will open a new untitled window if no window is open."/>
+			-->
+		<command name="print" code="aevtpdoc" description="Print an object.">
+			<!-- type would be better written as "file | document". -->
+			<direct-parameter description="The file(s) or document(s) to be printed." type="file"/>
+		</command>
+		<command name="quit" code="aevtquit" description="Quit an application.">
+			<cocoa class="NSQuitCommand"/>
+			<parameter name="saving" code="savo" description="Specifies whether changes should be saved before quitting." type="save options" optional="yes">
+				<cocoa key="SaveOptions"/>
+			</parameter>
+		</command>
+		<!-- The old Core Suite: the object model commands, plus a few more. -->
+		<command name="close" code="coreclos" description="Close an object.">
+			<cocoa class="NSCloseCommand"/>
+			<direct-parameter description="the object to close" type="specifier"/>
+			<parameter name="saving" code="savo" description="Specifies whether changes should be saved before closing." type="save options" optional="yes">
+				<cocoa key="SaveOptions"/>
+			</parameter>
+			<parameter name="saving in" code="kfil" description="The file in which to save the object." type="file" optional="yes">
+				<cocoa key="File"/>
+			</parameter>
+		</command>
+		<command name="count" code="corecnte" description="Return the number of elements of a particular class within an object.">
+			<cocoa class="NSCountCommand"/>
+			<direct-parameter description="the object whose elements are to be counted" type="specifier"/>
+			<parameter name="each" code="kocl" description="The class of objects to be counted." type="type" optional="yes">
+				<cocoa key="ObjectClass"/>
+			</parameter>
+			<result description="the number of elements" type="integer"/>
+		</command>
+		<command name="delete" code="coredelo" description="Delete an object.">
+			<cocoa class="NSDeleteCommand"/>
+			<direct-parameter description="the object to delete" type="specifier"/>
+		</command>
+		<!--
+		<command name="duplicate" code="coreclon" description="Copy object(s) and put the copies at a new location.">
+			<cocoa name="Copy" class="NSCloneCommand"/>
+			<direct-parameter description="the object(s) to duplicate" type="specifier"/>
+		-->
+		<!-- "duplicate" is supposed to return the new objects.
+				<result type="object" description="to the duplicated object(s)"/>
+				-->
+		<!-- "to" is supposed to be optional. -->
+		<!--
+			<parameter name="to" code="insh" description="The location for the new object(s)." type="location specifier">
+				<cocoa key="ToLocation"/>
+			</parameter>
+			<parameter name="with properties" code="prdt" description="Properties to be set in the new duplicated object(s)." type="record" optional="yes">
+				<cocoa key="WithProperties"/>
+			</parameter>
+		</command>
+		-->
+		<command name="exists" code="coredoex" description="Verify if an object exists.">
+			<cocoa class="NSExistsCommand"/>
+			<direct-parameter description="the object in question" type="specifier"/>
+			<result description="true if it exists, false if not" type="boolean"/>
+		</command>
+		<!-- "get" is supposed to be hidden. -->
+		<command name="get" code="coregetd" description="Get the data for an object.">
+			<cocoa class="NSGetCommand"/>
+			<direct-parameter type="specifier"/>
+			<result type="any"/>
+		</command>
+		<!--
+		<command name="make" code="corecrel" description="Make a new object.">
+			<cocoa name="Create" class="NSCreateCommand"/>
+			<parameter name="new" code="kocl" description="The class of the new object." type="type">
+				<cocoa key="ObjectClass"/>
+			</parameter>
+			<parameter name="at" code="insh" description="The location at which to insert the object." type="location specifier" optional="yes">
+				<cocoa key="Location"/>
+			</parameter>
+			<parameter name="with data" code="data" description="The initial data for the object." type="any" optional="yes">
+				<cocoa key="ObjectData"/>
+			</parameter>
+			<parameter name="with properties" code="prdt" description="The initial values for properties of the object." type="record" optional="yes">
+				<cocoa key="KeyDictionary"/>
+			</parameter>
+			<result description="to the new object" type="specifier"/>
+		</command>
+		-->
+		<command name="move" code="coremove" description="Move object(s) to a new location.">
+			<cocoa class="NSMoveCommand"/>
+			<direct-parameter description="the object(s) to move" type="specifier"/>
+			<!-- "move" is supposed to return the relocated objects.
+				<result type="object" description="to the object(s) after they have been moved"/>
+				-->
+			<parameter name="to" code="insh" description="The new location for the object(s)." type="location specifier">
+				<cocoa key="ToLocation"/>
+			</parameter>
+		</command>
+		<command name="save" code="coresave" description="Save an object.">
+			<direct-parameter description="the object to save, usually a document or window" type="specifier"/>
+			<parameter name="in" code="kfil" description="The file in which to save the object." type="file" optional="yes">
+				<cocoa key="File"/>
+			</parameter>
+			<parameter name="as" code="fltp" description="The file type in which to save the data." type="text" optional="yes">
+				<cocoa key="FileType"/>
+			</parameter>
+		</command>
+		<!-- "set" is supposed to be hidden. -->
+		<command name="set" code="coresetd" description="Set an object&apos;s data.">
+			<cocoa class="NSSetCommand"/>
+			<direct-parameter type="specifier"/>
+			<!-- "set" is supposed to return the fully evaluated "to" data.
+				<result type="any"/>
+				-->
+			<parameter name="to" code="data" description="The new value." type="any">
+				<cocoa key="Value"/>
+			</parameter>
+		</command>
+	</suite>
+	<suite name="QLab Suite" code="QLab" description="Commands and classes for QLab scripting">
+		<enumeration name="enabled disabled" code="YorN">
+			<enumerator name="enabled" code="Yyes">
+				<cocoa boolean-value="YES"/>
+			</enumerator>
+			<enumerator name="disabled" code="Nnoo">
+				<cocoa boolean-value="NO"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="continue modes" code="Cont" description="Continue mode of a cue.">
+			<enumerator name="do_not_continue" code="NoCo" description="Do not automatically continue to the next cue.">
+				<cocoa integer-value="0"/>
+			</enumerator>
+			<enumerator name="auto_continue" code="DoCo" description="Automatically continue to the next cue after completing the post wait.">
+				<cocoa integer-value="1"/>
+			</enumerator>
+			<enumerator name="auto_follow" code="DoFo" description="Automatically continue to the next cue after completing the action of the cue.">
+				<cocoa integer-value="2"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="group modes" code="GRUP">
+			<enumerator name="cue_list" code="qGCL" description="The group is a cue list.">
+				<cocoa integer-value="0"/>
+			</enumerator>
+			<enumerator name="fire_first_enter_group" code="qGSS" description="Fire first child and enter into group.">
+				<cocoa integer-value="1"/>
+			</enumerator>
+			<enumerator name="fire_first_go_to_next_cue" code="qGHS" description="Fire first child and go to next cue.">
+				<cocoa integer-value="2"/>
+			</enumerator>
+			<enumerator name="fire_all" code="qGFA" description="Fire all children simultaneously.">
+				<cocoa integer-value="3"/>
+			</enumerator>
+			<enumerator name="fire_random" code="qGFR" description="Fire a random child cue and then go to the next cue.">
+				<cocoa integer-value="4"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="smpte format" code="SMPT" description="SMPTE timecode format.">
+			<enumerator name="fps_24" code="tfFP" description="24 frames per second">
+				<cocoa integer-value="0"/>
+			</enumerator>
+			<enumerator name="fps_25" code="tiFP" description="25 frames per second">
+				<cocoa integer-value="1"/>
+			</enumerator>
+			<enumerator name="fps_30_drop" code="thDR" description="30 frames per second (drop frame)">
+				<cocoa integer-value="2"/>
+			</enumerator>
+			<enumerator name="fps_30_non_drop" code="thND" description="30 frames per second (non-drop)">
+				<cocoa integer-value="3"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="absolute relative" code="ABRE">
+			<enumerator name="absolute" code="ABSO">
+				<cocoa integer-value="0"/>
+			</enumerator>
+			<enumerator name="relative" code="RELA">
+				<cocoa integer-value="1"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="osc type" code="QOTY">
+			<enumerator name="qlab" code="QLOs" description="QLab OSC message.">
+				<cocoa integer-value="1"/>
+			</enumerator>
+			<enumerator name="custom" code="CuOs" description="Custom OSC message.">
+				<cocoa integer-value="2"/>
+			</enumerator>
+			<enumerator name="udp" code="UdOs" description="Raw UDP message.">
+				<cocoa integer-value="3"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="mtc ltc" code="MTLT">
+			<enumerator name="mtc" code="synM" description="MIDI Timecode">
+				<cocoa integer-value="0"/>
+			</enumerator>
+			<enumerator name="ltc" code="synL" description="Linear / Logitudinal Timecode">
+				<cocoa integer-value="1"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="midi type" code="MITY">
+			<enumerator name="voice" code="MiVo" description="MIDI Voice message (&quot;Musical MIDI&quot;).">
+				<cocoa integer-value="1"/>
+			</enumerator>
+			<enumerator name="msc" code="MiSc" description="MIDI Show Control message.">
+				<cocoa integer-value="2"/>
+			</enumerator>
+			<enumerator name="sysex" code="SySe" description="MIDI SysEx message.">
+				<cocoa integer-value="3"/>
+			</enumerator>
+		</enumeration>
+		<enumeration name="midi command" code="MICO">
+			<enumerator name="note_on" code="NtOn" description="Note on.">
+				<cocoa integer-value="1"/>
+			</enumerator>
+			<enumerator name="note_off" code="NtOf" description="Note off.">
+				<cocoa integer-value="0"/>
+			</enumerator>
+			<enumerator name="program_change" code="PrCh" description="Program change.">
+				<cocoa integer-value="4"/>
+			</enumerator>
+			<enumerator name="control_change" code="CtCh" description="Control change.">
+				<cocoa integer-value="3"/>
+			</enumerator>
+			<enumerator name="key_pressure" code="KyPr" description="Key pressure (aftertouch).">
+				<cocoa integer-value="2"/>
+			</enumerator>
+			<enumerator name="channel_pressure" code="ChPr" description="Channel pressure.">
+				<cocoa integer-value="5"/>
+			</enumerator>
+			<enumerator name="pitch_bend" code="PiBe" description="Pitch bend (pitch wheel).">
+				<cocoa integer-value="6"/>
+			</enumerator>
+		</enumeration>
+		<class name="override controller" code="qOvC" inherits="item">
+			<cocoa class="OverrideController"/>
+			<property name="midi input enabled" code="qMIE" description="Allow musical MIDI input (default ON)" type="boolean">
+				<cocoa key="midiInputEnabled"/>
+			</property>
+			<property name="midi output enabled" code="qMOE" description="Allow musical MIDI output (default ON)" type="boolean">
+				<cocoa key="midiOutputEnabled"/>
+			</property>
+			<property name="msc output enabled" code="qMTI" description="Allow MSC output (default ON)" type="boolean">
+				<cocoa key="mscOutputEnabled"/>
+			</property>
+			<property name="msc input enabled" code="qMTO" description="Allow MSC input (default ON)" type="boolean">
+				<cocoa key="mscInputEnabled"/>
+			</property>
+			<property name="sysex input enabled" code="qSIE" description="Allow SysEx (other than MSC and MTC) input (default ON)" type="boolean">
+				<cocoa key="sysexInputEnabled"/>
+			</property>
+			<property name="sysex output enabled" code="qSOE" description="Allow SysEx (other than MSC and MTC) output (default ON)" type="boolean">
+				<cocoa key="sysexOutputEnabled"/>
+			</property>
+			<property name="osc input enabled" code="qOIE" description="Allow OSC input (default ON)" type="boolean">
+				<cocoa key="oscInputEnabled"/>
+			</property>
+			<property name="osc output enabled" code="qOOE" description="Allow OSC output (default ON)" type="boolean">
+				<cocoa key="oscOutputEnabled"/>
+			</property>
+			<property name="timecode input enabled" code="qTIE" description="Allow timecode input (default ON)" type="boolean">
+				<cocoa key="timecodeInputEnabled"/>
+			</property>
+			<property name="timecode output enabled" code="qTOE" description="Allow timecode output (default ON)" type="boolean">
+				<cocoa key="timecodeOutputEnabled"/>
+			</property>
+			<property name="artnet enabled" code="qANE" description="Allow Art-Net input and output (default ON)" type="boolean">
+				<cocoa key="artNetEnabled"/>
+			</property>
+		</class>
+		<class name="preferences controller" code="qPrC" inherits="item">
+			<cocoa class="PrefsController"/>
+			<property name="live fade preview" code="qLFP" description="Live Fade Preview" type="boolean">
+				<cocoa key="liveFadePreview"/>
+			</property>
+		</class>
+		<class name="workspace" code="qDoc" description="A QLab workspace." plural="workspaces" inherits="document">
+			<cocoa class="Workspace"/>
+			<element description="The list of cue lists in the workspace." type="cue list">
+				<cocoa key="cueList"/>
+				<accessor style="name"/>
+				<accessor style="id"/>
+				<accessor style="index"/>
+			</element>
+			<element description="The complete list of cues in this workspace." type="cue" access="r">
+				<cocoa key="cue"/>
+				<accessor style="name"/>
+				<accessor style="id"/>
+			</element>
+			<property name="unique id" code="qWID" description="The unique ID of the workspace." type="text" access="r">
+				<cocoa key="uniqueID"/>
+			</property>
+			<property name="current cue list" code="qCLI" description="The currently visible cue list for the workspace." type="cue list">
+				<cocoa key="currentCueListScripting"/>
+			</property>
+			<property name="selected" code="qSEL" description="The currently selected cue(s) in the currently visible cue list.">
+				<cocoa key="selectedCues"/>
+				<type type="cue" list="yes"/>
+			</property>
+			<property name="active cues" code="actQ" description="The list of active cues (running or paused) in this workspace." access="r">
+				<cocoa key="runningOrPausedCues"/>
+				<type type="cue" list="yes"/>
+			</property>
+			<property name="edit mode" code="qIEM" description="Is the workspace currently in edit mode?" type="boolean">
+				<cocoa key="inEditModeScripting"/>
+			</property>
+			<property name="show mode" code="qISM" description="Is the workspace currently in show mode?" type="boolean">
+				<cocoa key="inShowModeScripting"/>
+			</property>
+			<responds-to command="make">
+				<cocoa method="handleMakeScriptCommand:"/>
+			</responds-to>
+			<responds-to command="load">
+				<cocoa method="handleLoadScriptCommand:"/>
+			</responds-to>
+			<responds-to command="go">
+				<cocoa method="handleGoScriptCommand:"/>
+			</responds-to>
+			<responds-to command="start">
+				<cocoa method="handleStartScriptCommand:"/>
+			</responds-to>
+			<responds-to command="pause">
+				<cocoa method="handlePauseScriptCommand:"/>
+			</responds-to>
+			<responds-to command="stop">
+				<cocoa method="handleStopScriptCommand:"/>
+			</responds-to>
+			<responds-to command="hardStop">
+				<cocoa method="handleHardStopScriptCommand:"/>
+			</responds-to>
+			<responds-to command="reset">
+				<cocoa method="handleResetScriptCommand:"/>
+			</responds-to>
+			<responds-to command="panic">
+				<cocoa method="handlePanicScriptCommand:"/>
+			</responds-to>
+			<responds-to command="moveSelectionUp">
+				<cocoa method="handleMoveSelectionUpScriptCommand:"/>
+			</responds-to>
+			<responds-to command="moveSelectionDown">
+				<cocoa method="handleMoveSelectionDownScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="cue" code="aCue" description="A cue." plural="cues">
+			<cocoa class="Cue"/>
+			<element description="Cues contained by this cue, if any." type="cue">
+				<accessor style="name"/>
+				<accessor style="id"/>
+				<accessor style="index"/>
+			</element>
+			<property name="uniqueID" code="ID  " description="The unique ID of the cue." type="text" access="r"/>
+			<property name="parent" code="qPar" description="The parent cue of this cue." type="cue" access="r">
+				<cocoa key="parent"/>
+			</property>
+			<property name="q type" code="qTyp" description="The name of this kind of cue, e.g. &quot;Audio&quot;, &quot;Video&quot;, &quot;MIDI&quot;, etc." type="text" access="r">
+				<cocoa key="type"/>
+			</property>
+			<property name="q number" code="pnam" description="The number of the cue. Unique if present." type="text">
+				<cocoa key="number"/>
+			</property>
+			<property name="q name" code="qNam" description="The name of the cue. Not unique." type="text">
+				<cocoa key="name"/>
+			</property>
+			<property name="q list name" code="qDNa" description="The name of the cue as displayed in the cue list. (i.e. Might be a default name.)" type="text" access="r">
+				<cocoa key="listName"/>
+			</property>
+			<property name="q display name" code="qDNm" description="The name of the cue as displayed in the standby view. (i.e. Never empty.)" type="text" access="r">
+				<cocoa key="displayName"/>
+			</property>
+			<property name="q default name" code="qDeN" description="The name QLab would give the cue by default, if any." type="text" access="r">
+				<cocoa key="defaultName"/>
+			</property>
+			<property name="notes" code="qNot" description="The notes for this cue." type="text">
+				<cocoa key="scriptNotes"/>
+			</property>
+			<property name="cue target" code="qQTr" description="The cue this cue targets, if any." type="cue">
+				<cocoa key="cueTarget"/>
+			</property>
+			<property name="file target" code="qFTr" description="The file this cue targets, if any." type="file">
+				<cocoa key="scriptFileTarget"/>
+			</property>
+			<property name="pre wait" code="qPre" description="The time in seconds before the action is triggered." type="real">
+				<cocoa key="preWait"/>
+			</property>
+			<property name="duration" code="qDur" description="The duration of the cue&apos;s action in seconds. Not editable for all cue types." type="real">
+				<cocoa key="duration"/>
+			</property>
+			<property name="temp duration" code="qTDu" description="The temporary duration of the cue&apos;s action in seconds. Not all cues allow editing the duration. Setting the temporary duration does not mark the document as edited. Reset the cue to go back to the original duration." type="real">
+				<cocoa key="tempDuration"/>
+			</property>
+			<property name="current duration" code="qTDt" description="The current active duration of the cue&apos;s action in seconds. This property reflects the temporary duration, if it has been set. Otherwise it returns the cue&apos;s duration." type="real" access="r">
+				<cocoa key="currentDuration"/>
+			</property>
+			<property name="post wait" code="qPos" description="The time in seconds until continuing on to the next cue." type="real">
+				<cocoa key="postWait"/>
+			</property>
+			<property name="continue mode" code="qCon" description="Continue mode of the cue." type="continue modes">
+				<cocoa key="continueMode"/>
+			</property>
+			<property name="flagged" code="qFla" description="Is this cue flagged?" type="boolean">
+				<cocoa key="flagged"/>
+			</property>
+			<property name="autoload" code="qALd" description="Does this cue auto load?" type="boolean">
+				<cocoa key="autoLoad"/>
+			</property>
+			<property name="armed" code="qArm" description="Is this cue armed?" type="boolean">
+				<cocoa key="armed"/>
+			</property>
+			<property name="hotkey trigger" code="qUHT" description="State of the HotKey trigger." type="enabled disabled">
+				<cocoa key="useHotKey"/>
+			</property>
+			<property name="midi trigger" code="qUMT" description="State of the MIDI trigger." type="enabled disabled">
+				<cocoa key="useMIDITrigger"/>
+			</property>
+			<property name="midi command" code="qMSt" description="Type of MIDI command that will trigger the cue. (NOTE: pitch_bend messages are NOT accepted as remote MIDI triggers.)" type="midi command">
+				<cocoa key="midiTriggerCommand"/>
+			</property>
+			<property name="midi byte one" code="qMB1" description="Byte 1 of the MIDI trigger." type="integer">
+				<cocoa key="midiTriggerByte1"/>
+			</property>
+			<property name="midi byte two" code="qMB2" description="Byte 2 of the MIDI trigger." type="integer">
+				<cocoa key="midiTriggerByte2"/>
+			</property>
+			<property name="midi byte one string" code="qB1S" description="Display String of Byte 1 of the MIDI trigger." type="text">
+				<cocoa key="midiTriggerByte1String"/>
+			</property>
+			<property name="midi byte two string" code="qB2S" description="Display String of Byte 2 of the MIDI trigger." type="text">
+				<cocoa key="midiTriggerByte2String"/>
+			</property>
+			<property name="timecode trigger" code="qUTC" description="State of the timecode trigger." type="enabled disabled">
+				<cocoa key="useTimecode"/>
+			</property>
+			<property name="wall clock trigger" code="qUWC" description="State of the wall clock trigger." type="enabled disabled">
+				<cocoa key="useWallClock"/>
+			</property>
+			<property name="wall clock hours" code="qwcH" description="Hours field of the wall clock trigger." type="integer">
+				<cocoa key="wallHours"/>
+			</property>
+			<property name="wall clock minutes" code="qwcM" description="Minutes field of the wall clock trigger." type="integer">
+				<cocoa key="wallMinutes"/>
+			</property>
+			<property name="wall clock seconds" code="qwcS" description="Seconds field of the wall clock trigger." type="integer">
+				<cocoa key="wallSeconds"/>
+			</property>
+			<property name="loaded" code="qOnD" description="Is this cue loaded?" type="boolean" access="r">
+				<cocoa key="isLoaded"/>
+			</property>
+			<property name="running" code="qRun" description="Is this cue running?" type="boolean" access="r">
+				<cocoa key="isRunning"/>
+			</property>
+			<property name="paused" code="qPas" description="Is this cue paused?" type="boolean" access="r">
+				<cocoa key="isPaused"/>
+			</property>
+			<property name="broken" code="qBrk" description="Is this cue broken?" type="boolean" access="r">
+				<cocoa key="isBroken"/>
+			</property>
+			<property name="pre wait elapsed" code="qPrE" description="The time in seconds that have elapsed on the pre wait." type="real" access="r">
+				<cocoa key="scriptPreWaitElapsed"/>
+			</property>
+			<property name="action elapsed" code="qAcE" description="The time in seconds that have elapsed in the action of the cue." type="real" access="r">
+				<cocoa key="scriptActionElapsed"/>
+			</property>
+			<property name="post wait elapsed" code="qPoE" description="The time in seconds that have elapsed on the post wait." type="real" access="r">
+				<cocoa key="scriptPostWaitElapsed"/>
+			</property>
+			<property name="percent pre wait elapsed" code="qPRE" description="The percent of the pre wait that has elapsed." type="real" access="r">
+				<cocoa key="scriptPercentPreWaitElapsed"/>
+			</property>
+			<property name="percent action elapsed" code="qACE" description="The percent of the cue&apos;s action that has elapsed." type="real" access="r">
+				<cocoa key="scriptPercentActionElapsed"/>
+			</property>
+			<property name="percent post wait elapsed" code="qPOE" description="The percent of the post wait that has elapsed." type="real" access="r">
+				<cocoa key="scriptPercentPostWaitElapsed"/>
+			</property>
+			<responds-to command="load">
+				<cocoa method="handleLoadScriptCommand:"/>
+			</responds-to>
+			<responds-to command="preview">
+				<cocoa method="handlePreviewScriptCommand:"/>
+			</responds-to>
+			<responds-to command="start">
+				<cocoa method="handleStartScriptCommand:"/>
+			</responds-to>
+			<responds-to command="pause">
+				<cocoa method="handlePauseScriptCommand:"/>
+			</responds-to>
+			<responds-to command="stop">
+				<cocoa method="handleStopScriptCommand:"/>
+			</responds-to>
+			<responds-to command="hardStop">
+				<cocoa method="handleHardStopScriptCommand:"/>
+			</responds-to>
+			<responds-to command="reset">
+				<cocoa method="handleResetScriptCommand:"/>
+			</responds-to>
+			<responds-to command="panic">
+				<cocoa method="handlePanicScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="group cue" code="GRPq" description="A Group Cue." plural="group cues" inherits="cue">
+			<cocoa class="GroupCue"/>
+			<property name="mode" code="qGMo" description="The firing style of this group." type="group modes">
+				<cocoa key="groupMode"/>
+			</property>
+		</class>
+		<class name="cue list" code="GRPq" description="A cue list." plural="cue lists" inherits="group cue">
+			<cocoa class="GroupCue"/>
+			<property name="playback position" code="qPLB" description="The playback position of this cue list is the cue that will fire at the next GO." type="cue">
+				<cocoa key="playbackPosition"/>
+			</property>
+			<property name="playhead" code="qPLH" description="The playhead (playback position) of this cue list is the cue that will fire at the next GO." type="cue">
+				<cocoa key="playbackPosition"/>
+			</property>
+			<property name="sync to timecode" code="qSTC" description="Sync the cues in this cue list to incoming timecode." type="enabled disabled">
+				<cocoa key="syncToTimecode"/>
+			</property>
+			<property name="sync mode" code="qSMo" description="Which kind of incoming timecode this cue list listens for." type="mtc ltc">
+				<cocoa key="syncMode"/>
+			</property>
+			<property name="smpte format" code="qSMP" description="SMPTE format of the incoming timecode." type="smpte format">
+				<cocoa key="smpteFormat"/>
+			</property>
+			<property name="mtc sync source name" code="qMTN" description="Name of the MIDI device which feeds us MTC timecode." type="text">
+				<cocoa key="mtcSyncSourceName"/>
+			</property>
+			<property name="ltc sync channel" code="qLTC" description="Audio channel that carries the LTC signal." type="integer">
+				<cocoa key="ltcSyncChannel"/>
+			</property>
+		</class>
+		<class name="audio cue" code="SNDq" description="An Audio Cue." plural="audio cues" inherits="cue">
+			<cocoa class="AudioCue"/>
+			<property name="patch" code="qPch" description="Audio device patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="start time" code="qSta" description="Time in the file where playback begins." type="real">
+				<cocoa key="startTime"/>
+			</property>
+			<property name="end time" code="qEnd" description="Time in the file where playback ends." type="real">
+				<cocoa key="endTime"/>
+			</property>
+			<property name="play count" code="qLCo" description="Number of times the audio between the start and end times plays.  Always &gt;= 1." type="integer">
+				<cocoa key="playCount"/>
+			</property>
+			<property name="infinite loop" code="qInf" description="Does the cue loop infinitely?" type="boolean">
+				<cocoa key="infiniteLoop"/>
+			</property>
+			<property name="rate" code="qRAt" description="Playback rate of the audio cue." type="real">
+				<cocoa key="rate"/>
+			</property>
+			<property name="integrated fade" code="qIFa" description="State of the integrated fade (enabled or disabled)." type="enabled disabled">
+				<cocoa key="doFade"/>
+			</property>
+			<property name="lock fade to cue" code="qIFk" description="Whether the integrated fade should lock to the start/end times of the cue (enabled or disabled)." type="enabled disabled">
+				<cocoa key="lockFadeToCue"/>
+			</property>
+			<property name="audio input channels" code="qNCh" description="The number of audio input channels for the cue.  (i.e. The number of distinct channels in the file.)" type="integer" access="r">
+				<cocoa key="numChannelsIn"/>
+			</property>
+			<property name="pitch shift" code="qPSh" description="Whether pitch shifting is enabled or disabled." type="enabled disabled">
+				<cocoa key="doPitchShift"/>
+			</property>
+			<responds-to command="getLevel">
+				<cocoa method="handleGetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setLevel">
+				<cocoa method="handleSetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="getGang">
+				<cocoa method="handleGetGangScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setGang">
+				<cocoa method="handleSetGangScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="mic cue" code="MICq" description="A Microphone Cue." plural="mic cues" inherits="cue">
+			<cocoa class="MicCue"/>
+			<property name="patch" code="qPch" description="Audio device patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="audio input channels" code="qNCh" description="The number of audio input channels for the cue." type="integer" access="r">
+				<cocoa key="numChannelsIn"/>
+			</property>
+			<responds-to command="getLevel">
+				<cocoa method="handleGetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setLevel">
+				<cocoa method="handleSetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="getGang">
+				<cocoa method="handleGetGangScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setGang">
+				<cocoa method="handleSetGangScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="video cue" code="VIDq" description="A Video Cue." plural="video cues" inherits="cue">
+			<cocoa class="VideoCue"/>
+			<property name="patch" code="qPch" description="Audio device patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="start time" code="qSta" description="Time in the file where playback begins." type="real">
+				<cocoa key="startTime"/>
+			</property>
+			<property name="end time" code="qEnd" description="Time in the file where playback ends." type="real">
+				<cocoa key="endTime"/>
+			</property>
+			<property name="infinite loop" code="qInf" description="Does the cue loop infinitely?" type="boolean">
+				<cocoa key="infiniteLoop"/>
+			</property>
+			<property name="rate" code="qRAt" description="Playback rate of the video cue." type="real">
+				<cocoa key="rate"/>
+			</property>
+			<property name="layer" code="qLay" description="Display layer of the video." type="integer">
+				<cocoa key="layer"/>
+			</property>
+			<property name="full screen" code="qFSc" description="Is the cue displaying in full surface mode?" type="boolean">
+				<cocoa key="fullScreen"/>
+			</property>
+			<property name="full surface" code="qFSf" description="Is the cue displaying in full surface mode?" type="boolean">
+				<cocoa key="fullSurface"/>
+			</property>
+			<property name="preserve aspect ratio" code="qPAs" description="Does the cue preserve aspect ratio?" type="boolean">
+				<cocoa key="preserveAspectRatio"/>
+			</property>
+			<property name="opacity" code="qOpa" description="Video opacity." type="real">
+				<cocoa key="opacity"/>
+			</property>
+			<property name="translation x" code="qTrX" description="Translation along the x axis." type="real">
+				<cocoa key="translationX"/>
+			</property>
+			<property name="translation y" code="qTrY" description="Translation along the y axis." type="real">
+				<cocoa key="translationY"/>
+			</property>
+			<property name="scale x" code="qScX" description="Scale along the x axis." type="real">
+				<cocoa key="scaleX"/>
+			</property>
+			<property name="scale y" code="qScY" description="Scale along the y axis." type="real">
+				<cocoa key="scaleY"/>
+			</property>
+			<property name="do video effect" code="qCuR" description="Apply a video effect?" type="boolean">
+				<cocoa key="doEffect"/>
+			</property>
+			<property name="custom quartz file" code="qQFi" description="The custom Quartz Composer file used to render this cue." type="file">
+				<cocoa key="scriptRenderFile"/>
+			</property>
+			<property name="audio input channels" code="qNCh" description="The number of audio input channels for the cue.  (i.e. The number of distinct channels in the file.)" type="integer" access="r">
+				<cocoa key="numChannelsIn"/>
+			</property>
+			<property name="integrated fade" code="qIFA" description="State of the integrated fade (enabled or disabled)." type="enabled disabled">
+				<cocoa key="doFade"/>
+			</property>
+			<property name="lock fade to cue" code="qIFK" description="Whether the integrated fade should lock to the start/end times of the cue (enabled or disabled)." type="enabled disabled">
+				<cocoa key="lockFadeToCue"/>
+			</property>
+			<property name="pitch shift" code="qPsh" description="Whether pitch shifting is enabled or disabled." type="enabled disabled">
+				<cocoa key="doPitchShift"/>
+			</property>
+			<property name="hold at end" code="qHoL" description="Should the final frame of the video be left visible when playback reaches the end of the file?" type="boolean">
+				<cocoa key="holdLastFrame"/>
+			</property>
+			<responds-to command="getLevel">
+				<cocoa method="handleGetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setLevel">
+				<cocoa method="handleSetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="getGang">
+				<cocoa method="handleGetGangScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setGang">
+				<cocoa method="handleSetGangScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="text cue" code="TTLq" description="A Text Cue." plural="text cues" inherits="video cue">
+			<cocoa class="TextCue"/>
+			<property name="text" code="qTxt" description="Text of the text cue." type="text">
+				<cocoa key="text"/>
+			</property>
+			<property name="live text" code="qLTx" description="Live text of the text cue. Setting this does not mark the workspace as edited." type="text">
+				<cocoa key="liveText"/>
+			</property>
+		</class>
+		<class name="camera cue" code="CAMq" description="A Camera Cue." plural="camera cues" inherits="cue">
+			<cocoa class="CameraCue"/>
+			<property name="camera patch" code="qPcH" description="Camera patch number." type="integer">
+				<cocoa key="cameraPatch"/>
+			</property>
+			<property name="layer" code="qLay" description="Display layer of the video." type="integer">
+				<cocoa key="layer"/>
+			</property>
+			<property name="full screen" code="qFSc" description="Is the cue displaying in full surface mode?" type="boolean">
+				<cocoa key="fullScreen"/>
+			</property>
+			<property name="full surface" code="qFSf" description="Is the cue displaying in full surface mode?" type="boolean">
+				<cocoa key="fullSurface"/>
+			</property>
+			<property name="preserve aspect ratio" code="qPAs" description="Does the cue preserve aspect ratio?" type="boolean">
+				<cocoa key="preserveAspectRatio"/>
+			</property>
+			<property name="opacity" code="qOpa" description="Video opacity." type="real">
+				<cocoa key="opacity"/>
+			</property>
+			<property name="translation x" code="qTrX" description="Translation along the x axis." type="real">
+				<cocoa key="translationX"/>
+			</property>
+			<property name="translation y" code="qTrY" description="Translation along the y axis." type="real">
+				<cocoa key="translationY"/>
+			</property>
+			<property name="scale x" code="qScX" description="Scale along the x axis." type="real">
+				<cocoa key="scaleX"/>
+			</property>
+			<property name="scale y" code="qScY" description="Scale along the y axis." type="real">
+				<cocoa key="scaleY"/>
+			</property>
+			<property name="do video effect" code="qCuR" description="Apply a video effect?" type="boolean">
+				<cocoa key="doEffect"/>
+			</property>
+			<property name="custom quartz file" code="qCQF" description="The custom Quartz Composer file used to render this cue." type="file">
+				<cocoa key="scriptRenderFile"/>
+			</property>
+		</class>
+		<class name="fade cue" code="FADq" description="A Fade Cue." plural="fade cues" inherits="cue">
+			<cocoa class="FadeCue"/>
+			<property name="fade mode" code="qAbs" description="Absolute or relative mode." type="absolute relative">
+				<cocoa key="mode"/>
+			</property>
+			<property name="stop target when done" code="qAuS" description="Stop the target when this cue completes?" type="boolean">
+				<cocoa key="stopTargetWhenDone"/>
+			</property>
+			<property name="opacity" code="qOpa" description="Video opacity." type="real">
+				<cocoa key="opacity"/>
+			</property>
+			<property name="translation x" code="qTrX" description="Translation along the x axis." type="real">
+				<cocoa key="translationX"/>
+			</property>
+			<property name="translation y" code="qTrY" description="Translation along the y axis." type="real">
+				<cocoa key="translationY"/>
+			</property>
+			<property name="scale x" code="qScX" description="Scale along the x axis." type="real">
+				<cocoa key="scaleX"/>
+			</property>
+			<property name="scale y" code="qScY" description="Scale along the y axis." type="real">
+				<cocoa key="scaleY"/>
+			</property>
+			<property name="preserve aspect ratio" code="qScL" description="Does the cue preserve aspect ratio?" type="boolean">
+				<cocoa key="preserveAspectRatio"/>
+			</property>
+			<property name="rotation type" code="qRoM" description="Quaternion, x-axis, y-axis, or z-axis." type="integer">
+				<cocoa key="rotationType"/>
+			</property>
+			<property name="rotation" code="qRot" description="Rotation in degrees." type="real">
+				<cocoa key="rotation"/>
+			</property>
+			<property name="do opacity" code="qDoO" description="Does the cue animate opacity?" type="boolean">
+				<cocoa key="doOpacity"/>
+			</property>
+			<property name="do translation" code="qDoT" description="Does the cue animate translation?" type="boolean">
+				<cocoa key="doTranslation"/>
+			</property>
+			<property name="do scale" code="qDoS" description="Does the cue animate scale?" type="boolean">
+				<cocoa key="doScale"/>
+			</property>
+			<property name="do rotation" code="qDoR" description="Does the cue animate rotation?" type="boolean">
+				<cocoa key="doRotation"/>
+			</property>
+			<responds-to command="getLevel">
+				<cocoa method="handleGetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setLevel">
+				<cocoa method="handleSetLevelScriptCommand:"/>
+			</responds-to>
+			<responds-to command="getGang">
+				<cocoa method="handleGetGangScriptCommand:"/>
+			</responds-to>
+			<responds-to command="setGang">
+				<cocoa method="handleSetGangScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="light cue" code="LITq" description="A Light Cue." plural="light cues" inherits="cue">
+			<cocoa class="LightCue"/>
+			<property name="command text" code="qClx" description="The light cue command text." type="text">
+				<cocoa key="commandText"/>
+			</property>
+			<property name="always collate" code="qAlc" description="Flag for whether this cue should always collate the effects of previous light cues in the same list when it runs." type="boolean">
+				<cocoa key="alwaysCollate"/>
+			</property>
+			<responds-to command="flatten">
+				<cocoa method="handleFlattenCommandsScriptCommand:"/>
+			</responds-to>
+			<responds-to command="prune">
+				<cocoa method="handlePruneCommandsScriptCommand:"/>
+			</responds-to>
+			<responds-to command="safeSort">
+				<cocoa method="handleSafeSortScriptCommand:"/>
+			</responds-to>
+			<responds-to command="collateAndStart">
+				<cocoa method="handleCollateAndStartScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="midi cue" code="MIDq" description="A MIDI Cue." plural="midi cues" inherits="cue">
+			<cocoa class="MIDICue"/>
+			<property name="patch" code="qPCh" description="MIDI device patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="message type" code="qMES" description="The type of MIDI message." type="midi type">
+				<cocoa key="messageType"/>
+			</property>
+			<property name="command" code="qCOm" description="The MIDI command." type="midi command">
+				<cocoa key="status"/>
+			</property>
+			<property name="channel" code="qCHa" description="MIDI channel number." type="integer">
+				<cocoa key="channel"/>
+			</property>
+			<property name="byte one" code="qBy1" description="First byte of the message." type="integer">
+				<cocoa key="byte1"/>
+			</property>
+			<property name="byte two" code="qBy2" description="Second byte of the message." type="integer">
+				<cocoa key="byte2"/>
+			</property>
+			<property name="byte combo" code="qBy3" description="Value when first and second bytes are interpreted as parts of one number.  Used for pitch bend messages." type="integer">
+				<cocoa key="byteCombo"/>
+			</property>
+			<property name="start value" code="qSVA" description="The start value for the MIDI fade." type="integer" access="r">
+				<cocoa key="startValue"/>
+			</property>
+			<property name="end value" code="qEVA" description="The end value for the MIDI fade." type="integer">
+				<cocoa key="endValue"/>
+			</property>
+			<property name="fade" code="qDoF" description="State of the MIDI fade." type="enabled disabled">
+				<cocoa key="doFade"/>
+			</property>
+			<property name="deviceID" code="qDID" description="MIDI Show Control device ID." type="integer">
+				<cocoa key="deviceID"/>
+			</property>
+			<property name="command format" code="qFor" description="MIDI Show Control command format." type="integer">
+				<cocoa key="commandFormat"/>
+			</property>
+			<property name="command number" code="qCom" description="MIDI Show Control command." type="integer">
+				<cocoa key="command"/>
+			</property>
+			<property name="q_number" code="qmsN" description="Q Number message parameter." type="text">
+				<cocoa key="qNumber"/>
+			</property>
+			<property name="q_list" code="qmsL" description="Q List message parameter." type="text">
+				<cocoa key="qList"/>
+			</property>
+			<property name="q_path" code="qmsP" description="Q Path message parameter." type="text">
+				<cocoa key="qPath"/>
+			</property>
+			<property name="macro" code="qMac" description="MSC macro." type="integer">
+				<cocoa key="macro"/>
+			</property>
+			<property name="control number" code="qCNt" description="MSC control number." type="integer">
+				<cocoa key="controlNumber"/>
+			</property>
+			<property name="control value" code="qCNv" description="MSC control value." type="integer">
+				<cocoa key="controlValue"/>
+			</property>
+			<property name="hours" code="qHou" description="MSC hours parameter." type="integer">
+				<cocoa key="hours"/>
+			</property>
+			<property name="minutes" code="qMin" description="MSC minutes parameter." type="integer">
+				<cocoa key="minutes"/>
+			</property>
+			<property name="seconds" code="qSec" description="MSC seconds parameter." type="integer">
+				<cocoa key="seconds"/>
+			</property>
+			<property name="frames" code="qFra" description="MSC frames parameter." type="integer">
+				<cocoa key="frames"/>
+			</property>
+			<property name="subframes" code="qSFr" description="MSC subframes parameter." type="integer">
+				<cocoa key="subframes"/>
+			</property>
+			<property name="smpte format" code="qSmP" description="SMPTE format of the timecode parameters." type="smpte format">
+				<cocoa key="smpteFormat"/>
+			</property>
+			<property name="send time with set" code="qSTW" description="Send the timecode parameters with the SET command?" type="boolean">
+				<cocoa key="sendTimeFlag"/>
+			</property>
+			<property name="sysex message" code="qSEX" description="The raw SysEx message.  Use only hexadecimal characters and whitespace.  Omit the starting F0 and the ending F7." type="text">
+				<cocoa key="rawString"/>
+			</property>
+		</class>
+		<class name="midi file cue" code="MIFq" description="A MIDI File Cue." plural="midi file cues" inherits="cue">
+			<cocoa class="MIDIFileCue"/>
+			<property name="patch" code="qPCh" description="MIDI device patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="rate" code="qRAt" description="Playback rate of the MIDI File cue." type="real">
+				<cocoa key="rate"/>
+			</property>
+		</class>
+		<class name="network cue" code="NETq" description="A Network Cue." plural="network cues" inherits="cue">
+			<cocoa class="NetworkCue"/>
+			<property name="patch" code="qPOh" description="OSC destination patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="osc message type" code="qOSc" description="The type of OSC message." type="osc type">
+				<cocoa key="scriptMessageType"/>
+			</property>
+			<property name="q_num" code="qCuN" description="The QLab cue number, for QLab type messages." type="text">
+				<cocoa key="qlabCueNumber"/>
+			</property>
+			<property name="q_command" code="qCQm" description="The QLab OSC command, for QLab type messages." type="number">
+				<cocoa key="qlabCommand"/>
+			</property>
+			<property name="q_params" code="qCuP" description="The QLab command parameters, for QLab type messages. Not all messages have parameters." type="text">
+				<cocoa key="qlabCueParameters"/>
+			</property>
+			<property name="custom message" code="qCuM" description="The custom OSC message, for custom type messages." type="text">
+				<cocoa key="customString"/>
+			</property>
+			<property name="udp message" code="qCuD" description="The raw UDP message, for udp type messages." type="text">
+				<cocoa key="udpString"/>
+			</property>
+		</class>
+		<class name="timecode cue" code="MTCq" description="A Timecode Cue to generate MTC or LTC timecode." plural="timecode cues" inherits="cue">
+			<cocoa class="TimecodeCue"/>
+			<property name="patch" code="qPCt" description="MIDI destination patch number." type="integer">
+				<cocoa key="patch"/>
+			</property>
+			<property name="smpte format" code="qSMp" description="SMPTE format of the outgoing timecode." type="smpte format">
+				<cocoa key="smpteFormat"/>
+			</property>
+			<property name="start time offset" code="qStA" description="Time in seconds where the MTC clock begins counting." type="real">
+				<cocoa key="startTimeOffset"/>
+			</property>
+		</class>
+		<class name="devamp cue" code="DEVq" description="A Devamp Cue." plural="devamp cues" inherits="cue">
+			<cocoa class="DevampCue"/>
+			<property name="fire next cue when slice ends" code="qFNQ" description="Fire the next cue at the moment the target slice ends?" type="boolean">
+				<cocoa key="startNextCueWhenSliceEnds"/>
+			</property>
+			<property name="stop target when slice ends" code="qAUS" description="Stop the target at the moment the target slice ends?" type="boolean">
+				<cocoa key="stopTargetWhenSliceEnds"/>
+			</property>
+		</class>
+		<class name="load cue" code="LOAq" description="A Load Cue." plural="load cues" inherits="cue">
+			<cocoa class="LoadCue"/>
+			<property name="load time" code="qLTi" description="Load target cue to this time." type="real">
+				<cocoa key="time"/>
+			</property>
+		</class>
+		<class name="target cue" code="TARq" description="A Target Cue." plural="target cues" inherits="cue">
+			<cocoa class="TargetCue"/>
+			<property name="assigned number" code="qASN" description="Number of cue to assign.  The cue with this number will be assigned as the new target." type="text">
+				<cocoa key="targetCueNumber"/>
+			</property>
+		</class>
+		<class name="script cue" code="SCRq" description="A Script Cue." plural="script cues" inherits="cue">
+			<cocoa class="ScriptCue"/>
+			<property name="script source" code="qScS" description="AppleScript source for the cue.  The script will be recompiled when set." type="text">
+				<cocoa key="scriptSource"/>
+			</property>
+			<responds-to command="compile">
+				<cocoa method="handleCompileSourceScriptCommand:"/>
+			</responds-to>
+		</class>
+		<command name="make" code="QLabmake">
+			<direct-parameter type="workspace"/>
+			<parameter name="type" code="newT" description="Name of the kind of cue you want to make.  (Audio, Video, Camera, MIDI, etc.)  Pass &quot;cue list&quot; to make a new cue list." type="text">
+				<cocoa key="type"/>
+			</parameter>
+		</command>
+		<command name="load" code="QLabload" description="Load a cue or workspace to a given time.">
+			<direct-parameter description="The cue(s) or workspace(s) to load." type="specifier"/>
+			<parameter name="time" code="Ltim" description="Load time." type="real" optional="yes">
+				<cocoa key="time"/>
+			</parameter>
+		</command>
+		<command name="go" code="QLabgogo" description="Make a workspace GO.">
+			<direct-parameter description="The workspace to GO." type="specifier"/>
+		</command>
+		<command name="preview" code="QLabprvw" description="Preview one or more cues. Previewing starts only the action of the cue, skipping any prewait and not continuing to other cues.">
+			<direct-parameter description="The cue(s) to preview." type="specifier"/>
+		</command>
+		<command name="start" code="QLabstrt" description="Start one or more cues or workspaces.">
+			<direct-parameter description="The cue(s) or workspace(s) to start.  For a workspace, &quot;start&quot; means to unpause all paused cues." type="specifier"/>
+		</command>
+		<command name="pause" code="QLabpaus" description="Pause one or more cues or workspaces.">
+			<direct-parameter description="The cue(s) or workspace(s) to pause." type="specifier"/>
+		</command>
+		<command name="stop" code="QLabstop" description="Stop one or more cues or workspaces.">
+			<direct-parameter description="The cue(s) or workspace(s) to stop." type="specifier"/>
+		</command>
+		<command name="hardStop" code="QLabhstp" description="Hard stop one or more cues or workspaces.">
+			<direct-parameter description="The cue(s) or workspace(s) to stop." type="specifier"/>
+		</command>
+		<command name="panic" code="QLabpnic" description="Panic one or more cues or workspaces.">
+			<direct-parameter description="The cue(s) or workspace(s) to panic." type="specifier"/>
+		</command>
+		<command name="reset" code="QLabrset" description="Reset one or more cues or workspaces.">
+			<direct-parameter description="The cue(s) or workspace(s) to reset." type="specifier"/>
+		</command>
+		<command name="moveSelectionUp" code="QLabmvup" description="Select the previous cue.">
+			<direct-parameter description="The workspace whose selection will change." type="specifier"/>
+		</command>
+		<command name="moveSelectionDown" code="QLabmvdn" description="Select the next cue.">
+			<direct-parameter description="The workspace whose selection will change." type="specifier"/>
+		</command>
+		<command name="getLevel" code="QLablevg">
+			<direct-parameter description="The cue for which you want to get the volume level." type="cue"/>
+			<parameter name="row" code="levR" description="The row of the level matrix.  Row 0 = the master and output levels." type="integer">
+				<cocoa key="row"/>
+			</parameter>
+			<parameter name="column" code="levC" description="The column of the level matrix.  Column 0 = the master and input levels." type="integer">
+				<cocoa key="column"/>
+			</parameter>
+			<result description="The value in decibels of the level at the specified location in the matrix." type="real"/>
+		</command>
+		<command name="setLevel" code="QLablevs">
+			<direct-parameter description="The cue for which you want to adjust the volume level." type="cue"/>
+			<parameter name="row" code="levR" description="The row of the level matrix.  Row 0 = the master and output levels." type="integer">
+				<cocoa key="row"/>
+			</parameter>
+			<parameter name="column" code="levC" description="The column of the level matrix.  Column 0 = the master and input levels." type="integer">
+				<cocoa key="column"/>
+			</parameter>
+			<parameter name="db" code="levD" description="The decibel value for the volume level." type="real">
+				<cocoa key="db"/>
+			</parameter>
+		</command>
+		<command name="getGang" code="QLabgngg">
+			<direct-parameter description="The cue for which you want to adjust the gang." type="cue"/>
+			<parameter name="row" code="levR" description="The row of the level matrix.  Row 0 = the master and output levels." type="integer">
+				<cocoa key="row"/>
+			</parameter>
+			<parameter name="column" code="levC" description="The column of the level matrix.  Column 0 = the master and input levels." type="integer">
+				<cocoa key="column"/>
+			</parameter>
+			<result description="The value of the gang at the specified location in the matrix." type="text"/>
+		</command>
+		<command name="setGang" code="QLabgngs">
+			<direct-parameter description="The cue for which you want to adjust the gang." type="cue"/>
+			<parameter name="row" code="levR" description="The row of the level matrix.  Row 0 = the master and output levels." type="integer">
+				<cocoa key="row"/>
+			</parameter>
+			<parameter name="column" code="levC" description="The column of the level matrix.  Column 0 = the master and input levels." type="integer">
+				<cocoa key="column"/>
+			</parameter>
+			<parameter name="gang" code="gANg" description="The gang value to set." type="text">
+				<cocoa key="gang"/>
+			</parameter>
+		</command>
+		<command name="compile" code="QLabcmpl">
+			<direct-parameter description="The Script cue whose source you want to recompile." type="script cue"/>
+		</command>
+		<command name="prune" code="QLabprun">
+			<direct-parameter description="The Light cue whose command text you want to prune." type="light cue"/>
+		</command>
+		<command name="collateAndStart" code="QLablxcs">
+			<direct-parameter description="The Light cue you want to collate and start." type="light cue"/>
+		</command>
+	</suite>
+</dictionary>
