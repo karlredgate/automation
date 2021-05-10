@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pkg-info
+    identifier="org.ballerina.1.1.1"
+    version="1.1.1"
+    format-version="2"
+    overwrite-permissions="true"
+    relocatable="false"
+    postinstall-action="none"
+    generator-version="InstallCmds-662.1 (17A405)"
+    auth="root">
+    <payload numberOfFiles="2785" installKBytes="251183"/>
+    <bundle-version/>
+    <upgrade-bundle/>
+    <update-bundle/>
+    <atomic-update-bundle/>
+    <strict-identifier/>
+    <relocate/>
+    <scripts>
+        <postinstall file="./postinstall"/>
+    </scripts>
+</pkg-info>

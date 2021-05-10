@@ -1,0 +1,533 @@
+
+@p maximum_input_line_length = infinity
+@p maximum_output_line_length = infinity
+@p typesetter = tex
+
+%
+% These funnelweb defined commands generate the text around
+% the macro definitions.  Here we redefine them to also
+% generate index entries for every macro defined in the file.
+%
+
+\def\fwmacroname#1#2{\index{#1 {\sl macro}}\index{Macro number!#2}{\sl #1\/}$\lbrack$#2$\rbrack$}
+\def\fwfilename#1#2{\index{#1 {\sl macro}}\index{Macro number!#2}{\bf #1}$\lbrack$#2$\rbrack$}
+
+\def\fwodef{\parindent=15pt\vskip3pt\hrule\vskip6pt\parindent=20pt}
+\def\fwcdef{\vskip6pt\hrule\vskip0pt\parindent=0pt}
+
+\ifx\pdfoutput\undefined
+\documentclass[twoside]{book}
+\else
+\documentclass[pdftex,twoside]{book}
+\usepackage{thumbpdf}
+\pdfcompresslevel=9
+\fi
+
+%
+% Packages for LaTeX
+%
+\usepackage[all,ps,dvips]{xy}
+\usepackage{pst-node}
+\usepackage{pst-tree}
+\usepackage[dvips]{graphicx}
+\usepackage{fancyhdr}
+\usepackage{makeidx}
+\usepackage{utopia}
+
+% To allow \url{} and \href ...
+\usepackage{hyperref}
+
+\newenvironment{commentary}[1]
+{\index{Commentary notes!#1}
+\begin{center}\begin{minipage}{0.8\textwidth}
+\vspace{2ex}\hrule\vspace{1ex}
+\def\commentaryname{#1}
+\parskip=\medskipamount
+\em}
+{\par {\bf -- \commentaryname}
+\vspace{1ex}\hrule\vspace{2ex}
+\end{minipage}\end{center}}
+% End of commentary environment definition
+
+\pagestyle{fancy}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,RE]{RedEye}
+\fancyfoot[CO,CE]{\copyright 2019 -- Karl Redgate}
+
+% Since this is funnelweb, the parindent is normally changed to
+% 0pt and a parskip is defined.  However, since I define a bunch
+% of other LaTeX stuff after the funnelweb header, this gets
+% screwed up.  So, here I use the funnelweb TeX commands to restore
+% that behavior.
+\parindent=0pt
+\fwparskipon
+% END of funnelweb setup
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\addtolength{\textwidth}{3cm}
+\addtolength{\headwidth}{3cm}
+\addtolength{\marginparwidth}{-2cm}
+\addtolength{\oddsidemargin}{-2cm}
+\addtolength{\evensidemargin}{-2cm}
+% \marginpar{ This is a test }
+
+\makeindex
+\typeout{Copyright (c) 2019, Karl Redgate}
+\typeout{Author: Karl Redgate}
+
+%%%%%%%%%%%%%%%
+%
+% Start of document
+%
+\begin{document}
+
+\frontmatter
+
+% Title Page
+
+\thispagestyle{empty}
+\makebox{
+    \begin{minipage}{\textwidth}
+        {\Huge\bfseries Specification of a\\[1ex]
+        \makebox{Simple Spark Application}\\
+        }
+    \noindent\rule[-1ex]{\textwidth}{5pt}\\[2.5ex]
+    \end{minipage}
+}
+\vspace{2ex}
+\makebox[0pt][l]{
+    \begin{minipage}{\textwidth}
+    \flushright
+    {\bfseries
+        Karl Redgate\\[3ex]}
+        Version 1.0.0\\
+        7 June, 2019
+    \end{minipage}
+}
+
+\vspace{\stretch{1}}
+\makebox[0pt][l]{
+\begin{minipage}{\textwidth}
+\begin{center}
+\includegraphics[scale=0.75]{assets/feather.jpg}
+\end{center}
+\end{minipage}
+}
+
+% Skip my framebox ...
+% normally my framebox has the stretch and then the copyright has
+% \vspace[2ex]
+% instead put the stretch before the copyright
+
+\vspace{\stretch{1}}
+\begin{center}
+Copyright \copyright 2019, \textsf{Karl Redgate}
+\end{center}
+\pagebreak
+
+% Copyright Page -- change this to a BSD license or some such
+\thispagestyle{empty}
+\begin{small}
+FIX THIS
+Copyright \copyright 2019 Karl Redgate, as an unpublished work.
+This notice does not imply unrestricted or public access to these
+materials which are a trade secret of Karl Redgate or its
+subsidiaries or affiliates (together referred to as "SUN"), and
+which may not be reproduced, used, sold or transferred to any third
+party without SUN's prior written consent.
+
+All rights reserved.
+
+U.S. Government Restricted Rights.  If you are licensing the
+Software on behalf of the U.S. Government ("Government"), the
+following provisions apply to you.  If the Software is supplied to
+the Department of Defense ("DoD"), it is classified as "Commercial
+Computer Software" under paragraph 252.227-7014 of the DoD Supplement
+to the Federal Acquisition Regulations ("DFARS") (or any successor
+regulations) and the Government is acquiring only the license
+rights granted herein (the license rights customarily provided to
+non-Government users).  If the Software is supplied to any unit
+or agency of the Government other than DoD, it is classified as
+"Restricted Computer Software" and the Government's rights in the
+Software are defined in paragraph 52.227-19 of the Federal Acquisition
+Regulations ("FAR") (or any successor regulations) or, in the cases
+of NASA, in paragraph 18.52.227-86 of the NASA Supplement to the FAR
+(or any successor regulations).
+\end{small}
+
+\tableofcontents
+
+\mainmatter
+
+% ============================================================
+\chapter{Overview}
+
+@O@<Project.java@>@{
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.SparkConf;
+
+public class SimpleApp {
+    @<Main program@>
+}
+@}
+
+@$@<Main program@>==@{@-
+public static void main( String[] args ) {
+    SparkConf conf = @<Create app config@>;
+
+    String logFile = "YOUR_SPARK_HOME/README.md"; // Should be some file on your system
+    SparkSession spark = SparkSession.builder().appName("Simple Application").getOrCreate();
+    Dataset<String> logData = spark.read().textFile(logFile).cache();
+
+    long numAs = logData.filter(s -> s.contains("a")).count();
+    long numBs = logData.filter(s -> s.contains("b")).count();
+
+    System.out.println("Lines with a: " + numAs + ", lines with b: " + numBs);
+    spark.stop();
+}
+@}
+
+@$@<Create app config@>==@{@-
+new SparkConf().setAppName( "Name" ).setMaster( master )
+@}
+
+% ============================================================
+\chapter{Maven Build}
+
+This file is a funnelweb file containing all ot the 
+other files in this directory.  This is the omly one needed
+for the processor.
+
+@O@<pom.xml@>@{
+<?xml version="1.0"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  @<Required elements@>
+  @<Property section@>
+  @<Dependency section@>
+  @<Build section@>
+  @<Profile section@>
+
+  @<Copyright XML Comment@>
+</project>
+@}
+
+{\verb+https://maven.apache.org/pom.html+}
+{ - pom reference}
+https://maven.apache.org/ref/3.5.4/maven-model/maven.html - tags
+https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+https://maven.apache.org/guides/mini/guide-configuring-maven.html
+https://maven.apache.org/ref/3.5.4/maven-settings/settings.html
+https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html
+
+\section{Required Parts}
+
+The \verb+modelVersion+ element contains the version of the Maven object model.
+
+@$@<Required elements@>+=@{@-
+<modelVersion>4.0.0</modelVersion>
+@}
+
+The group id is not required to be a domain name,
+but it helps prevent collisions.
+
+@$@<Required elements@>+=@{@-
+<groupId>com.redgates.base</groupId>
+@}
+
+The \verb+version+ element contains the version of the package.
+
+@$@<Required elements@>+=@{@-
+<version>1.0.0-SNAPSHOT</version>
+@}
+
+@$@<Required elements@>+=@{@-
+<artifactId>redgates-base</artifactId>
+@}
+
+\section{Parent}
+
+I am not sure what the parent is intended to do yet.
+
+\begin{commentary}{kredgate}
+This is not in use yet
+\end{commentary}
+
+@$@<Parent section@>@Z==@{@-
+<parent>
+  @<Parent elements@>
+</parent>
+@}
+
+@$@<Parent elements@>+=@{@-
+<groupId>com.redgates.base</groupId>
+@}
+
+This is the version of the package.
+Or is this the version of the parent
+
+@$@<Parent elements@>+=@{@-
+<version>1.0.0-SNAPSHOT</version>
+@}
+
+@$@<Parent elements@>+=@{@-
+<artifactId>redgates-base</artifactId>
+@}
+
+\section{Properties}
+
+@$@<Property section@>==@{@-
+<properties>
+  @<Properties@>
+</properties>
+@}
+
+Used by formatter-maven-plugin to locate \verb+eclipse-java-google-style.xml+
+
+@$@<Properties@>+=@{@-
+<main.basedir>${project.parent.basedir}</main.basedir>
+@}
+
+
+% -----------------------------------------------------------
+% https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html
+\chapter{Dependencies}
+
+Maven avoids the need to discover and specify the libraries that
+your own dependencies\cite{Dependencies}
+require by including transitive dependencies automatically.
+This feature is facilitated by reading the project files of your
+dependencies from the remote repositories specified.
+In general, all dependencies of those projects are used in your
+project, as are any that the project inherits from its parents, or
+from its dependencies, and so on.
+There is no limit to the number of levels that dependencies can be
+gathered from.
+A problem arises only if a cyclic dependency is discovered.
+
+
+% FW sections that do not have the @@Z marker must be used
+% FW sections that have the @@M marker may be used multiple times
+@$@<Dependency section@>==@{@-
+<dependencies>
+  @<Dependencies@>
+</dependencies>
+@}
+
+\begin{description}
+\item[Dependency mediation] -
+    this determines what version of an artifact will be chosen when
+    multiple versions are encountered as dependencies.
+    Maven picks the "nearest definition".
+    That is, it uses the version of the closest dependency to your
+    project in the tree of dependencies.
+    You can always guarantee a version by declaring it explicitly
+    in your project's POM.
+    Note that if two dependency versions are at the same depth in
+    the dependency tree, the first declaration wins.
+\item["nearest definition"]
+    means that the version used will be the closest one to your
+    project in the tree of dependencies.
+    For example, if dependencies
+    for A, B, and C are defined as A -> B -> C -> D 2.0 and A -> E
+    -> D 1.0, then D 1.0 will be used when building A because the
+    path from A to D through E is shorter.
+    You could explicitly add a dependency to D 2.0 in A to force
+    the use of D 2.0.
+\item[Dependency management] -
+    this allows project authors to directly specify the versions
+    of artifacts to be used when they are encountered in transitive
+    dependencies or in dependencies where no version has been
+    specified.
+    In the example in the preceding section a dependency
+    was directly added to A even though it is not directly used by A.
+    Instead, A can include D as a dependency in its dependencyManagement
+    section and directly control which version of D is used when,
+    or if, it is ever referenced.
+\item[Dependency scope] -
+    this allows you to only include dependencies appropriate for
+    the current stage of the build.
+    This is described in more detail below.
+\item[Excluded dependencies] -
+    If project X depends on project Y, and project Y depends on
+    project Z, the owner of project X can explicitly exclude project
+    Z as a dependency, using the "exclusion" element.
+\item[Optional dependencies] -
+    If project Y depends on project Z, the owner of project Y can
+    mark project Z as an optional dependency, using the "optional"
+    element.
+    When project X depends on project Y, X will depend only on
+    Y and not on Y's optional dependency Z.
+    The owner of project X may then explicitly add a dependency
+    on Z, at her option.
+    (It may be helpful to think of optional dependencies
+    as "excluded by default.")
+\end{description}
+
+
+@$@<Dependencies@>+=@{@-
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <scope>test</scope>
+    <version>LATEST</version>
+    <exclusions>
+       <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+       </exclusion>
+    </exclusions>
+</dependency>
+@}
+
+\section{Scope}
+
+Dependency scope is used to limit the transitivity of a dependency,
+and also to affect the classpath used for various build tasks.
+
+There are 6 scopes available:
+
+\begin{description}
+\item[compile]
+    This is the default scope, used if none is specified.
+    Compile dependencies are available in all classpaths of a project.
+    Furthermore, those dependencies are propagated to dependent projects.
+\item[provided]
+    This is much like compile, but indicates you expect the JDK or
+    a container to provide the dependency at runtime.
+    For example, when building a web application for the Java
+    Enterprise Edition, you would set the dependency on the Servlet
+    API and related Java EE APIs to scope provided because the web
+    container provides those classes.
+    This scope is only available on the compilation and test
+    classpath, and is not transitive.
+\item[runtime]
+    This scope indicates that the dependency is not required for
+    compilation, but is for execution.
+    It is in the runtime and test classpaths, but not the compile
+    classpath.
+\item[test]
+    This scope indicates that the dependency is not required for
+    normal use of the application, and is only available for the
+    test compilation and execution phases.
+    This scope is not transitive.
+\item[system]
+    This scope is similar to provided except that you have to provide
+    the JAR which contains it explicitly.
+    The artifact is always available and is not looked up in a repository.
+\item[import]
+    This scope is only supported on a dependency of type pom in the
+    <dependencyManagement> section.
+    It indicates the dependency to be replaced with the effective
+    list of dependencies in the specified POM's <dependencyManagement>
+    section.
+    Since they are replaced, dependencies with a scope of import
+    do not actually participate in limiting the transitivity of a
+    dependency.
+\end{description}
+
+Each of the scopes (except for import) affects transitive dependencies
+in different ways, as is demonstrated in the table below.
+If a dependency is set to the scope in the left column, transitive
+dependencies of that dependency with the scope across the top row
+will result in a dependency in the main project with the scope
+listed at the intersection.
+If no scope is listed, it means the dependency will be omitted.
+
+% -----------------------------------------------------------
+\chapter{Build}
+
+@$@<Build section@>==@{@-
+<build>
+</build>
+@}
+
+% -----------------------------------------------------------
+\chapter{Profiles}
+
+@$@<Profile section@>==@{@-
+<profiles>
+</profiles>
+@}
+
+% ============================================================
+\chapter{Utility FunnelWeb Macros}
+
+@$@<Start Header@>@(@1@)@Z@M==@{@-
+@<Copyright Comment@>
+#ifndef _@1_H_
+#define _@1_H_
+@}
+
+@$@<End Header@>@(@1@)@Z@M==@{@-
+#endif /* _@1_H_ */
+@}
+
+\section{Copyright}
+
+This macro is intended to be included anywhere we need a copyright in
+a product file.
+
+@$@<Copyright XML Comment@>@Z@M==@{@-
+<!--
+  @<Copyright Message@>
+  -->
+@}
+
+@$@<Copyright Comment@>@Z@M==@{@-
+/*
+ * @<Copyright Message@>
+ */
+@}
+
+@$@<Copyright Message@>@Z@M==@{@-
+FIX THIS
+Copyright (c) 2019 Karl Redgate, as an unpublished work.
+This notice does not imply unrestricted or public access to these
+materials which are a trade secret of Karl Redgate or its
+subsidiaries or affiliates (together referred to as "SUN"), and
+which may not be reproduced, used, sold or transferred to any third
+party without SUN's prior written consent.  All rights reserved.
+
+U.S. Government Rights.  If the Software is to be used by the
+U.S. Government ("Government"), the following provisions apply. The
+Software and associated documentation are commercial computer software
+and commercial computer software documentation, respectively, and the
+Government is acquiring only the license rights granted in the License
+Agreement accompanying this Software (the license rights customarily
+provided to non-Government users), in accordance with Section 12.212
+of the Federal Acquisition Regulations ("FAR") or Section 227.7202-3
+of the Defense Federal Acquisition Regulation Supplement ("DFARS"), as
+applicable. For NASA users, the Government shall obtain the minimum
+rights permitted under Section, in paragraph 1852.227-86 of the NASA
+Supplement to the FAR (or any successor regulations).
+@}
+
+\backmatter
+
+\begin{thebibliography}{99}
+
+\bibitem{Parsing}
+   Dick Grune, Ceriel Jacobs.
+   \newblock {\em Parsing Techniques: A Practical Guide}.
+   \newblock Ellis Horwood Limited, 1990.
+   \newblock ISBN: 0-13-651431-6.
+
+\bibitem{Dependencies}
+   Maven project.
+   \newblock {\em Introduction to the Dependency Mechanism}.
+   \newblock \url{https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html}
+
+\end{thebibliography}
+
+\printindex
+
+\end{document}
+
+@! vim:autoindent expandtab sw=4 syntax=tex
