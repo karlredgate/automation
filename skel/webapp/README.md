@@ -101,4 +101,211 @@ ApplicationName
 
 These requirements are defined by Java Servlet API.
 
+## Servlet Interface
+
+Jersey, RestEasy etc are implementations of the JAX-RS standard.
+A JAX-RS implementation grovels through the directory/jar
+hierarchy to find @Path annotations and registers them in a
+request routing list.
+
+The class @Path annotation prefixes all method @Path annotations
+within the class.  The method annotations use @GET, @DELETE, @POST,
+etc to determine the request.  The @Path that has path params
+and query params expects the arguments to the method to have
+annotations to connect them (by name) - @PathParam and @QueryParam.
+The @Context annotation provides the request context to the method.
+The @Body annotation provides the raw body ?
+
+For POST PUT and others, they allow a single argument without
+annotation to pass the body.
+
+Tomcat is an overly simple servlet container that does not
+implement all of JEE.  JBoss, Wildfly, WebLogic, WebSphere 
+are full implememtations.
+
+THe Container defaults to using the war file name as the top path.
+This can be overridden in the web.xml.
+The web.xml also registers the top servlet class as a
+servlet element, and a servlet-mapping element to connect the
+servlet name to a path.  THis path is a subpath to the war
+path.
+
+| Annotation   | Package Detail/Import statement |
+|--------------|---------------------------------|
+| @GET         | import javax.ws.rs.GET;         |
+| @Produces    | import javax.ws.rs.Produces;    |
+| @Path        | import javax.ws.rs.Path;        |
+| @PathParam   | import javax.ws.rs.PathParam;   |
+| @QueryParam  | import javax.ws.rs.QueryParam;  |
+| @POST        | import javax.ws.rs.POST;        |
+| @Consumes    | import javax.ws.rs.Consumes;    |
+| @FormParam   | import javax.ws.rs.FormParam;   |
+| @PUT         | import javax.ws.rs.PUT;         |
+| @DELETE      | import javax.ws.rs.DELETE;      |
+
+
+### @GET
+
+Annotate your Get request methods with @GET.
+
+```
+@GET
+public String getHTML() {
+...
+}
+```
+
+### @Produces
+@Produces annotation specifies the type of output this method (or web service) will produce.
+
+```
+@GET
+@Produces("application/xml")
+public Contact getXML() {
+...
+}
+```
+
+```
+@GET
+@Produces("application/json")
+public Contact getJSON() {
+...
+}
+```
+
+### @Path
+
+@Path annotation specify the URL path on which this method will be invoked.
+
+```
+@GET
+@Produces("application/xml")
+@Path("xml/{firstName}")
+public Contact getXML() {
+...
+}
+```
+### @PathParam
+
+We can bind REST-style URL parameters to method arguments using
+@PathParam annotation as shown below.
+
+```
+@GET
+@Produces("application/xml")
+@Path("xml/{firstName}")
+public Contact getXML(@PathParam("firstName") String firstName) {
+Contact contact = contactService.findByFirstName(firstName);
+return contact;
+}
+```
+
+```
+@GET
+@Produces("application/json")
+@Path("json/{firstName}")
+public Contact getJSON(@PathParam("firstName") String firstName) {
+Contact contact = contactService.findByFirstName(firstName);
+return contact;
+}
+```
+
+### @QueryParam
+
+Request parameters in query string can be accessed using @QueryParam
+annotation as shown below.
+
+```
+@GET
+@Produces("application/json")
+@Path("json/companyList")
+public CompanyList getJSON(@QueryParam("start") int start, @QueryParam("limit") int limit) {
+CompanyList list = new CompanyList(companyService.listCompanies(start, limit));
+return list;
+}
+```
+
+The example above returns a list of companies (with server side
+pagination) which can be displayed with rich clients implemented
+using Ext-js or jQuery. You can read more more about setting up
+ExtJS grid panel with remote sorting and pagination using Hibernate.
+
+<http://blog.techferry.com/2012/01/25/extjs-grid-panel-with-remote-sorting-and-pagination-using-hibernate/>
+
+### @POST
+
+Annotate POST request methods with @POST.
+
+```
+@POST
+@Consumes("application/json")
+@Produces("application/json")
+public RestResponse<Contact> create(Contact contact) {
+...
+}
+```
+
+### @Consumes
+
+The @Consumes annotation is used to specify the MIME media types a REST resource can consume.
+
+```
+@PUT
+@Consumes("application/json")
+@Produces("application/json")
+@Path("{contactId}")
+public RestResponse<Contact> update(Contact contact) {
+...
+}
+```
+
+### @FormParam
+
+The REST resources will usually consume XML/JSON for the complete
+Entity Bean. Sometimes, you may want to read parameters sent in
+POST requests directly and you can do that using @FormParam annotation.
+GET Request query parameters can be accessed using @QueryParam
+annotation.
+
+```
+@POST
+public String save(@FormParam("firstName") String firstName,
+@FormParam("lastName") String lastName) {
+...
+}
+```
+
+### @PUT
+
+Annotate PUT request methods with @PUT.
+
+```
+@PUT
+@Consumes("application/json")
+@Produces("application/json")
+@Path("{contactId}")
+public RestResponse<Contact> update(Contact contact) {
+...
+}
+```
+
+### @DELETE
+
+Annotate DELETE request methods with @DELETE.
+
+```
+@DELETE
+@Produces("application/json")
+@Path("{contactId}")
+public RestResponse<Contact> delete(@PathParam("contactId") int contactId) {
+...
+}
+```
+
+### References
+
+Jersey JAX-RS Annotations:
+<https://wikis.oracle.com/display/Jersey/Overview+of+JAX-RS+1.0+Features>
+
 <!-- vim: set autoindent expandtab sw=4 syntax=markdown: -->
