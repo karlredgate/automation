@@ -1,0 +1,2 @@
+
+rule myRule { condition: true }
