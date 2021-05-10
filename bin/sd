@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Calculate the standard deviation of the values
+# from stdin
+#
+
+tmp=/tmp/std-$$
+function cleanup() {
+    rm -f $tmp
+}
+trap cleanup EXIT
+
+# sum of squares
+function sum_sq_dist() {
+    # start with 0
+    echo "3k 0.0"
+    # add the square of the difference from the mean
+    sed -e "s/$/ ${mean}- 2^ +/" < $tmp
+    # divide the sum by 1 less than the number of values
+    echo "$count 1- /"
+    # take the square root - then print the value
+    echo vp
+}
+
+{ : main
+  cat > $tmp
+  mean=$( mean < $tmp )
+  count=$( wc -l < $tmp )
+  sum_sq_dist | dc
+}
+
+# vim: autoindent expandtab sw=4

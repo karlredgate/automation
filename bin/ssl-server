@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# Need to check that localhost is present in /etc/hosts - or
+# can be looked up
+
+PKI=$HOME/pki/test
+SUBJECT='/C=US/ST=MA/L=Boston/O=Redgates/OU=Appliance/CN=testserver'
+
+mkdir -p $PKI
+date +%s > $PKI/serial
+cp /dev/null $PKI/index.txt
+
+function create_diffie_hellman_key() {
+    openssl dhparam -outform PEM -out $PKI/dh.pem 1024
+}
+
+# create certificate authority certificate and private key
+# Don't think I need the -newkey and -sha1 args??
+function create_CA_certificate() {
+    openssl req -batch \
+                -days 365 \
+                -nodes \
+                -new \
+                -newkey rsa:1024 \
+                -sha1 \
+                -x509 \
+                -subj "$SUBJECT" \
+                -keyout $PKI/ca.key \
+                -out $PKI/ca.cert
+}
+
+# generate server certificate signing request
+function create_server_csr() {
+    openssl req -batch \
+                -config $PKI/server.conf \
+                -extensions server \
+                -days 365 \
+                -nodes \
+                -new \
+                -newkey rsa:1024 \
+                -subj "$SUBJECT" \
+                -keyout $PKI/server.key \
+                -out    $PKI/server.csr
+    chmod 0700 $PKI/server.key
+}
+
+# Sign the server certificate request
+function sign_server_csr() {
+    openssl ca -batch \
+               -config $PKI/server.conf \
+               -name CarboniteCA \
+               -extensions server \
+               -days 365 \
+               -md sha1 \
+               -subj "$SUBJECT" \
+               -in $PKI/server.csr \
+               -out $PKI/server.cert
+}
+
+function server() {
+    echo "starting server"
+    openssl s_server -cert $PKI/server.cert -key $PKI/server.key -www
+}
+
+{ : main
+
+    for command in create_diffie_hellman_key create_CA_certificate create_server_csr sign_server_csr
+    do
+        echo "$command ..."
+        output=$($command 2>&1) || {
+            echo "$command failed: $output"
+	    exit 1
+        }
+    done
+    server
+}
+
+: vim:autoindent expandtab sw=4

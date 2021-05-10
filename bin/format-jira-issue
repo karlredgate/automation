@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var filename = process.argv[2] || '/dev/stdin';
+
+const fs = require('fs');
+
+function print_comment( c ) {
+    console.log( " - - - - - - - - - - -" );
+    console.log( "[33m" + c.author.displayName + "[0m " + c.updated );
+    console.log( c.body );
+}
+
+o = JSON.parse( fs.readFileSync(filename) );
+
+console.log( "[36m" + o.key + "[0m  [31m" +
+                        o.fields.issuetype.name + "[0m " +
+                        o.fields.priority.name + " " +
+                        o.fields.created );
+
+console.log( "Project: " + o.fields.project.key + "  (" + o.fields.project.name + ")" );
+console.log( "Reporter: [33m" + o.fields.reporter.displayName +
+      "[0m  Assigned: [33m" + o.fields.assignee.displayName + "[0m" );
+console.log( o.fields.status.name );
+console.log( "Summary: [35m" + o.fields.summary + "[0m" );
+console.log( "Descr:   " + o.fields.description );
+
+o.fields.comment.comments.forEach( print_comment );

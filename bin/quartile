@@ -1,0 +1,70 @@
+#!/bin/bash
+#
+# stdin is a list of values
+#
+
+tmp=/tmp/$$quartile
+
+function average() {
+    local line=$1
+    read left ; read  right ; let ave="($left+$right)/2" ; echo $ave
+}
+
+function line() {
+    local line=$1
+    head -$line < $tmp | tail -1
+}
+
+function lines() {
+    local line=$1
+    head -$line < $tmp | tail -2 | average
+}
+
+sort -n > $tmp
+let   count="$( wc -l < $tmp )"
+let m_count="(${count} + 1) / 2"
+let    half="${count}/2"
+let  m_line="${half}+1"
+
+case $(( $count % 2)) in
+0) # even
+    median=$( lines $m_line )
+    let q1_line="(${half} / 2) + 1"
+    let q3_line="${half} + ${q1_line}"
+    ;;
+1) # odd
+    median=$( line $m_line )
+    let q1_line="(${m_line} / 2) + 1"
+    let q3_line="(${m_line} / 2) + ${m_line}"
+    ;;
+esac
+
+case $(( $m_count % 2 )) in
+0) # half is even
+    q1=$( lines $q1_line )
+    q3=$( lines $q3_line )
+    ;;
+1) # half is odd
+    q1=$( line  $q1_line )
+    q3=$( line  $q3_line )
+    ;;
+esac
+
+let iqr="$q3 - $q1"
+let lwm="$median - ($iqr + ($iqr/2))"  # median - 1.5 * iqr
+let hwm="$median + ($iqr + ($iqr/2))"
+
+echo "count is $count  m_count is $m_count"
+echo "q1 #$q1_line, median #$m_line, q3 #$q3_line"
+echo "q1=$q1, median=$median, q3=$q3"
+echo "iqr=$iqr  lwm=$lwm  hwm=$hwm"
+
+echo -n "lo: "
+awk "\$1 > $lwm { print \$1 ; exit }" < $tmp
+echo -n "hi: "
+awk "\$1 < $hwm {s = \$1} \$1 > $hwm {print s; exit}" < $tmp
+
+echo -n "lo-out: "
+awk "\$1 < $lwm {print \$1}" < $tmp
+echo -n "hi-out: "
+awk "\$1 > $hwm {print \$1}" < $tmp

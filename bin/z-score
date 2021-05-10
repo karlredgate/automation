@@ -1,0 +1,30 @@
+#!/bin/bash
+
+tmp=/tmp/std-$$
+function cleanup() {
+    rm -f $tmp
+}
+trap cleanup EXIT
+
+cat > $tmp
+
+# sum of squares
+mean=$( mean < $tmp )
+s=$( sd < $tmp )
+
+function score() {
+    echo '3k'
+    # sed -e "s|\$| ${mean}- ${s}/p|" < $tmp
+    sed -e "s|\$| dn[ ]P ${mean}- ${s}/n0AP|" < $tmp
+}
+
+for arg
+do
+    case "$arg" in
+    --data)  ;;
+    esac
+done
+
+score | dc
+
+# vim: autoindent expandtab sw=4

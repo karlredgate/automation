@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# stdin is a list of values
+#
+
+tmp=/tmp/$$quartile
+
+function odd_middle() {
+    let middle=$1+1
+    head -$middle $tmp | tail -1
+}
+
+function even_middle() {
+    let middle=$1+1
+    head -$middle < $tmp | tail -2 | ( read left ; read  right ; let ave="($left+$right)/2" ; echo $ave )
+}
+
+sort -n > $tmp
+let count="$( wc -l < $tmp )"
+let odd=$count%2
+let middle=$count/2
+
+case $odd in
+0) even_middle $middle ;;
+1) odd_middle $middle ;;
+esac

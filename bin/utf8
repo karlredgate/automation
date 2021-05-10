@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# Translate a Unicode char to UTF-8 echo string
+# this is only handling 16 bits
+#
+
+# https://en.wikipedia.org/wiki/UTF-8
+
+# #bytes Bits first   last         1         2         3       4
+# 1       7   U+0000  U+007F       0xxxxxxx
+# 2      11   U+0080  U+07FF       110xxxxx  10xxxxxx
+# 3      16   U+0800  U+FFFF       1110xxxx  10xxxxxx  10xxxxxx
+# 4      21   U+10000 U+10FFFF[18] 11110xxx  10xxxxxx  10xxxxxx 10xxxxxx
+
+
+unicode="$1"
+
+let unicode=0x"$1"
+
+(( $unicode < 0x80 )) && {
+    printf '\\x%x\n' $unicode
+    exit 0
+}
+
+let first=$(( ($unicode >> 12) & 0xF ))
+let octet1=" 0xE0 + $first "
+
+let second=$(( ($unicode >> 6) & 0x3F ))
+let octet2=" 0x80 + $second "
+
+(( $unicode < 0x800 )) && {
+    printf '\\x%X\\x%x\n' $octet1 $octet2
+    exit 0
+}
+
+let third=$(( $unicode & 0x3F ))
+let octet3=" 0x80 + $third "
+
+printf '\\x%X\\x%X\\x%x\n' $octet1 $octet2 $octet3

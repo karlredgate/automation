@@ -1,0 +1,38 @@
+#!/bin/bash
+
+host=$1
+
+ip=$( dig +short @8.8.8.8 "$host" A | tail -1 )
+# echo "Checking $ip ..."
+
+# netarch:# jq -r '.data[] | [.city,.country,".location",.name,.override_name,.siebel_id,.state] | join(",")'
+curl --silent https://tools.keycdn.com/geo.json?host=${ip} | jq -r '.data.geo | [.isp,.city,.region_code,.country_code] | join(", ")'
+
+COMMENT=<<END
+{
+  "status": "success",
+  "description": "Data successfully received.",
+  "data": {
+    "geo": {
+      "host": "23.36.38.13",
+      "ip": "23.36.38.13",
+      "rdns": "a23-36-38-13.deploy.static.akamaitechnologies.com",
+      "asn": 20940,
+      "isp": "Akamai International B.V.",
+      "country_name": "United States",
+      "country_code": "US",
+      "region_name": "Massachusetts",
+      "region_code": "MA",
+      "city": "South Walpole",
+      "postal_code": "02071",
+      "continent_name": "North America",
+      "continent_code": "NA",
+      "latitude": 42.0963,
+      "longitude": -71.272,
+      "metro_code": 506,
+      "timezone": "America/New_York",
+      "datetime": "2020-06-24 13:26:01"
+    }
+  }
+}
+END

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+let mu=0
+let sigma=0
+let k=1
+
+function process() {
+    let x=$1
+    let previous=$mu
+    let mu="$mu + ($x - $mu) / $k"
+    let sigma="$sigma + ($x - $mu) * ($x - $previous)"
+    let k+=1
+    echo "k = $k  x = $x  previous = $previous  mu = $mu  sigma = $sigma"
+}
+
+while read value
+do
+    process $value
+done
+
+let s="$sigma / ($k - 1)"
+
+echo "$mu $s"
+
+# vim: autoindent expandtab sw=4

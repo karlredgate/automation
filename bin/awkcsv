@@ -1,0 +1,8 @@
+#!/opt/local/bin/gawk -f
+#
+# Set FPAT to the expression that knows CSVs with embedded commas
+#
+
+BEGIN { FPAT = "([^,]+)|(\"[^\"]+\")" }
+/^#/  { }
+      { print $2 }
