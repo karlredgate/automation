@@ -1,0 +1,9 @@
+
+provider "github" {
+  token = "5e386a2880b59b07e7c9f6b5a75f9fd043ac47bb"
+  owner = "karlredgate"
+}
+
+data "github_repositories" "example" {
+  query = "org:karlredgate language:C"
+}
