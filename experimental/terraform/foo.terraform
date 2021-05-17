@@ -1,6 +1,6 @@
 
 provider "github" {
-  token = "5e386a2880b59b07e7c9f6b5a75f9fd043ac47bb"
+  token = "5eTHISWASAMADEUPKEYdidnotprivdeaccess7bb"
   owner = "karlredgate"
 }
 
