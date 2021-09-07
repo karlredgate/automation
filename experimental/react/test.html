@@ -1,0 +1,70 @@
+<html>
+    <head>
+	<meta charset="utf-8"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	      rel="stylesheet" type="text/css" />
+	<link href="https://cdn.jsdelivr.net/gh/fullstackreact/30-days-of-react@master/day-04/src/components/Timeline/Timeline.css"
+	      rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+	<div id="app"></div>
+	<script type="text/babel">
+	    class App extends React.Component {
+	        render() {
+		    return (
+		        <div className="notificationsFrame">
+			    <div className="panel">
+			        <Header title="This is a timeline test" />
+				<Content />
+			    </div>
+			</div>
+		    );
+		}
+	    }
+
+	    class Header extends React.Component {
+	        render() {
+		    return (
+		    <div className="header">
+		        <div className="menuIcon">
+			    <div className="dashTop"></div>
+			    <div className="dashBottom"></div>
+			    <div className="circle"></div>
+			</div>
+			<span className="title">{this.props.title}</span>
+			<input type="text" className="searchInput" placeholder="Search..." />
+			<div className="fa fa-search searchIcon"></div>
+		    </div>
+		    );
+		}
+	    }
+
+	    class Content extends React.Component {
+	        render() {
+		    return (
+		    <div className="content">
+			<div className="line"></div>
+			{/* timeline item */}
+			<div className="item">
+			    <div className="avatar">
+			        <img alt="Doug"
+				     src="http://www.croop.cl/UI/twitter/images/doug.jpg" />
+			    </div>
+			    <span className="time">hour ago</span>
+			    <p>ate lunch</p>
+			    <div className="commentCount"></div>
+			</div>
+			{/* ... */}
+		    </div>
+		    );
+		}
+	    }
+
+	    var element = document.querySelector("#app");
+	    ReactDOM.render( <App/>, element );
+	</script>
+    </body>
+</html>
