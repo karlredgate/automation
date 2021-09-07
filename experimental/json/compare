@@ -8,8 +8,10 @@ function die() {
 for i in {1..100}
 do
     dada json.pb > raw.json
+    echo "JQ ..."
     time jq . < raw.json > cooked.json || die "jq raw"
     # cat cooked.json
+    echo "Basic..."
     time ./basic < raw.json || die "basic raw"
     time ./basic < cooked.json || die "cooked raw"
 done

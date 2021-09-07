@@ -4,6 +4,7 @@ INCLUDES=-I/opt/local/include -I.
 
 test: plugin-dump
 	./plugin-dump < junk.out
+	./plugin-dump < file.protobuf  >f.p
 
 # plugin-dump: main.o plugin.pb.o google/protobuf/descriptor.pb.o
 plugin-dump: main.o plugin.pb.o
@@ -23,6 +24,9 @@ google/protobuf/descriptor.pb.o: google/protobuf/descriptor.pb.cc
 
 google/protobuf/descriptor.pb.h google/protobuf/descriptor.pb.cc: google/protobuf/descriptor.proto
 	protoc --cpp_out=. $^
+
+hack:
+	protoc --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="$(PWD)/ggg" plugin.proto
 
 clean:
 	rm -f *.o
