@@ -18,14 +18,16 @@ function usage() {
 function update_link() {
     local target="$1"
     local link=$( basename $target )
-    [ -L ~/skel/$link ] && return
+    echo "Check $link ..."
+    [ -L "${HOME}/skel/$link" ] && return
     ln -s $target ~/skel/$link
 }
 
 # Make sure all skel pointers are up to date
 function evergreen() {
     mkdir -p ~/skel
-    for target in ~/ws/github/automation/skel/* ~/ws/automation/skel/*
+    # for target in ~/ws/github/automation/skel/* ~/ws/automation/skel/*
+    for target in ~/github/automation/skel/* ~/ws/automation/skel/*
     do
         update_link $target
     done
