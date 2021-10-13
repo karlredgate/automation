@@ -1,0 +1,16 @@
+name: EXAMPLE
+base: BASE
+version: '1.0'
+summary: Some EXAMPLE app
+description: |
+    This is a longer description.
+grade: stable
+confinement: strict
+apps:
+    EXAMPLE:
+        command: bin/EXAMPLE
+parts:
+    PART-EXAMPLE:
+        source: http://...
+        plugin: autotools
+

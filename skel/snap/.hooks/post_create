@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# run after copying the hierarchy
+#
+
+function main() {
+    : create zip
+}
+
+main "$@"
+
+# vim: ai et sw=4
