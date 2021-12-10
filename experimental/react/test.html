@@ -1,73 +1,183 @@
+<!doctype html>
 <html>
-    <head>
-	<meta charset="utf-8"/>
-	<link href="Timeline.css" rel="stylesheet" type="text/css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js"></script>
-	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-	      rel="stylesheet" type="text/css" />
-	<!--
-	<link href="https://cdn.jsdelivr.net/gh/fullstackreact/30-days-of-react@master/day-04/src/components/Timeline/Timeline.css"
-	      rel="stylesheet" type="text/css" />
-	-->
-    </head>
+ <head>
+   <title>Scout Spot Testing</title>
+   <meta charset="utf-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link rel="shortcut icon" id="favicon" href="/favicon.png" />
+   <meta name="description" content="Teleoperation tool for the Spot robot." />
+
+   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+         rel="stylesheet" type="text/css" />
+   <link href="Timeline.css" rel="stylesheet" type="text/css" />
+   <link href="Clock.css" rel="stylesheet" type="text/css" />
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js"></script>
+
+   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+   <script src="https://unpkg.com/moment@2.24.0/min/moment.min.js"></script>
+
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+         rel="stylesheet" type="text/css" />
+   <!--
+   <link href="https://cdn.jsdelivr.net/gh/fullstackreact/30-days-of-react@master/day-04/src/components/Timeline/Timeline.css"
+         rel="stylesheet" type="text/css" />
+   -->
+ </head>
+
     <body>
-	<div id="app" class="demo"></div>
-	<script type="text/babel">
-	    class App extends React.Component {
-	        render() {
-		    return (
-		        <div className="notificationsFrame">
-			    <div className="panel">
-			        <Header title="This is a timeline test" />
-				<Content />
-			    </div>
-			</div>
-		    );
-		}
-	    }
+        <!-- THIS IS WHERE THE APP GOES - demo class is for the stylesheet -->
+        <div id="app" class="demo"></div>
 
-	    class Header extends React.Component {
-	        render() {
-		    return (
-		    <div className="header">
-		        <div className="menuIcon">
-			    <div className="dashTop"></div>
-			    <div className="dashBottom"></div>
-			    <div className="circle"></div>
-			</div>
-			<span className="title">{this.props.title}</span>
-			<input type="text" className="searchInput" placeholder="Search..." />
-			<div className="fa fa-search searchIcon"></div>
-		    </div>
-		    );
-		}
-	    }
+        <script type="text/babel">
 
-	    class Content extends React.Component {
-	        render() {
-		    return (
-		    <div className="content">
-			<div className="line"></div>
-			{/* timeline item */}
-			<div className="item">
-			    <div className="avatar">
-			        <img alt="Doug"
-				     src="http://www.croop.cl/UI/twitter/images/doug.jpg" />
-			    </div>
-			    <span className="time">hour ago</span>
-			    <p>ate lunch</p>
-			    <div className="commentCount"></div>
-			</div>
-			{/* ... */}
-		    </div>
-		    );
-		}
-	    }
+            const activities = [
+                { timestamp: new Date().getTime(),
+                  text: "ate lunch",
+                  user: {
+                    id: 1, name: "Nate",
+                    avatar: "http://www.croop.cl/UI/twitter/images/doug.jpg"
+                  },
+                  comments: [ {from:"Ari",text:"me too"} ]
+                },
+                { timestamp: new Date().getTime(),
+                  text: "woke up early",
+                  user: {
+                    id: 2, name: "Ari",
+                    avatar: "http://www.croop.cl/UI/twitter/images/doug.jpg"
+                  },
+                  comments: [ {from:"Nate",text:"I am jealous"} ]
+                },
+            ];
 
-	    var element = document.querySelector("#app");
-	    ReactDOM.render( <App/>, element );
-	</script>
+            class App extends React.Component {
+                constructor( props ) {
+                    super( props );
+                    this.state = {
+                        activities: []
+                    };
+                }
+                render() {
+                    return (
+                        <div className="notificationsFrame">
+                            <div className="panel">
+                                <Header title="This is a timeline test" />
+                                <Content activities={activities} />
+                                {/* <Clock /> */}
+                            </div>
+                        </div>
+                    );
+                }
+                componentDidMount() { }
+                componentWillMount() { }
+                componentDidUpdate() { }
+                componentWillUpdate() { }
+                componentWillReceiveProps() { }
+            }
+
+            class Header extends React.Component {
+                render() {
+                    return (
+                    <div className="header">
+                        <div className="menuIcon">
+                            <div className="dashTop"></div>
+                            <div className="dashBottom"></div>
+                            <div className="circle"></div>
+                        </div>
+                        <span className="title">{this.props.title}</span>
+                        <input type="text" className="searchInput" placeholder="Search..." />
+                        <div className="fa fa-search searchIcon"></div>
+                    </div>
+                    );
+                }
+            }
+
+            class Content extends React.Component {
+                render() {
+                    const {activities} = this.props;
+                    // const activity = this.props.activity;
+                    return (
+                    <div className="content">
+                        <div className="line"></div>
+                        {/* timeline item */}
+                        {activities.map(
+                            activity => ( <ActivityItem activity={activity} /> )
+                         )}
+                        {/* ... */}
+                    </div>
+                    );
+                }
+            }
+
+            class ActivityItem extends React.Component {
+                render() {
+                    const {activity} = this.props;
+                    // const activity = this.props.activity;
+                    return (
+                        <div className="item">
+                            <div className="avatar">
+                                <img alt={activity.text}
+                                     src={activity.user.avatar} />
+                                {activity.user.name}
+                            </div>
+                            <span className="time">
+                                { moment(activity.timestamp).fromNow() }
+                            </span>
+                            <p>{activity.text}</p>
+                            <div className="commentCount">
+                                {activity.comments.length}
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
+            class Clock extends React.Component {
+                getTime() {
+                    const now = new Date();
+                    return {
+                        hours: now.getHours(),
+                        minutes: now.getMinutes(),
+                        seconds: now.getSeconds(),
+                        meridian: hours >= 12 ? 'pm' : 'am'
+                    }
+                }
+                constructor( props ) {
+                    super( props );
+                    this.state = this.getTime();
+                }
+                render() {
+                    const {hours, minutes, seconds, meridian} = this.state;
+                    return (
+                        <div className="clock">
+                            {
+                              hours == 0 ? 12 : ( hours >= 12 ? hours - 12 : hours )
+                            }:{
+                              minutes > 9 ? minutes : `0${minutes}`
+                            }:{
+                              seconds > 9 ? seconds : `0${seconds}`
+                            } {meridian}
+                        </div>
+                    );
+                }
+                componentDidMount() { // what the hell is this? not doc yet??
+                    this.setTimer();
+                }
+                setTimer() {
+                    const callback = this.updateClock.bind(this);
+                    clearTimeout( this.timeout );
+                    this.timeout = setTimeout( callback, 1000 );
+                }
+                updateClock() {
+                    this.setState( this.getTime, this.setTimer );
+                }
+            }
+
+            var element = document.querySelector("#app");
+            ReactDOM.render( <App/>, element );
+
+        </script>
     </body>
 </html>
+<!-- vim: set autoindent expandtab sw=4 : -->
