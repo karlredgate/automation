@@ -44,3 +44,11 @@ def rv2(): return "foo"
 
 print( "rv1" + str(rv1()) )
 print( "rv2" + str(rv2()) )
+
+# Saw this ...
+# The intent of the author was to check if it is not
+# set to a value or it is set to one specific value.
+# This *always* returns true-ish
+def none_check(v):
+    return v == None or 'Static'
+
