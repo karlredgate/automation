@@ -1,4 +1,5 @@
 
+// https://stackoverflow.com/questions/69187442/const-utf8encoder-new-textencoder-in-node-js
 // JSDOM requires this - but by def it generates an error.
 //   const utf8Encoder = new TextEncoder();
 //   ReferenceError: TextEncoder is not defined
