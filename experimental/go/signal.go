@@ -11,6 +11,7 @@ func service() {
 
 /*
  * why is there a difference between ? "<-" and ":= <-" ??
+ * the := does type detection
  */
 func main() {
     // var result = 0
