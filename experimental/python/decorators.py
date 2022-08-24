@@ -1,4 +1,11 @@
 
+# Decorators are somewhat like a "curry", take a
+# function as an argument, return a new function
+# derived from the old function.
+#
+# This would be a good way to add aspect oriented
+# programming...
+
 # https://www.geeksforgeeks.org/decorators-in-python/
 # https://www.geeksforgeeks.org/function-decorators-in-python-set-1-introduction/
 

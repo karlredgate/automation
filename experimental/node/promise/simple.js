@@ -38,3 +38,5 @@ Promise.prototype.then = function (good, err) {
 	failure.push( err );
     }
 };
+
+// async and await ?
