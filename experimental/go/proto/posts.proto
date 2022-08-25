@@ -1,0 +1,56 @@
+syntax = 'proto3';
+
+package sma;
+
+option go_package="src/go/sma";
+
+import "google/protobuf/timestamp.proto";
+
+service Posts {
+  // Create Post
+  //
+  // Create a new post
+  rpc CreatePost(CreatePostReq) returns (Post);
+}
+
+// CreatePostReq
+//
+// The request message to create a post
+message CreatePostReq {
+  // The title for the Post
+  string title = 1;
+  // The description for the Post
+  string description = 2;
+  // The id of the user who created the Post
+  string use_id = 3;
+  // The collection of the Posts's media files
+  repeated string media_ids = 4;
+}
+
+// Post
+//
+// The message that represents a post
+message Post {
+  // The id for the Post
+  string id = 1;
+  // The title for the Post
+  string title = 2;
+  // The description for the Post
+  string description = 3;
+  // The is of the user who created the Post
+  string user_id = 4;
+  // The current status of the Post
+  PostStatus status = 5;
+  // The date when the Post was created
+  google.protobuf.Timestamp created_at = 6;
+  // The date when the Post was updated
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+enum PostStatus {
+  POST_STATUS_UNSPECIFIED = 0;
+  POST_STATUS_DRAFT = 1;
+  POST_STATUS_SCHEDULED = 2;
+  POST_STATUS_ARCHIVED = 3;
+  POST_STATUS_ACTIVE = 4;
+}
