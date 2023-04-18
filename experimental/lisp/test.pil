@@ -1,0 +1,27 @@
+
+(de log @
+    (out NIL (prinl " [LOG] " (pass text)))
+)
+
+(prinl "Run ls -l")
+(call 'ls '-l)
+
+(prinl "Test 'in' function")
+(in (list 'ls '-tr) (echo))
+
+(prinl "Test case function...")
+(case (in (list 'ls '-tr) (read))
+      (README.md (prinl "readme"))
+      (T (log "default [@]"))
+)
+
+(chdir 'd (call 'ls '-a) )
+(wait (* 2 1000))
+(call 'ls '-a)
+
+(if (fork)
+    (prinl "I am parent")
+    (prinl "I am child")
+)
+
+

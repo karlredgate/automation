@@ -1,0 +1,10 @@
+
+(prinl "call")
+(call 'ip 'route 'show)
+(prinl "(in) read")
+(prinl (in (list 'ip 'route 'show) (read)) )
+
+(prinl "(in) echo")
+(prinl (in (list 'ip 'route 'show) (echo)) )
+
+(bye)
