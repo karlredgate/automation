@@ -1,4 +1,6 @@
 
+// argv is os.Args
+
 package main
 
 import ( "os"; "fmt" )
