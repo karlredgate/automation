@@ -1,0 +1,17 @@
+
+syntax = "proto3";
+option go_package = "github.com/karlredgate/echo";
+
+package echo;
+
+service Greeter {
+    rpc SayHello( EchoRequest ) returns ( EchoReply ) {}
+}
+
+message EchoRequest {
+    string name = 1;
+}
+
+message EchoReply {
+    string mesg = 1;
+}
