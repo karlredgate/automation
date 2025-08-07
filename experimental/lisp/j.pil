@@ -1,0 +1,11 @@
+
+(de die (messages)
+    ; check for it being a list
+    (for line messages (println 'DIE line))
+    (bye)
+)
+
+(println 'testing)
+(die '("test this" " and this"))
+(println "unreachable")
+(die "test this" " and this")
